@@ -1,0 +1,218 @@
+/**
+ * @fileOverview
+ *
+ * This JSONP specifies which surveys should be loaded depending on the current URL.
+ *
+ * The JSONP structure is the following:
+ *
+ * *   pop_up_settings_file
+ * >   URL to the popup settings file, described in *data/custom_invitation_settings.js*
+ *
+ *     *   white_list
+ *     >   Array of regular expressions as strings
+ *
+ *     *   black_list
+ *     >   Array of regular expressions as strings
+ *
+ *
+ * The expressions in the black list are stronger than the expressions in the white list.
+ *
+ */
+
+SurveyInvitation.load_survey_url_rules_callback({
+	"surveys": [
+		{
+			"https://ec.europa.eu/wel/surveys/wr_survey03/data/invitation_settings/ec_online_survey/01/invitation_settings.js": {
+				"white_list": [
+					"https?://commission\.europa\.eu/.*",
+					"https?://comm-ewcms-commission\.acc\.fpfis\.tech\.ec\.europa\.eu/strategy-and-policy_en",
+					"https?://comm-ewpp-ext-learning-corner\.acc\.fpfis\.tech\.ec\.europa\.eu/.*"
+				],
+				"black_list": [
+
+				]
+			}
+		},
+		{
+			"https://ec.europa.eu/wel/surveys/wr_survey03/data/invitation_settings/eu_online_survey/01/invitation_settings.js": {
+				"white_list": [
+					"https?://european\-union\.europa\.eu/.*"
+				],
+				"black_list": [
+
+				]
+			}
+		},
+		{
+			"https://ec.europa.eu/wel/surveys/wr_survey03/data/invitation_settings/uat-eu/01/invitation_settings.js": {
+				"white_list": [
+					"https://comm-ewcms-uat-eu\.acc\.fpfis\.tech\.ec\.europa\.eu/.*"
+				],
+				"black_list": [
+
+				]
+			}
+		},
+		{
+			"https://ec.europa.eu/wel/surveys/wr_survey03/data/invitation_settings/europeday/01/invitation_settings.js": {
+				"white_list": [
+					"https://europeday\.europa\.eu/.*"
+				],
+				"black_list": [
+
+				]
+			}
+		},
+		{
+			"https://ec.europa.eu/wel/surveys/wr_survey03/data/invitation_settings/economy-finance/01/invitation_settings.js": {
+				"white_list": [
+					"https://economy-finance\.ec\.europa\.eu/economic-forecast-and-surveys/economic-forecasts/spring-2023-economic-forecast-improved-outlook-amid-persistent-challenges_en"
+				],
+				"black_list": [
+
+				]
+			}
+		},
+		{
+			"https://ec.europa.eu/wel/surveys/wr_survey03/data/invitation_settings/kohesio/01/invitation_settings.js": {
+				"white_list": [
+				    "https://kohesio\.ec\.europa\.eu.*",
+					"https://kohesio\.test\.ec\.europa\.eu.*"
+				],
+				"black_list": [
+
+				]
+			}
+		},
+		{
+			"https://ec.europa.eu/wel/surveys/wr_survey03/data/invitation_settings/cem/mode_1/invitation_settings.js": {
+				"white_list": [
+					"https://ec\.europa\.eu/test_cem/rombpat/surveys/popup1\.html"
+				],
+				"black_list": [
+
+				]
+			}
+		},
+		{
+			"https://ec.europa.eu/wel/surveys/wr_survey03/data/invitation_settings/health/invitation_settings.js": {
+				"white_list": [
+					"https://health\.ec\.europa\.eu.*"
+				],
+				"black_list": [
+
+				]
+			}
+		},
+      		{
+			"https://ec.europa.eu/wel/surveys/wr_survey03/data/invitation_settings/agriculture/invitation_settings.js": {
+				"white_list": [
+					"https://agriculture\.ec\.europa\.eu.*"
+				],
+				"black_list": [
+
+				]
+			}
+		},
+		{
+			"https://ec.europa.eu/wel/surveys/wr_survey03/data/invitation_settings/cem/mode_2/invitation_settings.js": {
+				"white_list": [
+					"https://ec\.europa\.eu/test_cem/rombpat/surveys/popup2\.html",
+					"https://comm-ewcms-uat-ec\.dhs\.tech\.ec\.europa\.eu/support/test-inc02973764_en",
+					"https://ec\.europa\.eu/test_cem/test_neha/Surveys/popup_nonEWPP\.html",
+					"https://ec\.europa\.eu/test_cem/test_neha/Surveys/popup_EWPP\.html" 
+				],
+				"black_list": [
+
+				]
+			}
+		}, 
+		{
+			"https://ec.europa.eu/wel/surveys/wr_survey03/data/invitation_settings/eacea/invitation_settings.js": {
+				"white_list": [
+					"https://www\.eacea\.ec\.europa\.eu.*"
+				],
+				"black_list": [
+
+				]
+			}
+		},
+		{
+			"https://ec.europa.eu/wel/surveys/wr_survey03/data/invitation_settings/taxation_and_customs_union/invitation_settings.js": {
+				"white_list": [
+					"https://taxation-customs\.ec\.europa\.eu.*"
+				],
+				"black_list": [
+ 
+				]
+			}
+		},
+		{
+			"https://ec.europa.eu/wel/surveys/wr_survey03/data/invitation_settings/home/invitation_settings.js": {
+				
+				"white_list": [
+					"https://home-affairs\.ec\.europa\.eu.*"
+				],
+				"black_list": [
+
+				]
+			}
+		
+		},	
+		{
+			"https://ec.europa.eu/wel/surveys/wr_survey03/data/invitation_settings/eu_for_children/invitation_settings.js": {
+				
+				"white_list": [
+					"https://eu-for-children\.europa\.eu/childrens-voices",
+					"https://eu-for-children\.europa\.eu/participate",
+					"https://eu-for-children\.europa\.eu/democracy-voting-survey",
+					"https://eu-for-children\.europa\.eu/feeling-safe",
+					"https://eu-for-children\.europa\.eu/together-online",
+					"https://eu-for-children\.europa\.eu/co-creation-team",
+					"https://eu-for-children\.europa\.eu/activities-news",
+					"https://eu-for-children\.europa\.eu/activities-news/photos-videos-2023",
+					"https://eu-for-children\.europa\.eu/about/members",
+					"https://comm-ewcms-uat-ec\.dhs\.tech\.ec\.europa\.eu/support/test-pdf-ola_en"
+				],
+				"black_list": [
+
+				]
+			}
+		},	
+		{
+			"https://ec.europa.eu/wel/surveys/wr_survey03/data/invitation_settings/open-science-cloud/invitation_settings.js": {
+				
+				"white_list": [
+					"https://open-science-cloud\.ec\.europa\.eu/.*"
+				],
+				"black_list": [
+					"https://open-science-cloud\.ec\.europa\.eu/dashboard"
+
+				]
+			}
+		},
+		{
+			"https://ec.europa.eu/wel/surveys/wr_survey03/data/invitation_settings/joint-research-centre/invitation_settings.js": {
+				
+				"white_list": [
+					"https://joint-research-centre\.ec\.europa\.eu/index_en",
+					"https://joint-research-centre\.ec\.europa\.eu/digcompedu_en",
+					"https://joint-research-centre\.ec\.europa\.eu/working-us/jobs-jrc_en"
+				],
+				"black_list": [
+
+				]
+			}
+		},
+		{
+			"https://ec.europa.eu/wel/surveys/wr_survey03/data/invitation_settings/ted/invitation_settings.js": {
+				"white_list": [
+					"https://ted\.europa\.eu.*"
+				],
+				"black_list": [
+
+				]
+			}
+		}
+	]
+});
