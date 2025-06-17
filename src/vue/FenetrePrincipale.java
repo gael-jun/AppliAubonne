@@ -6,6 +6,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -13,6 +14,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
+
 import main.Main;
 
 /**
@@ -34,6 +36,7 @@ public class FenetrePrincipale {
     private PagePuissance pagePuissance;
     private PageOnduleur pageOnduleur;
     private PageCablesProtections pageCablesProtections;
+    private PageEstimationPVGIS pageEstimationPVGIS;
     
     /**
      * Constructeur de la classe {@code FenetrePrincipale}.
@@ -49,17 +52,8 @@ public class FenetrePrincipale {
         UIManager.put("Button.border", new EmptyBorder(5, 15, 5, 15));
         UIManager.put("Button.focus", new Color(0, 120, 215));
 
-        // Tentative de chargement du logo depuis /img/logo.png puis /logo.png
-        java.net.URL logoUrl = FenetrePrincipale.class.getResource("/img/logo.png");
-        if (logoUrl == null) {
-            logoUrl = FenetrePrincipale.class.getResource("/logo.png");
-        }
-        if (logoUrl != null) {
-            logo = new ImageIcon(logoUrl);
-        } else {
-            logo = new ImageIcon(); // Logo vide si non trouvé
-            System.err.println("Logo non trouvé dans le classpath (ni /img/logo.png ni /logo.png)");
-        }
+        java.net.URL logoUrl = FenetrePrincipale.class.getResource("/logo.png");
+        logo = new ImageIcon(logoUrl);
         
         fenetre = new JFrame("E-AUBONNE pré-études");
         fenetre.setIconImage(logo.getImage());
@@ -87,11 +81,13 @@ public class FenetrePrincipale {
         pagePuissance = new PagePuissance();
         pageOnduleur = new PageOnduleur();
         pageCablesProtections = new PageCablesProtections();
+        pageEstimationPVGIS = new PageEstimationPVGIS();
 
         cardPanel.add(pageSurface.getPage(), "Surface");
         cardPanel.add(pagePuissance.getPage(), "Puissance");
         cardPanel.add(pageOnduleur.getPage(), "Onduleur");
         cardPanel.add(pageCablesProtections.getPage(), "Câbles_Protections");
+        cardPanel.add(pageEstimationPVGIS, "Estimation_PVGIS");
 
         JButton boutonSurface = new JButton("Surface");
         JButton boutonPuissance = new JButton("Puissance");
@@ -99,6 +95,7 @@ public class FenetrePrincipale {
         JButton boutonCablesProtections = new JButton("Câbles_Protections");
         JButton boutonExporter = new JButton("Exporter");
         JButton boutonCalculer = new JButton("Calculer");
+        JButton boutonEstimationPVGIS = new JButton("Estimation PVGIS");
         
         JPanel calculPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         calculPanel.add(boutonExporter);
@@ -110,10 +107,12 @@ public class FenetrePrincipale {
         bottomPanel.add(calculPanel, BorderLayout.EAST);
         bottomPanel.setBackground(Color.WHITE);
 
+        boutonsMenuPanel.add(boutonEstimationPVGIS);
         boutonsMenuPanel.add(boutonSurface);
         boutonsMenuPanel.add(boutonPuissance);
         boutonsMenuPanel.add(boutonOndulateur);
         boutonsMenuPanel.add(boutonCablesProtections);
+        
 
         mainPanel.add(boutonsMenuPanel, BorderLayout.NORTH);
         mainPanel.add(cardPanel, BorderLayout.CENTER);
@@ -131,6 +130,10 @@ public class FenetrePrincipale {
         boutonCablesProtections.addActionListener(Main.controleur);
         boutonCalculer.addActionListener(Main.controleur);
         boutonExporter.addActionListener(Main.controleur);
+        boutonEstimationPVGIS.addActionListener(e -> {
+            cardSurface.show(cardPanel, "Estimation_PVGIS");
+            carteCourante = "Estimation_PVGIS";
+        });
     }
     
     /**

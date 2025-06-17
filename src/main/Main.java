@@ -2,8 +2,9 @@ package main;
 
 import javax.swing.UnsupportedLookAndFeelException;
 
-import controleur.*;
-import vue.*;
+import controleur.Controleur;
+import vue.FenetrePrincipale;
+
 
 /**
  * La classe {@code Main} est le point d'entrée de l'application.

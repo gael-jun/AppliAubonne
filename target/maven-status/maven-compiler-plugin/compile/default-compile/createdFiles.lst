@@ -18,6 +18,7 @@ vue\PagePuissance$1.class
 vue\cablesetprotections\Tables$14.class
 vue\cablesetprotections\Tables$17.class
 vue\cablesetprotections\vue\cablesetprotections\customrenderers\CustomRendererTableParafoudreDC.class
+vue\PageEstimationPVGIS$1.class
 modele\cablesetprotections\FamilleDElements.class
 modele\cablesetprotections\ParafoudresAC.class
 vue\PageSurface$3.class
@@ -39,6 +40,7 @@ vue\Styles$1.class
 modele\cablesetprotections\DisjoncteurACOnduleur.class
 vue\cablesetprotections\Tables$5.class
 vue\cablesetprotections\ZonesDeTexte$1.class
+vue\PageEstimationPVGIS.class
 vue\cablesetprotections\ImagePanel.class
 vue\cablesetprotections\Tables$16.class
 vue\cablesetprotections\Tables$10.class
