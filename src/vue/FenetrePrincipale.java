@@ -9,6 +9,7 @@ import java.awt.Font;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -88,6 +89,9 @@ public class FenetrePrincipale {
         cardPanel.add(pageOnduleur.getPage(), "Onduleur");
         cardPanel.add(pageCablesProtections.getPage(), "Câbles_Protections");
         cardPanel.add(pageEstimationPVGIS, "Estimation_PVGIS");
+        cardPanel.add(new PageEstimationPVGISGrid(), "Estimation_PVGIS_Grid");
+        cardPanel.add(new PageEstimationPVGISTracker(), "Estimation_PVGIS_Tracker");
+        cardPanel.add(new PageEstimationPVGISOffGrid(), "Estimation_PVGIS_OffGrid");
 
         JButton boutonSurface = new JButton("Surface");
         JButton boutonPuissance = new JButton("Puissance");
@@ -95,8 +99,32 @@ public class FenetrePrincipale {
         JButton boutonCablesProtections = new JButton("Câbles_Protections");
         JButton boutonExporter = new JButton("Exporter");
         JButton boutonCalculer = new JButton("Calculer");
-        JButton boutonEstimationPVGIS = new JButton("Estimation PVGIS");
         
+        JComboBox<String> estimationDropdown = new JComboBox<>(new String[]{"PV couplé au réseau", "PV suiveur", "PV hors réseau"});
+        estimationDropdown.addActionListener(e -> {
+            String selectedOption = (String) estimationDropdown.getSelectedItem();
+            switch (selectedOption) {
+                case "PV couplé au réseau":
+                    cardSurface.show(cardPanel, "Estimation_PVGIS_Grid");
+                    carteCourante = "Estimation_PVGIS_Grid";
+                    break;
+                case "PV suiveur":
+                    cardSurface.show(cardPanel, "Estimation_PVGIS_Tracker");
+                    carteCourante = "Estimation_PVGIS_Tracker";
+                    break;
+                case "PV hors réseau":
+                    cardSurface.show(cardPanel, "Estimation_PVGIS_OffGrid");
+                    carteCourante = "Estimation_PVGIS_OffGrid";
+                    break;
+            }
+        });
+        boutonsMenuPanel.add(estimationDropdown);
+        boutonsMenuPanel.add(boutonSurface);
+        boutonsMenuPanel.add(boutonPuissance);
+        boutonsMenuPanel.add(boutonOndulateur);
+        boutonsMenuPanel.add(boutonCablesProtections);
+        
+
         JPanel calculPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         calculPanel.add(boutonExporter);
         calculPanel.add(boutonCalculer);
@@ -106,13 +134,6 @@ public class FenetrePrincipale {
         bottomPanel.add(logoPanel, BorderLayout.CENTER);
         bottomPanel.add(calculPanel, BorderLayout.EAST);
         bottomPanel.setBackground(Color.WHITE);
-
-        boutonsMenuPanel.add(boutonEstimationPVGIS);
-        boutonsMenuPanel.add(boutonSurface);
-        boutonsMenuPanel.add(boutonPuissance);
-        boutonsMenuPanel.add(boutonOndulateur);
-        boutonsMenuPanel.add(boutonCablesProtections);
-        
 
         mainPanel.add(boutonsMenuPanel, BorderLayout.NORTH);
         mainPanel.add(cardPanel, BorderLayout.CENTER);
@@ -130,10 +151,6 @@ public class FenetrePrincipale {
         boutonCablesProtections.addActionListener(Main.controleur);
         boutonCalculer.addActionListener(Main.controleur);
         boutonExporter.addActionListener(Main.controleur);
-        boutonEstimationPVGIS.addActionListener(e -> {
-            cardSurface.show(cardPanel, "Estimation_PVGIS");
-            carteCourante = "Estimation_PVGIS";
-        });
     }
     
     /**
