@@ -15,7 +15,6 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
@@ -23,8 +22,8 @@ import javax.swing.SwingUtilities;
 public class PageEstimationPVGISGrid extends JPanel {
     // Champs du formulaire Grid-Connected
     private JTextField latField, lonField, useHorizonField, userHorizonField, radDatabaseField, peakPowerField, pvTechChoiceField, mountingPlaceField, lossField, fixedField, angleField, aspectField, optimalInclinationField, optimalAnglesField, inclinedAxisField, inclinedOptimumField, inclinedAxisAngleField, verticalAxisField, verticalOptimumField, verticalAxisAngleField, twoAxisField, pvPriceField, systemCostField, interestField, lifetimeField, outputFormatField, browserField;
-    private JTextArea resultArea;
     private JPanel graphPanel;
+    private JLabel statusLabel; // Nouvelle box de statut
     private String lastJson = null;
 
     public PageEstimationPVGISGrid() {
@@ -107,11 +106,23 @@ public class PageEstimationPVGISGrid extends JPanel {
         verticalPanel.setLayout(new BoxLayout(verticalPanel, BoxLayout.Y_AXIS));
         verticalPanel.add(new JScrollPane(inputPanel));
         verticalPanel.add(buttonPanel);
-        resultArea = new JTextArea(18, 60);
-        resultArea.setLineWrap(true);
-        resultArea.setWrapStyleWord(true);
-        JScrollPane scrollPane = new JScrollPane(resultArea);
-        verticalPanel.add(scrollPane);
+        // Ajout de la box de statut
+        statusLabel = new JLabel("En attente d'une estimation.");
+        statusLabel.setOpaque(true);
+        statusLabel.setBackground(new java.awt.Color(220, 220, 220)); // gris clair
+        statusLabel.setForeground(java.awt.Color.BLACK);
+        statusLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        statusLabel.setPreferredSize(new Dimension(400, 30));
+        JPanel statusPanel = new JPanel();
+        statusPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        statusPanel.add(statusLabel);
+        verticalPanel.add(statusPanel);
+        // Suppression de la zone JSON
+        // resultArea = new JTextArea(18, 60);
+        // resultArea.setLineWrap(true);
+        // resultArea.setWrapStyleWord(true);
+        // JScrollPane scrollPane = new JScrollPane(resultArea);
+        // verticalPanel.add(scrollPane);
         graphPanel = new JPanel();
         graphPanel.setLayout(new BoxLayout(graphPanel, BoxLayout.Y_AXIS));
         JScrollPane graphScrollPane = new JScrollPane(graphPanel);
@@ -127,7 +138,7 @@ public class PageEstimationPVGISGrid extends JPanel {
         url.append("&peakpower=").append(peakPowerField.getText());
         url.append("&loss=").append(lossField.getText());
         if (!radDatabaseField.getText().isEmpty()) url.append("&raddatabase=").append(radDatabaseField.getText());
-        if (!pvTechChoiceField.getText().isEmpty()) url.append("&pvtechchoice=").append(pvTechChoiceField.getText());
+        if (!pvTechChoiceField.getText().isEmpty()) url.append("&pvtechccadrehoice=").append(pvTechChoiceField.getText());
         if (!mountingPlaceField.getText().isEmpty()) url.append("&mountingplace=").append(mountingPlaceField.getText());
         if (!fixedField.getText().isEmpty()) url.append("&fixed=").append(fixedField.getText());
         if (!angleField.getText().isEmpty()) url.append("&angle=").append(angleField.getText());
@@ -149,16 +160,29 @@ public class PageEstimationPVGISGrid extends JPanel {
         if (!userHorizonField.getText().isEmpty()) url.append("&userhorizon=").append(userHorizonField.getText());
         if (!outputFormatField.getText().isEmpty()) url.append("&outputformat=").append(outputFormatField.getText());
         if (!browserField.getText().isEmpty()) url.append("&browser=").append(browserField.getText());
-        resultArea.setText("Requête envoyée à :\n" + url + "\n\nEn attente de la réponse...");
+        // Affichage attente
+        SwingUtilities.invokeLater(() -> {
+            statusLabel.setText("En attente de la réponse de l'API...");
+            statusLabel.setBackground(new java.awt.Color(220, 220, 220)); // gris clair
+            statusLabel.setForeground(java.awt.Color.BLACK);
+        });
         new Thread(() -> {
             try {
                 HttpClient client = HttpClient.newHttpClient();
                 HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url.toString())).GET().build();
-                HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-                lastJson = response.body();
-                SwingUtilities.invokeLater(() -> resultArea.setText(lastJson));
+                String responseBody = client.send(request, HttpResponse.BodyHandlers.ofString()).body();
+                lastJson = responseBody;
+                SwingUtilities.invokeLater(() -> {
+                    statusLabel.setText("Succès : données reçues");
+                    statusLabel.setBackground(new java.awt.Color(0, 180, 0)); // vert
+                    statusLabel.setForeground(java.awt.Color.WHITE);
+                });
             } catch (Exception ex) {
-                SwingUtilities.invokeLater(() -> resultArea.setText("Erreur lors de la requête :\n" + ex.getMessage()));
+                SwingUtilities.invokeLater(() -> {
+                    statusLabel.setText("Erreur lors de la requête : " + ex.getMessage());
+                    statusLabel.setBackground(new java.awt.Color(200, 0, 0)); // rouge
+                    statusLabel.setForeground(java.awt.Color.WHITE);
+                });
             }
         }).start();
     }

@@ -10,8 +10,8 @@ import java.net.http.HttpResponse;
 
 public class PageEstimationPVGISOffGrid extends JPanel {
     private JTextField latField, lonField, useHorizonField, userHorizonField, radDatabaseField, peakPowerField, angleField, aspectField, batterySizeField, cutoffField, consumptionDayField, hourConsumptionField, outputFormatField, browserField;
-    private JTextArea resultArea;
     private JPanel graphPanel;
+    private JLabel statusLabel; // Nouvelle box de statut
     private String lastJson = null;
 
     public PageEstimationPVGISOffGrid() {
@@ -65,11 +65,17 @@ public class PageEstimationPVGISOffGrid extends JPanel {
         verticalPanel.add(new JScrollPane(inputPanel));
         verticalPanel.add(buttonPanel);
 
-        resultArea = new JTextArea(18, 60);
-        resultArea.setLineWrap(true);
-        resultArea.setWrapStyleWord(true);
-        JScrollPane scrollPane = new JScrollPane(resultArea);
-        verticalPanel.add(scrollPane);
+        // Ajout de la box de statut
+        statusLabel = new JLabel("En attente d'une estimation.");
+        statusLabel.setOpaque(true);
+        statusLabel.setBackground(new java.awt.Color(220, 220, 220)); // gris clair
+        statusLabel.setForeground(java.awt.Color.BLACK);
+        statusLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        statusLabel.setPreferredSize(new Dimension(400, 30));
+        JPanel statusPanel = new JPanel();
+        statusPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        statusPanel.add(statusLabel);
+        verticalPanel.add(statusPanel);
 
         graphPanel = new JPanel();
         graphPanel.setLayout(new BoxLayout(graphPanel, BoxLayout.Y_AXIS));
@@ -96,18 +102,29 @@ public class PageEstimationPVGISOffGrid extends JPanel {
         if (!hourConsumptionField.getText().isEmpty()) url.append("&hourconsumption=").append(hourConsumptionField.getText());
         if (!outputFormatField.getText().isEmpty()) url.append("&outputformat=").append(outputFormatField.getText());
         if (!browserField.getText().isEmpty()) url.append("&browser=").append(browserField.getText());
-
-        resultArea.setText("Requête envoyée à :\n" + url + "\n\nEn attente de la réponse...");
-
+        // Affichage attente
+        SwingUtilities.invokeLater(() -> {
+            statusLabel.setText("En attente de la réponse de l'API...");
+            statusLabel.setBackground(new java.awt.Color(220, 220, 220)); // gris clair
+            statusLabel.setForeground(java.awt.Color.BLACK);
+        });
         new Thread(() -> {
             try {
                 HttpClient client = HttpClient.newHttpClient();
                 HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url.toString())).GET().build();
-                HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-                lastJson = response.body();
-                SwingUtilities.invokeLater(() -> resultArea.setText(lastJson));
+                String responseBody = client.send(request, HttpResponse.BodyHandlers.ofString()).body();
+                lastJson = responseBody;
+                SwingUtilities.invokeLater(() -> {
+                    statusLabel.setText("Succès : données reçues");
+                    statusLabel.setBackground(new java.awt.Color(0, 180, 0)); // vert
+                    statusLabel.setForeground(java.awt.Color.WHITE);
+                });
             } catch (Exception ex) {
-                SwingUtilities.invokeLater(() -> resultArea.setText("Erreur lors de la requête :\n" + ex.getMessage()));
+                SwingUtilities.invokeLater(() -> {
+                    statusLabel.setText("Erreur lors de la requête : " + ex.getMessage());
+                    statusLabel.setBackground(new java.awt.Color(200, 0, 0)); // rouge
+                    statusLabel.setForeground(java.awt.Color.WHITE);
+                });
             }
         }).start();
     }

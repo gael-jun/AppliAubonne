@@ -37,7 +37,6 @@ public class FenetrePrincipale {
     private PagePuissance pagePuissance;
     private PageOnduleur pageOnduleur;
     private PageCablesProtections pageCablesProtections;
-    private PageEstimationPVGIS pageEstimationPVGIS;
     
     /**
      * Constructeur de la classe {@code FenetrePrincipale}.
@@ -82,13 +81,13 @@ public class FenetrePrincipale {
         pagePuissance = new PagePuissance();
         pageOnduleur = new PageOnduleur();
         pageCablesProtections = new PageCablesProtections();
-        pageEstimationPVGIS = new PageEstimationPVGIS();
+        
 
         cardPanel.add(pageSurface.getPage(), "Surface");
         cardPanel.add(pagePuissance.getPage(), "Puissance");
         cardPanel.add(pageOnduleur.getPage(), "Onduleur");
         cardPanel.add(pageCablesProtections.getPage(), "Câbles_Protections");
-        cardPanel.add(pageEstimationPVGIS, "Estimation_PVGIS");
+        
         cardPanel.add(new PageEstimationPVGISGrid(), "Estimation_PVGIS_Grid");
         cardPanel.add(new PageEstimationPVGISTracker(), "Estimation_PVGIS_Tracker");
         cardPanel.add(new PageEstimationPVGISOffGrid(), "Estimation_PVGIS_OffGrid");
