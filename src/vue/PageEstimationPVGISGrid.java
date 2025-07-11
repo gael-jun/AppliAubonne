@@ -12,88 +12,155 @@ import java.net.http.HttpResponse;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.JCheckBox;
 
+/**
+ * Page d'estimation PVGIS pour systèmes photovoltaïques couplés au réseau (grid-connected).
+ * Fournit un formulaire ergonomique, l'appel à l'API PVGIS et l'affichage graphique des résultats.
+ */
 public class PageEstimationPVGISGrid extends JPanel {
-    // Champs du formulaire Grid-Connected
-    private JTextField latField, lonField, useHorizonField, userHorizonField, radDatabaseField, peakPowerField, pvTechChoiceField, mountingPlaceField, lossField, fixedField, angleField, aspectField, optimalInclinationField, optimalAnglesField, inclinedAxisField, inclinedOptimumField, inclinedAxisAngleField, verticalAxisField, verticalOptimumField, verticalAxisAngleField, twoAxisField, pvPriceField, systemCostField, interestField, lifetimeField, outputFormatField, browserField;
+    /** Champ de saisie pour la latitude du site. */
+    private JTextField latField;
+    /** Champ de saisie pour la longitude du site. */
+    private JTextField lonField;
+    /** Champ de saisie pour l'horizon utilisateur (optionnel). */
+    private JTextField userHorizonField;
+    /** Champ de saisie pour la puissance crête du système PV (kW). */
+    private JTextField peakPowerField;
+    /** Champ de saisie pour les pertes système (%). */
+    private JTextField lossField;
+    /** Champ de saisie pour l'inclinaison du module PV (degrés). */
+    private JTextField angleField;
+    /** Champ de saisie pour l'azimut du module PV (degrés). */
+    private JTextField aspectField;
+    /** Champ de saisie pour l'angle axe incliné (degrés). */
+    private JTextField inclinedAxisAngleField;
+    /** Champ de saisie pour l'angle axe vertical (degrés). */
+    private JTextField verticalAxisAngleField;
+    /** Champ de saisie pour le prix PV (optionnel). */
+    private JTextField pvPriceField;
+    /** Champ de saisie pour le coût système (optionnel). */
+    private JTextField systemCostField;
+    /** Champ de saisie pour l'intérêt (optionnel). */
+    private JTextField interestField;
+    /** Champ de saisie pour la durée de vie (ans). */
+    private JTextField lifetimeField;
+    /** Champ de saisie pour le format de sortie (json, csv, ...). */
+    private JTextField outputFormatField;
+    /** Liste déroulante pour la base de données de radiation. */
+    private JComboBox<String> radDatabaseCombo;
+    /** Liste déroulante pour la technologie PV. */
+    private JComboBox<String> pvTechChoiceCombo;
+    /** Liste déroulante pour le type de montage. */
+    private JComboBox<String> mountingPlaceCombo;
+    /** Case à cocher pour inclure l'horizon naturel. */
+    private JCheckBox useHorizonCheck;
+    /** Case à cocher pour montage fixe. */
+    private JCheckBox fixedCheck;
+    /** Case à cocher pour inclinaison optimale. */
+    private JCheckBox optimalInclinationCheck;
+    /** Case à cocher pour angles optimaux. */
+    private JCheckBox optimalAnglesCheck;
+    /** Case à cocher pour axe incliné. */
+    private JCheckBox inclinedAxisCheck;
+    /** Case à cocher pour inclinaison optimale axe incliné. */
+    private JCheckBox inclinedOptimumCheck;
+    /** Case à cocher pour axe vertical. */
+    private JCheckBox verticalAxisCheck;
+    /** Case à cocher pour inclinaison optimale axe vertical. */
+    private JCheckBox verticalOptimumCheck;
+    /** Case à cocher pour double axe. */
+    private JCheckBox twoAxisCheck;
+    /** Case à cocher pour le mode browser (affichage interactif). */
+    private JCheckBox browserCheck;
+    /** Panel d'affichage des graphes. */
     private JPanel graphPanel;
-    private JLabel statusLabel; // Nouvelle box de statut
+    /** Label de statut pour l'utilisateur (attente, succès, erreur). */
+    private JLabel statusLabel;
+    /** Dernière réponse JSON reçue de l'API PVGIS. */
     private String lastJson = null;
 
+    /**
+     * Construit la page d'estimation PVGIS Grid-Connected avec formulaire, boutons et zone de graphes.
+     */
     public PageEstimationPVGISGrid() {
         setLayout(new BorderLayout());
         JLabel label = new JLabel("Formulaire pour PV couplé au réseau");
         label.setHorizontalAlignment(SwingConstants.CENTER);
         add(label, BorderLayout.NORTH);
 
-        JPanel inputPanel = new JPanel();
-        inputPanel.setLayout(new GridLayout(0, 2));
+        JPanel inputPanel = new JPanel(new GridLayout(0, 2, 5, 5));
 
-        // Champs obligatoires avec valeurs par défaut
+        //Champs obligatoires avec valeurs par défaut
+
         latField = new JTextField("48.989");
         lonField = new JTextField("2.277");
         peakPowerField = new JTextField("6"); // kW
         lossField = new JTextField("14"); // %
 
-        // Champs facultatifs avec valeurs par défaut PVGIS
-        useHorizonField = new JTextField("1");
-        userHorizonField = new JTextField("");
-        radDatabaseField = new JTextField("PVGIS-SARAH3");
-        pvTechChoiceField = new JTextField("crystSi");
-        mountingPlaceField = new JTextField("free");
-        fixedField = new JTextField("1");
+        // Champs facultatifs ergonomiques
+        radDatabaseCombo = new JComboBox<>(new String[]{"PVGIS-SARAH3", "PVGIS-ERA5"});
+        radDatabaseCombo.setSelectedIndex(0);
+        pvTechChoiceCombo = new JComboBox<>(new String[]{"crystSi", "CIS", "CdTe", "amorphous"});
+        pvTechChoiceCombo.setSelectedIndex(0);
+        mountingPlaceCombo = new JComboBox<>(new String[]{"free", "building"});
+        mountingPlaceCombo.setSelectedIndex(0);
+        fixedCheck = new JCheckBox(); fixedCheck.setSelected(true);
         angleField = new JTextField("0");
         aspectField = new JTextField("0");
-        optimalInclinationField = new JTextField("0");
-        optimalAnglesField = new JTextField("0");
-        inclinedAxisField = new JTextField("0");
-        inclinedOptimumField = new JTextField("0");
+        optimalInclinationCheck = new JCheckBox();
+        optimalAnglesCheck = new JCheckBox();
+        inclinedAxisCheck = new JCheckBox();
+        inclinedOptimumCheck = new JCheckBox();
         inclinedAxisAngleField = new JTextField("0");
-        verticalAxisField = new JTextField("0");
-        verticalOptimumField = new JTextField("0");
+        verticalAxisCheck = new JCheckBox();
+        verticalOptimumCheck = new JCheckBox();
         verticalAxisAngleField = new JTextField("0");
-        twoAxisField = new JTextField("0");
+        twoAxisCheck = new JCheckBox();
         pvPriceField = new JTextField("0");
         systemCostField = new JTextField("");
         interestField = new JTextField("");
         lifetimeField = new JTextField("25");
+        useHorizonCheck = new JCheckBox(); useHorizonCheck.setSelected(true);
+        userHorizonField = new JTextField("");
         outputFormatField = new JTextField("json");
-        browserField = new JTextField("0");
+        browserCheck = new JCheckBox();
 
-        // Ajout des champs au formulaire
+        // Ajout des champs au formulaire ergonomique
         inputPanel.add(new JLabel("Latitude :*")); inputPanel.add(latField);
         inputPanel.add(new JLabel("Longitude :*")); inputPanel.add(lonField);
-        inputPanel.add(new JLabel("Base de données de radiation :")); inputPanel.add(radDatabaseField);
+        inputPanel.add(new JLabel("Base de données de radiation :")); inputPanel.add(radDatabaseCombo);
         inputPanel.add(new JLabel("Puissance PV crête (kW) :*")); inputPanel.add(peakPowerField);
-        inputPanel.add(new JLabel("Technologie PV :")); inputPanel.add(pvTechChoiceField);
-        inputPanel.add(new JLabel("Type de montage :")); inputPanel.add(mountingPlaceField);
+        inputPanel.add(new JLabel("Technologie PV :")); inputPanel.add(pvTechChoiceCombo);
+        inputPanel.add(new JLabel("Type de montage :")); inputPanel.add(mountingPlaceCombo);
         inputPanel.add(new JLabel("Pertes système (%) :*")); inputPanel.add(lossField);
-        inputPanel.add(new JLabel("Fixe (1=oui, 0=non) :")); inputPanel.add(fixedField);
+        inputPanel.add(new JLabel("Fixe :")); inputPanel.add(fixedCheck);
         inputPanel.add(new JLabel("Inclinaison (°) :")); inputPanel.add(angleField);
         inputPanel.add(new JLabel("Azimut (°) :")); inputPanel.add(aspectField);
-        inputPanel.add(new JLabel("Inclinaison optimale (1=oui, 0=non) :")); inputPanel.add(optimalInclinationField);
-        inputPanel.add(new JLabel("Angles optimaux (1=oui, 0=non) :")); inputPanel.add(optimalAnglesField);
-        inputPanel.add(new JLabel("Axe incliné (1=oui, 0=non) :")); inputPanel.add(inclinedAxisField);
-        inputPanel.add(new JLabel("Inclinaison optimale axe incliné (1=oui, 0=non) :")); inputPanel.add(inclinedOptimumField);
+        inputPanel.add(new JLabel("Inclinaison optimale :")); inputPanel.add(optimalInclinationCheck);
+        inputPanel.add(new JLabel("Angles optimaux :")); inputPanel.add(optimalAnglesCheck);
+        inputPanel.add(new JLabel("Axe incliné :")); inputPanel.add(inclinedAxisCheck);
+        inputPanel.add(new JLabel("Inclinaison optimale axe incliné :")); inputPanel.add(inclinedOptimumCheck);
         inputPanel.add(new JLabel("Angle axe incliné (°) :")); inputPanel.add(inclinedAxisAngleField);
-        inputPanel.add(new JLabel("Axe vertical (1=oui, 0=non) :")); inputPanel.add(verticalAxisField);
-        inputPanel.add(new JLabel("Inclinaison optimale axe vertical (1=oui, 0=non) :")); inputPanel.add(verticalOptimumField);
+        inputPanel.add(new JLabel("Axe vertical :")); inputPanel.add(verticalAxisCheck);
+        inputPanel.add(new JLabel("Inclinaison optimale axe vertical :")); inputPanel.add(verticalOptimumCheck);
         inputPanel.add(new JLabel("Angle axe vertical (°) :")); inputPanel.add(verticalAxisAngleField);
-        inputPanel.add(new JLabel("Double axe (1=oui, 0=non) :")); inputPanel.add(twoAxisField);
-        inputPanel.add(new JLabel("Prix PV (1=oui, 0=non) :")); inputPanel.add(pvPriceField);
+        inputPanel.add(new JLabel("Double axe :")); inputPanel.add(twoAxisCheck);
+        inputPanel.add(new JLabel("Prix PV :")); inputPanel.add(pvPriceField);
         inputPanel.add(new JLabel("Coût système (si prix PV) :")); inputPanel.add(systemCostField);
         inputPanel.add(new JLabel("Intérêt (si prix PV) :")); inputPanel.add(interestField);
         inputPanel.add(new JLabel("Durée de vie (ans) :")); inputPanel.add(lifetimeField);
-        inputPanel.add(new JLabel("Inclure l'horizon (1=oui, 0=non) :")); inputPanel.add(useHorizonField);
+        inputPanel.add(new JLabel("Inclure l'horizon :")); inputPanel.add(useHorizonCheck);
         inputPanel.add(new JLabel("Horizon utilisateur (8 valeurs, séparées par des virgules) :")); inputPanel.add(userHorizonField);
         inputPanel.add(new JLabel("Format de sortie :")); inputPanel.add(outputFormatField);
-        inputPanel.add(new JLabel("Browser (1=oui, 0=non) :")); inputPanel.add(browserField);
+        inputPanel.add(new JLabel("Browser :")); inputPanel.add(browserCheck);
 
         JButton estimateButton = new JButton("Estimer la production");
         estimateButton.addActionListener((ActionEvent e) -> estimerProduction());
@@ -131,35 +198,39 @@ public class PageEstimationPVGISGrid extends JPanel {
         add(verticalPanel, BorderLayout.CENTER);
     }
 
+    /**
+     * Effectue l'appel à l'API PVGIS avec les paramètres du formulaire et met à jour le statut.
+     */
     private void estimerProduction() {
         StringBuilder url = new StringBuilder("https://re.jrc.ec.europa.eu/api/v5_3/PVcalc?");
         url.append("lat=").append(latField.getText());
         url.append("&lon=").append(lonField.getText());
         url.append("&peakpower=").append(peakPowerField.getText());
         url.append("&loss=").append(lossField.getText());
-        if (!radDatabaseField.getText().isEmpty()) url.append("&raddatabase=").append(radDatabaseField.getText());
-        if (!pvTechChoiceField.getText().isEmpty()) url.append("&pvtechccadrehoice=").append(pvTechChoiceField.getText());
-        if (!mountingPlaceField.getText().isEmpty()) url.append("&mountingplace=").append(mountingPlaceField.getText());
-        if (!fixedField.getText().isEmpty()) url.append("&fixed=").append(fixedField.getText());
+        if (radDatabaseCombo.getSelectedItem() != null) url.append("&raddatabase=").append(radDatabaseCombo.getSelectedItem());
+        if (pvTechChoiceCombo.getSelectedItem() != null) url.append("&pvtechchoice=").append(pvTechChoiceCombo.getSelectedItem());
+        if (mountingPlaceCombo.getSelectedItem() != null) url.append("&mountingplace=").append(mountingPlaceCombo.getSelectedItem());
+        url.append("&fixed=").append(fixedCheck.isSelected() ? "1" : "0");
         if (!angleField.getText().isEmpty()) url.append("&angle=").append(angleField.getText());
         if (!aspectField.getText().isEmpty()) url.append("&aspect=").append(aspectField.getText());
-        if (!optimalInclinationField.getText().isEmpty()) url.append("&optimalinclination=").append(optimalInclinationField.getText());
-        if (!optimalAnglesField.getText().isEmpty()) url.append("&optimalangles=").append(optimalAnglesField.getText());
-        if (!inclinedAxisField.getText().isEmpty()) url.append("&inclined_axis=").append(inclinedAxisField.getText());
-        if (!inclinedOptimumField.getText().isEmpty()) url.append("&inclined_optimum=").append(inclinedOptimumField.getText());
+        url.append("&optimalinclination=").append(optimalInclinationCheck.isSelected() ? "1" : "0");
+        url.append("&optimalangles=").append(optimalAnglesCheck.isSelected() ? "1" : "0");
+        url.append("&inclined_axis=").append(inclinedAxisCheck.isSelected() ? "1" : "0");
+        url.append("&inclined_optimum=").append(inclinedOptimumCheck.isSelected() ? "1" : "0");
         if (!inclinedAxisAngleField.getText().isEmpty()) url.append("&inclinedaxisangle=").append(inclinedAxisAngleField.getText());
-        if (!verticalAxisField.getText().isEmpty()) url.append("&vertical_axis=").append(verticalAxisField.getText());
-        if (!verticalOptimumField.getText().isEmpty()) url.append("&vertical_optimum=").append(verticalOptimumField.getText());
+        url.append("&vertical_axis=").append(verticalAxisCheck.isSelected() ? "1" : "0");
+        url.append("&vertical_optimum=").append(verticalOptimumCheck.isSelected() ? "1" : "0");
         if (!verticalAxisAngleField.getText().isEmpty()) url.append("&verticalaxisangle=").append(verticalAxisAngleField.getText());
-        if (!twoAxisField.getText().isEmpty()) url.append("&twoaxis=").append(twoAxisField.getText());
+        url.append("&twoaxis=").append(twoAxisCheck.isSelected() ? "1" : "0");
         if (!pvPriceField.getText().isEmpty()) url.append("&pvprice=").append(pvPriceField.getText());
         if (!systemCostField.getText().isEmpty()) url.append("&systemcost=").append(systemCostField.getText());
         if (!interestField.getText().isEmpty()) url.append("&interest=").append(interestField.getText());
         if (!lifetimeField.getText().isEmpty()) url.append("&lifetime=").append(lifetimeField.getText());
-        if (!useHorizonField.getText().isEmpty()) url.append("&usehorizon=").append(useHorizonField.getText());
+        url.append("&usehorizon=").append(useHorizonCheck.isSelected() ? "1" : "0");
         if (!userHorizonField.getText().isEmpty()) url.append("&userhorizon=").append(userHorizonField.getText());
         if (!outputFormatField.getText().isEmpty()) url.append("&outputformat=").append(outputFormatField.getText());
-        if (!browserField.getText().isEmpty()) url.append("&browser=").append(browserField.getText());
+        url.append("&browser=").append(browserCheck.isSelected() ? "1" : "0");
+        url.append("&global=1"); // Ajout pour irradiation sur plan incliné
         // Affichage attente
         SwingUtilities.invokeLater(() -> {
             statusLabel.setText("En attente de la réponse de l'API...");
@@ -187,6 +258,9 @@ public class PageEstimationPVGISGrid extends JPanel {
         }).start();
     }
 
+    /**
+     * Affiche les graphes de résultats à partir du JSON retourné par l'API PVGIS.
+     */
     private void afficherGraphes() {
         graphPanel.removeAll();
         if (lastJson == null || lastJson.isEmpty()) {
@@ -210,35 +284,41 @@ public class PageEstimationPVGISGrid extends JPanel {
                 return;
             }
             // Diagramme 1 : Production PV moyenne (mensuelle et annuelle)
+            // Liste des mois en français
+            String[] moisFrancais = {"Jan", "Fév", "Mars", "Avril", "Mai", "Juin", "Juil", "Août", "Sep", "Oct", "Nov", "Déc"};
             java.util.List<String> mois = new java.util.ArrayList<>();
             java.util.List<Double> prod = new java.util.ArrayList<>();
+            java.util.List<Double> irradiation = new java.util.ArrayList<>();
             double totalProd = 0;
+            boolean irradiationOk = true;
             for (int i = 0; i < monthlyFixed.length(); i++) {
                 org.json.JSONObject m = monthlyFixed.getJSONObject(i);
-                mois.add("Mois " + m.getInt("month"));
+                int idxMois = m.getInt("month") - 1;
+                String nomMois = (idxMois >= 0 && idxMois < 12) ? moisFrancais[idxMois] : ("Mois " + m.getInt("month"));
+                mois.add(nomMois);
                 double val = m.getDouble("E_m");
                 prod.add(val);
+                if (m.has("H(i)_m")) {
+                    irradiation.add(m.getDouble("H(i)_m"));
+                } else {
+                    irradiationOk = false;
+                    irradiation.add(0.0);
+                }
                 totalProd += val;
             }
             org.knowm.xchart.CategoryChart chart1 = new org.knowm.xchart.CategoryChartBuilder().width(600).height(300).title("Production PV moyenne mensuelle (kWh/mois)").xAxisTitle("Mois").yAxisTitle("kWh").build();
             chart1.addSeries("Production mensuelle", mois, prod);
             graphPanel.add(new org.knowm.xchart.XChartPanel<>(chart1));
-            // Production annuelle
-            org.knowm.xchart.PieChart chartAnn = new org.knowm.xchart.PieChartBuilder().width(400).height(300).title("Production PV annuelle totale").build();
-            chartAnn.addSeries("Année", totalProd);
-            graphPanel.add(new org.knowm.xchart.XChartPanel<>(chartAnn));
-            // Diagramme 2 : Variabilité interannuelle (écart-type)
-            org.json.JSONObject totals = outputs.getJSONObject("totals");
-            org.json.JSONObject totalsFixed = totals.has("fixed") ? totals.getJSONObject("fixed") : null;
-            if (totalsFixed != null && totalsFixed.has("SD_y")) {
-                double std = totalsFixed.getDouble("SD_y");
-                org.knowm.xchart.PieChart chartStd = new org.knowm.xchart.PieChartBuilder().width(400).height(300).title("Variabilité interannuelle (écart-type)").build();
-                chartStd.addSeries("Ecart-type annuel", std);
-                graphPanel.add(new org.knowm.xchart.XChartPanel<>(chartStd));
+            // Diagramme 2 : Irradiation mensuelle sur plan fixe (kWh/m2/mois)
+            if (irradiationOk) {
+                org.knowm.xchart.CategoryChart chartIrr = new org.knowm.xchart.CategoryChartBuilder().width(600).height(300).title("Irradiation mensuelle sur plan fixe (kWh/m²/mois)").xAxisTitle("Mois").yAxisTitle("kWh/m²").build();
+                chartIrr.addSeries("Irradiation sur plan fixe", mois, irradiation);
+                graphPanel.add(new org.knowm.xchart.XChartPanel<>(chartIrr));
             } else {
-                JLabel label = new JLabel("Variabilité interannuelle non disponible dans la réponse JSON.");
+                JLabel label = new JLabel("Champ 'H(i)_m' (irradiation sur plan incliné) absent dans la réponse JSON PVGIS.");
                 graphPanel.add(label);
             }
+            // Suppression du diagramme de variabilité interannuelle (écart-type)
             graphPanel.revalidate();
             graphPanel.repaint();
         } catch (Exception ex) {
