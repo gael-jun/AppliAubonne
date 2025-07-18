@@ -1,6 +1,7 @@
 package vue;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
@@ -20,6 +21,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.JCheckBox;
+import javax.swing.JOptionPane;
 
 /**
  * Page d'estimation PVGIS pour systèmes photovoltaïques couplés au réseau (grid-connected).
@@ -33,7 +35,7 @@ public class PageEstimationPVGISGrid extends JPanel {
     /** Champ de saisie pour l'horizon utilisateur (optionnel). */
     private JTextField userHorizonField;
     /** Champ de saisie pour la puissance crête du système PV (kW). */
-    private JTextField peakPowerField;
+    private final JTextField peakPowerField;
     /** Champ de saisie pour les pertes système (%). */
     private JTextField lossField;
     /** Champ de saisie pour l'inclinaison du module PV (degrés). */
@@ -41,29 +43,29 @@ public class PageEstimationPVGISGrid extends JPanel {
     /** Champ de saisie pour l'azimut du module PV (degrés). */
     private JTextField aspectField;
     /** Champ de saisie pour l'angle axe incliné (degrés). */
-    private JTextField inclinedAxisAngleField;
+    private final JTextField inclinedAxisAngleField;
     /** Champ de saisie pour l'angle axe vertical (degrés). */
-    private JTextField verticalAxisAngleField;
+    private final JTextField verticalAxisAngleField;
     /** Champ de saisie pour le prix PV (optionnel). */
     private JTextField pvPriceField;
     /** Champ de saisie pour le coût système (optionnel). */
-    private JTextField systemCostField;
+    private final JTextField systemCostField;
     /** Champ de saisie pour l'intérêt (optionnel). */
     private JTextField interestField;
     /** Champ de saisie pour la durée de vie (ans). */
     private JTextField lifetimeField;
     /** Champ de saisie pour le format de sortie (json, csv, ...). */
-    private JTextField outputFormatField;
+    private final JTextField outputFormatField;
     /** Liste déroulante pour la base de données de radiation. */
-    private JComboBox<String> radDatabaseCombo;
+    private final JComboBox<String> radDatabaseCombo;
     /** Liste déroulante pour la technologie PV. */
     private JComboBox<String> pvTechChoiceCombo;
     /** Liste déroulante pour le type de montage. */
     private JComboBox<String> mountingPlaceCombo;
     /** Case à cocher pour inclure l'horizon naturel. */
-    private JCheckBox useHorizonCheck;
+    private final JCheckBox useHorizonCheck;
     /** Case à cocher pour montage fixe. */
-    private JCheckBox fixedCheck;
+    private final JCheckBox fixedCheck;
     /** Case à cocher pour inclinaison optimale. */
     private JCheckBox optimalInclinationCheck;
     /** Case à cocher pour angles optimaux. */
@@ -71,19 +73,19 @@ public class PageEstimationPVGISGrid extends JPanel {
     /** Case à cocher pour axe incliné. */
     private JCheckBox inclinedAxisCheck;
     /** Case à cocher pour inclinaison optimale axe incliné. */
-    private JCheckBox inclinedOptimumCheck;
+    private final JCheckBox inclinedOptimumCheck;
     /** Case à cocher pour axe vertical. */
     private JCheckBox verticalAxisCheck;
     /** Case à cocher pour inclinaison optimale axe vertical. */
-    private JCheckBox verticalOptimumCheck;
+    private final JCheckBox verticalOptimumCheck;
     /** Case à cocher pour double axe. */
     private JCheckBox twoAxisCheck;
     /** Case à cocher pour le mode browser (affichage interactif). */
-    private JCheckBox browserCheck;
+    private final JCheckBox browserCheck;
     /** Panel d'affichage des graphes. */
     private JPanel graphPanel;
     /** Label de statut pour l'utilisateur (attente, succès, erreur). */
-    private JLabel statusLabel;
+    private final JLabel statusLabel;
     /** Dernière réponse JSON reçue de l'API PVGIS. */
     private String lastJson = null;
 
@@ -166,9 +168,12 @@ public class PageEstimationPVGISGrid extends JPanel {
         estimateButton.addActionListener((ActionEvent e) -> estimerProduction());
         JButton graphButton = new JButton("Voir graphes");
         graphButton.addActionListener(e -> afficherGraphes());
+        JButton exportPdfButton = new JButton("Exporter en PDF");
+        exportPdfButton.addActionListener(e -> exporterResultatsEnPDF());
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         buttonPanel.add(estimateButton);
         buttonPanel.add(graphButton);
+        buttonPanel.add(exportPdfButton);
         JPanel verticalPanel = new JPanel();
         verticalPanel.setLayout(new BoxLayout(verticalPanel, BoxLayout.Y_AXIS));
         verticalPanel.add(new JScrollPane(inputPanel));
@@ -289,7 +294,6 @@ public class PageEstimationPVGISGrid extends JPanel {
             java.util.List<String> mois = new java.util.ArrayList<>();
             java.util.List<Double> prod = new java.util.ArrayList<>();
             java.util.List<Double> irradiation = new java.util.ArrayList<>();
-            double totalProd = 0;
             boolean irradiationOk = true;
             for (int i = 0; i < monthlyFixed.length(); i++) {
                 org.json.JSONObject m = monthlyFixed.getJSONObject(i);
@@ -304,7 +308,6 @@ public class PageEstimationPVGISGrid extends JPanel {
                     irradiationOk = false;
                     irradiation.add(0.0);
                 }
-                totalProd += val;
             }
             org.knowm.xchart.CategoryChart chart1 = new org.knowm.xchart.CategoryChartBuilder().width(600).height(300).title("Production PV moyenne mensuelle (kWh/mois)").xAxisTitle("Mois").yAxisTitle("kWh").build();
             chart1.addSeries("Production mensuelle", mois, prod);
@@ -326,6 +329,181 @@ public class PageEstimationPVGISGrid extends JPanel {
             graphPanel.add(label);
             graphPanel.revalidate();
             graphPanel.repaint();
+        }
+    }
+
+    /**
+     * Exporte les résultats en tant que tableau et graphes dans un fichier PDF.
+     */
+    private void exporterResultatsEnPDF() {
+        if (lastJson == null || lastJson.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Aucun résultat à exporter. Veuillez d'abord estimer la production.", "Erreur", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        try {
+            javax.swing.JFileChooser fileChooser = new javax.swing.JFileChooser();
+            fileChooser.setDialogTitle("Enregistrer le PDF");
+            if (fileChooser.showSaveDialog(this) != javax.swing.JFileChooser.APPROVE_OPTION) return;
+            java.io.File pdfFile = fileChooser.getSelectedFile();
+            if (!pdfFile.getName().toLowerCase().endsWith(".pdf")) {
+                pdfFile = new java.io.File(pdfFile.getAbsolutePath() + ".pdf");
+            }
+
+            org.json.JSONObject obj = new org.json.JSONObject(lastJson);
+            org.json.JSONObject outputs = obj.getJSONObject("outputs");
+            org.json.JSONObject monthly = outputs.getJSONObject("monthly");
+            org.json.JSONArray monthlyFixed = monthly.has("fixed") ? monthly.getJSONArray("fixed") : null;
+            if (monthlyFixed == null) {
+                JOptionPane.showMessageDialog(this, "Aucune donnée mensuelle 'fixed' trouvée dans la réponse JSON.", "Erreur", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            java.util.List<java.awt.image.BufferedImage> chartImages = new java.util.ArrayList<>();
+            String[] moisFrancais = {"Jan", "Fév", "Mars", "Avril", "Mai", "Juin", "Juil", "Août", "Sep", "Oct", "Nov", "Déc"};
+            java.util.List<String> mois = new java.util.ArrayList<>();
+            java.util.List<Double> prod = new java.util.ArrayList<>();
+            java.util.List<Double> irradiation = new java.util.ArrayList<>();
+            java.util.List<Double> deviation = new java.util.ArrayList<>();
+            for (int i = 0; i < monthlyFixed.length(); i++) {
+                org.json.JSONObject m = monthlyFixed.getJSONObject(i);
+                int idxMois = m.getInt("month") - 1;
+                String nomMois = (idxMois >= 0 && idxMois < 12) ? moisFrancais[idxMois] : ("Mois " + m.getInt("month"));
+                mois.add(nomMois);
+                prod.add(m.getDouble("E_m"));
+                irradiation.add(m.getDouble("H(i)_m"));
+                deviation.add(m.getDouble("E_m") - m.getDouble("H(i)_m"));
+            }
+
+            org.knowm.xchart.CategoryChart chart1 = new org.knowm.xchart.CategoryChartBuilder().width(600).height(300).title("Production PV moyenne mensuelle (kWh/mois)").xAxisTitle("Mois").yAxisTitle("kWh").build();
+            chart1.addSeries("Production mensuelle", mois, prod);
+            chartImages.add(org.knowm.xchart.BitmapEncoder.getBufferedImage(chart1));
+
+            org.knowm.xchart.CategoryChart chart2 = new org.knowm.xchart.CategoryChartBuilder().width(600).height(300).title("Irradiation mensuelle (kWh/m²/mois)").xAxisTitle("Mois").yAxisTitle("kWh/m²").build();
+            chart2.addSeries("Irradiation", mois, irradiation);
+            chartImages.add(org.knowm.xchart.BitmapEncoder.getBufferedImage(chart2));
+
+
+
+            org.apache.pdfbox.pdmodel.PDDocument doc = new org.apache.pdfbox.pdmodel.PDDocument();
+            org.apache.pdfbox.pdmodel.PDPage page = new org.apache.pdfbox.pdmodel.PDPage();
+            doc.addPage(page);
+            org.apache.pdfbox.pdmodel.PDPageContentStream content = new org.apache.pdfbox.pdmodel.PDPageContentStream(doc, page);
+            float y = 750;
+            try {
+                content.setFont(org.apache.pdfbox.pdmodel.font.PDType1Font.HELVETICA_BOLD, 18);
+                content.beginText();
+                content.newLineAtOffset(50, y);
+                content.showText("Estimation PVGIS Grid-Connected");
+                content.endText();
+                y -= 30;
+
+                content.beginText();
+                content.setFont(org.apache.pdfbox.pdmodel.font.PDType1Font.HELVETICA_BOLD, 12);
+                content.newLineAtOffset(50, y);
+                content.showText("Paramètres d'entrée :");
+                content.endText();
+                y -= 18;
+                String[][] entrees = {
+                    {"Latitude", latField.getText()},
+                    {"Longitude", lonField.getText()},
+                    {"Base de données de radiation", radDatabaseCombo.getSelectedItem().toString()},
+                    {"Inclure horizon", useHorizonCheck.isSelected() ? "Oui" : "Non"},
+                    {"Inclinaison (°)", angleField.getText()},
+                    {"Azimut (°)", aspectField.getText()},
+                    {"Type de montage", mountingPlaceCombo.getSelectedItem().toString()},
+                    {"Technologie PV", pvTechChoiceCombo.getSelectedItem().toString()},
+                    {"Puissance crête (kW)", peakPowerField.getText()},
+                    {"Pertes système (%)", lossField.getText()}
+                };
+                content.setFont(org.apache.pdfbox.pdmodel.font.PDType1Font.HELVETICA, 10);
+                for (String[] ligne : entrees) {
+                    content.beginText();
+                    content.newLineAtOffset(55, y);
+                    content.showText(ligne[0] + " : " + ligne[1]);
+                    content.endText();
+                    y -= 13;
+                }
+                y -= 10;
+
+                // Ajout du tableau des valeurs mensuelles
+                float tableStartY = y;
+                float tableStartX = 50;
+                float rowHeight = 18;
+                float tableWidth = 400;
+                float[] colWidths = {70, 110, 110, 110};
+                String[] headers = {"Mois", "Prod (kWh)", "Irradiation (kWh/m²)", "Déviation (kWh)"};
+                // En-tête en gras
+                content.setStrokingColor(java.awt.Color.BLACK);
+                content.setNonStrokingColor(java.awt.Color.LIGHT_GRAY);
+                content.addRect(tableStartX, y - rowHeight, tableWidth, rowHeight);
+                content.fill();
+                content.setNonStrokingColor(java.awt.Color.BLACK);
+                float nextX = tableStartX;
+                for (int i = 0; i < headers.length; i++) {
+                    content.beginText();
+                    content.setFont(org.apache.pdfbox.pdmodel.font.PDType1Font.HELVETICA_BOLD, 10);
+                    content.newLineAtOffset(nextX + 2, y - rowHeight + 4);
+                    content.showText(headers[i]);
+                    content.endText();
+                    nextX += colWidths[i];
+                }
+                // Lignes du tableau
+                y -= rowHeight;
+                for (int i = 0; i < mois.size(); i++) {
+                    nextX = tableStartX;
+                    String[] vals = {
+                        mois.get(i),
+                        String.format("%.0f", prod.get(i)),
+                        String.format("%.0f", irradiation.get(i)),
+                        String.format("%.1f", deviation.get(i))
+                    };
+                    for (int j = 0; j < headers.length; j++) {
+                        content.setStrokingColor(java.awt.Color.BLACK);
+                        content.addRect(nextX, y - rowHeight, colWidths[j], rowHeight);
+                        content.stroke();
+                        content.beginText();
+                        content.setFont(org.apache.pdfbox.pdmodel.font.PDType1Font.HELVETICA, 10);
+                        content.newLineAtOffset(nextX + 2, y - rowHeight + 4);
+                        content.showText(vals[j]);
+                        content.endText();
+                        nextX += colWidths[j];
+                    }
+                    y -= rowHeight;
+                }
+                // Saut de page si besoin
+                if (y < 200) {
+                    content.close();
+                    page = new org.apache.pdfbox.pdmodel.PDPage();
+                    doc.addPage(page);
+                    content = new org.apache.pdfbox.pdmodel.PDPageContentStream(doc, page);
+                    y = 750;
+                }
+
+                for (java.awt.image.BufferedImage img : chartImages) {
+                    org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject pdImage = org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory.createFromImage(doc, img);
+                    if (y < 350) {
+                        content.close();
+                        page = new org.apache.pdfbox.pdmodel.PDPage();
+                        doc.addPage(page);
+                        content = new org.apache.pdfbox.pdmodel.PDPageContentStream(doc, page);
+                        y = 750;
+                    }
+                    content.drawImage(pdImage, 50, y - 250, 500, 250);
+                    y -= 270;
+                }
+                content.close();
+                doc.save(pdfFile);
+                doc.close();
+                JOptionPane.showMessageDialog(this, "PDF exporté avec succès !", "Succès", JOptionPane.INFORMATION_MESSAGE);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Erreur lors de l'export PDF : " + ex.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
+                try { content.close(); } catch (Exception ignore) {}
+                try { doc.close(); } catch (Exception ignore) {}
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Erreur lors de l'export PDF : " + ex.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
         }
     }
 }

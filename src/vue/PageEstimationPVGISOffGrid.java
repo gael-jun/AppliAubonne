@@ -359,7 +359,7 @@ public class PageEstimationPVGISOffGrid extends JPanel {
                 y -= 13;
             }
             y -= 10;
-            // Tableau des résultats mensuels (avec colonnes tracées)
+            // Tableau des résultats mensuels
             float tableStartY = y;
             float tableStartX = 50;
             float rowHeight = 18;
