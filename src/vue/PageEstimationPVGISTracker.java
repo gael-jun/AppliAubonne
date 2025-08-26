@@ -1,6 +1,7 @@
 package vue;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
@@ -262,74 +263,6 @@ public class PageEstimationPVGISTracker extends JPanel {
         }).start();
     }
 
-    /**
-     * Affiche les graphes de résultats à partir du JSON retourné par l'API PVGIS.
-     */
-    private void afficherGraphes() {
-        graphPanel.removeAll();
-        if (lastJson == null || lastJson.isEmpty()) {
-            JLabel label = new JLabel("Aucun résultat JSON à afficher. Veuillez d'abord estimer la production.");
-            graphPanel.add(label);
-            graphPanel.revalidate();
-            graphPanel.repaint();
-            return;
-        }
-        try {
-            org.json.JSONObject obj = new org.json.JSONObject(lastJson);
-            org.json.JSONObject outputs = obj.getJSONObject("outputs");
-            // --- Correction parsing PVGIS ---
-            org.json.JSONObject monthly = outputs.getJSONObject("monthly");
-            org.json.JSONArray monthlyFixed = monthly.has("fixed") ? monthly.getJSONArray("fixed") : null;
-            if (monthlyFixed == null) {
-                JLabel label = new JLabel("Aucune donnée mensuelle 'fixed' trouvée dans la réponse JSON.");
-                graphPanel.add(label);
-                graphPanel.revalidate();
-                graphPanel.repaint();
-                return;
-            }
-            // Diagramme 1 : Production PV moyenne (mensuelle et annuelle)
-            // Liste des mois en français
-            String[] moisFrancais = {"Jan", "Fév", "Mars", "Avril", "Mai", "Juin", "Juil", "Août", "Sep", "Oct", "Nov", "Déc"};
-            java.util.List<String> mois = new java.util.ArrayList<>();
-            java.util.List<Double> prod = new java.util.ArrayList<>();
-            java.util.List<Double> irradiation = new java.util.ArrayList<>();
-            boolean irradiationOk = true;
-            for (int i = 0; i < monthlyFixed.length(); i++) {
-                org.json.JSONObject m = monthlyFixed.getJSONObject(i);
-                int idxMois = m.getInt("month") - 1;
-                String nomMois = (idxMois >= 0 && idxMois < 12) ? moisFrancais[idxMois] : ("Mois " + m.getInt("month"));
-                mois.add(nomMois);
-                double val = m.getDouble("E_m");
-                prod.add(val);
-                if (m.has("H(i)_m")) {
-                    irradiation.add(m.getDouble("H(i)_m"));
-                } else {
-                    irradiationOk = false;
-                    irradiation.add(0.0);
-                }
-            }
-            org.knowm.xchart.CategoryChart chart1 = new org.knowm.xchart.CategoryChartBuilder().width(600).height(300).title("Production PV moyenne mensuelle (kWh/mois)").xAxisTitle("Mois").yAxisTitle("kWh").build();
-            chart1.addSeries("Production mensuelle", mois, prod);
-            graphPanel.add(new org.knowm.xchart.XChartPanel<>(chart1));
-            // Diagramme 2 : Irradiation mensuelle sur plan fixe (kWh/m2/mois)
-            if (irradiationOk) {
-                org.knowm.xchart.CategoryChart chartIrr = new org.knowm.xchart.CategoryChartBuilder().width(600).height(300).title("Irradiation mensuelle sur plan fixe (kWh/m²/mois)").xAxisTitle("Mois").yAxisTitle("kWh/m²").build();
-                chartIrr.addSeries("Irradiation sur plan fixe", mois, irradiation);
-                graphPanel.add(new org.knowm.xchart.XChartPanel<>(chartIrr));
-            } else {
-                JLabel label = new JLabel("Champ 'H(i)_m' (irradiation sur plan incliné) absent dans la réponse JSON PVGIS.");
-                graphPanel.add(label);
-            }
-            // Suppression du diagramme de variabilité interannuelle (écart-type)
-            graphPanel.revalidate();
-            graphPanel.repaint();
-        } catch (Exception ex) {
-            JLabel label = new JLabel("Erreur lors du tracé des graphes : " + ex.getMessage());
-            graphPanel.add(label);
-            graphPanel.revalidate();
-            graphPanel.repaint();
-        }
-    }
 
     /**
      * Exporte les résultats en tant que tableau et graphes dans un fichier PDF.
@@ -503,6 +436,95 @@ public class PageEstimationPVGISTracker extends JPanel {
         } catch (Exception ex) {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(this, "Erreur lors de l'export PDF : " + ex.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    // Refactor to improve readability and maintainability
+    // Extracted repetitive code into helper methods
+    private void updateStatus(String message, Color backgroundColor, Color foregroundColor) {
+        statusLabel.setText(message);
+        statusLabel.setBackground(backgroundColor);
+        statusLabel.setForeground(foregroundColor);
+    }
+
+    private void addGraphToPanel(org.knowm.xchart.CategoryChart chart) {
+        graphPanel.add(new org.knowm.xchart.XChartPanel<>(chart));
+        graphPanel.revalidate();
+        graphPanel.repaint();
+    }
+
+    private org.knowm.xchart.CategoryChart createChart(String title, String xAxisTitle, String yAxisTitle, java.util.List<String> xData, java.util.List<Double> yData) {
+        org.knowm.xchart.CategoryChart chart = new org.knowm.xchart.CategoryChartBuilder().width(600).height(300).title(title).xAxisTitle(xAxisTitle).yAxisTitle(yAxisTitle).build();
+        chart.addSeries(title, xData, yData);
+        return chart;
+    }
+
+    /**
+     * Affiche les graphes de résultats à partir du JSON retourné par l'API PVGIS.
+     */
+    private void afficherGraphes() {
+        graphPanel.removeAll();
+        if (lastJson == null || lastJson.isEmpty()) {
+            JLabel label = new JLabel("Aucun résultat JSON à afficher. Veuillez d'abord estimer la production.");
+            graphPanel.add(label);
+            graphPanel.revalidate();
+            graphPanel.repaint();
+            return;
+        }
+        try {
+            org.json.JSONObject obj = new org.json.JSONObject(lastJson);
+            org.json.JSONObject outputs = obj.getJSONObject("outputs");
+            // --- Correction parsing PVGIS ---
+            org.json.JSONObject monthly = outputs.getJSONObject("monthly");
+            org.json.JSONArray monthlyFixed = monthly.has("fixed") ? monthly.getJSONArray("fixed") : null;
+            if (monthlyFixed == null) {
+                JLabel label = new JLabel("Aucune donnée mensuelle 'fixed' trouvée dans la réponse JSON.");
+                graphPanel.add(label);
+                graphPanel.revalidate();
+                graphPanel.repaint();
+                return;
+            }
+            // Diagramme 1 : Production PV moyenne (mensuelle et annuelle)
+            // Liste des mois en français
+            String[] moisFrancais = {"Jan", "Fév", "Mars", "Avril", "Mai", "Juin", "Juil", "Août", "Sep", "Oct", "Nov", "Déc"};
+            java.util.List<String> mois = new java.util.ArrayList<>();
+            java.util.List<Double> prod = new java.util.ArrayList<>();
+            java.util.List<Double> irradiation = new java.util.ArrayList<>();
+            boolean irradiationOk = true;
+            for (int i = 0; i < monthlyFixed.length(); i++) {
+                org.json.JSONObject m = monthlyFixed.getJSONObject(i);
+                int idxMois = m.getInt("month") - 1;
+                String nomMois = (idxMois >= 0 && idxMois < 12) ? moisFrancais[idxMois] : ("Mois " + m.getInt("month"));
+                mois.add(nomMois);
+                double val = m.getDouble("E_m");
+                prod.add(val);
+                if (m.has("H(i)_m")) {
+                    irradiation.add(m.getDouble("H(i)_m"));
+                } else {
+                    irradiationOk = false;
+                    irradiation.add(0.0);
+                }
+            }
+            org.knowm.xchart.CategoryChart chart1 = new org.knowm.xchart.CategoryChartBuilder().width(600).height(300).title("Production PV moyenne mensuelle (kWh/mois)").xAxisTitle("Mois").yAxisTitle("kWh").build();
+            chart1.addSeries("Production mensuelle", mois, prod);
+            graphPanel.add(new org.knowm.xchart.XChartPanel<>(chart1));
+            // Diagramme 2 : Irradiation mensuelle sur plan fixe (kWh/m2/mois)
+            if (irradiationOk) {
+                org.knowm.xchart.CategoryChart chartIrr = new org.knowm.xchart.CategoryChartBuilder().width(600).height(300).title("Irradiation mensuelle sur plan fixe (kWh/m²/mois)").xAxisTitle("Mois").yAxisTitle("kWh/m²").build();
+                chartIrr.addSeries("Irradiation sur plan fixe", mois, irradiation);
+                graphPanel.add(new org.knowm.xchart.XChartPanel<>(chartIrr));
+            } else {
+                JLabel label = new JLabel("Champ 'H(i)_m' (irradiation sur plan incliné) absent dans la réponse JSON PVGIS.");
+                graphPanel.add(label);
+            }
+            // Suppression du diagramme de variabilité interannuelle (écart-type)
+            graphPanel.revalidate();
+            graphPanel.repaint();
+        } catch (Exception ex) {
+            JLabel label = new JLabel("Erreur lors du tracé des graphes : " + ex.getMessage());
+            graphPanel.add(label);
+            graphPanel.revalidate();
+            graphPanel.repaint();
         }
     }
 }
