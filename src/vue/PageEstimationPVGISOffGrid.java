@@ -11,6 +11,9 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -25,11 +28,14 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
+import vue.ui.ButtonStyleUtil;
+
 /**
  * Page d'estimation PVGIS pour systèmes photovoltaïques hors réseau (off-grid).
  * Fournit un formulaire ergonomique, l'appel à l'API PVGIS et l'affichage graphique des résultats.
  */
 public class PageEstimationPVGISOffGrid extends JPanel {
+    private static final Logger LOGGER = Logger.getLogger(PageEstimationPVGISOffGrid.class.getName());
     // Champ de saisie pour la latitude du site.
     private JTextField latField;
     // Champ de saisie pour la longitude du site.
@@ -62,6 +68,16 @@ public class PageEstimationPVGISOffGrid extends JPanel {
     private final JPanel graphPanel;
     // Label de statut pour l'utilisateur (attente, succès, erreur).
     private final JLabel statusLabel;
+    // Bouton pour ouvrir le formulaire financier (visible seulement après réception des données PVGIS)
+    private javax.swing.JButton financeButton;
+    // Boutons d'action accessibles depuis la toolbar
+    private javax.swing.JButton graphButton;
+    private javax.swing.JButton exportPdfButton;
+    private javax.swing.JButton exportCsvButton;
+    // Export menu (regroupe les options d'export CSV/PDF)
+    private javax.swing.JButton exportMenuButton;
+    private javax.swing.JMenuItem exportPdfMenuItem;
+    private javax.swing.JMenuItem exportCsvMenuItem;
     // Contient la dernière réponse JSON reçue de l'API PVGIS.
     private String lastJson = null;
     // Liste pour stocker les images des graphes financiers (utilisées pour l'export PDF).
@@ -77,105 +93,295 @@ public class PageEstimationPVGISOffGrid extends JPanel {
     private String lastTauxActualisation = "0";
     private String lastAnneeDepart = "0";
 
+    // Résultats financiers calculés (conservés pour l'export PDF)
+    private java.util.List<String> financialAnnees = new java.util.ArrayList<>();
+    private java.util.List<Double> financialCashFlowCumule = new java.util.ArrayList<>();
+    private java.util.List<String> financialAnneesRD = new java.util.ArrayList<>();
+    private java.util.List<Double> financialRecettes = new java.util.ArrayList<>();
+    private java.util.List<Double> financialDepenses = new java.util.ArrayList<>();
+    private java.util.List<Double> financialVAN = new java.util.ArrayList<>();
+    private double financialVANTotal = 0.0;
+
     /**
      * Constructeur : initialise la page d'estimation avec le formulaire et les zones graphiques.
      */
     public PageEstimationPVGISOffGrid() {
         // Définit le layout principal du panneau en BorderLayout
         setLayout(new BorderLayout());
-        // Crée un panneau d'entrée avec un GridLayout 2 colonnes
-        JPanel inputPanel = new JPanel(new GridLayout(0, 2, 5, 5));
+    // Crée un panneau d'entrée avec un GridLayout 2 colonnes (espacements réduits)
+    // Réduit l'espace horizontal entre les deux colonnes à 0 et vertical à 0 pour coller les champs.
+    JPanel inputPanel = new JPanel(new GridLayout(0, 2, 0, 0));
+    // Ajoute une marge en haut et à gauche pour éviter que le formulaire soit collé au bord
+    inputPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(15, 15, 0, 0));
 
         // --- Champs obligatoires avec valeurs par défaut ---
-        latField = new JTextField("48.989"); // valeur par défaut latitude
-        lonField = new JTextField("2.277"); // valeur par défaut longitude
-        peakPowerField = new JTextField("6000"); // puissance PV par défaut en W
-        batterySizeField = new JTextField("10000"); // capacité batterie par défaut en Wh
-        cutoffField = new JTextField("20"); // seuil de décharge par défaut en %
-        consumptionDayField = new JTextField("2000"); // consommation journalière par défaut en Wh
+    // Taille cible des champs de saisie (limite la largeur pour éviter qu'ils s'étendent)
+    int inputWidth = 120;
+    latField = new JTextField("48.989"); // valeur par défaut latitude
+    latField.setPreferredSize(new Dimension(inputWidth, 18));
+    latField.setMaximumSize(new Dimension(inputWidth, 18));
+    latField.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT);
+    lonField = new JTextField("2.277"); // valeur par défaut longitude
+    lonField.setPreferredSize(new Dimension(inputWidth, 24));
+    lonField.setMaximumSize(new Dimension(inputWidth, 24));
+    lonField.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT);
+    peakPowerField = new JTextField("6000"); // puissance PV par défaut en W
+    peakPowerField.setPreferredSize(new Dimension(inputWidth, 24));
+    peakPowerField.setMaximumSize(new Dimension(inputWidth, 24));
+    peakPowerField.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT);
+    batterySizeField = new JTextField("10000"); // capacité batterie par défaut en Wh
+    batterySizeField.setPreferredSize(new Dimension(inputWidth, 24));
+    batterySizeField.setMaximumSize(new Dimension(inputWidth, 24));
+    batterySizeField.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT);
+    cutoffField = new JTextField("20"); // seuil de décharge par défaut en %
+    cutoffField.setPreferredSize(new Dimension(inputWidth, 24));
+    cutoffField.setMaximumSize(new Dimension(inputWidth, 24));
+    cutoffField.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT);
+    consumptionDayField = new JTextField("2000"); // consommation journalière par défaut en Wh
+    consumptionDayField.setPreferredSize(new Dimension(inputWidth, 24));
+    consumptionDayField.setMaximumSize(new Dimension(inputWidth, 24));
+    consumptionDayField.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT);
 
         // --- Champs facultatifs et options ---
         useHorizonCheck = new JCheckBox(); // inclure l'horizon naturel
         useHorizonCheck.setSelected(true); // activé par défaut
         userHorizonField = new JTextField(""); // horizon utilisateur vide par défaut
+    userHorizonField.setPreferredSize(new Dimension(inputWidth, 24));
+    userHorizonField.setMaximumSize(new Dimension(inputWidth, 24));
+    userHorizonField.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT);
         radDatabaseCombo = new JComboBox<>(new String[]{"PVGIS-SARAH3", "PVGIS-ERA5"}); // choix raddatabase
         radDatabaseCombo.setSelectedIndex(0);
+        radDatabaseCombo.setPreferredSize(new Dimension(inputWidth, 24));
+        radDatabaseCombo.setMaximumSize(new Dimension(inputWidth, 24));
+        radDatabaseCombo.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT);
         angleField = new JTextField("0"); // inclinaison par défaut
+    angleField.setPreferredSize(new Dimension(inputWidth, 24));
+    angleField.setMaximumSize(new Dimension(inputWidth, 24));
+    angleField.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT);
         aspectField = new JTextField("0"); // azimut par défaut
+    aspectField.setPreferredSize(new Dimension(inputWidth, 24));
+    aspectField.setMaximumSize(new Dimension(inputWidth, 24));
+    aspectField.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT);
         hourConsumptionField = new JTextField(""); // profil horaire vide
+    hourConsumptionField.setPreferredSize(new Dimension(inputWidth, 24));
+    hourConsumptionField.setMaximumSize(new Dimension(inputWidth, 24));
+    hourConsumptionField.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT);
         outputFormatField = new JTextField("json"); // format de sortie par défaut
+    outputFormatField.setPreferredSize(new Dimension(inputWidth, 24));
+    outputFormatField.setMaximumSize(new Dimension(inputWidth, 24));
+    outputFormatField.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT);
         browserCheck = new JCheckBox(); // option browser
         browserCheck.setSelected(false);
 
-        // Ajout des labels et champs au panneau d'entrée (UI)
-        inputPanel.add(new JLabel("Latitude :*")); inputPanel.add(latField);
-        inputPanel.add(new JLabel("Longitude :*")); inputPanel.add(lonField);
-        inputPanel.add(new JLabel("Base de données de radiation :")); inputPanel.add(radDatabaseCombo);
-        inputPanel.add(new JLabel("Puissance PV crête (W) :*")); inputPanel.add(peakPowerField);
-        inputPanel.add(new JLabel("Inclinaison (°) :")); inputPanel.add(angleField);
-        inputPanel.add(new JLabel("Azimut (°) :")); inputPanel.add(aspectField);
-        inputPanel.add(new JLabel("Capacité batterie (Wh) :*")); inputPanel.add(batterySizeField);
-        inputPanel.add(new JLabel("Limite de décharge (%) :*")); inputPanel.add(cutoffField);
-        inputPanel.add(new JLabel("Consommation par jour (Wh) :*")); inputPanel.add(consumptionDayField);
-        inputPanel.add(new JLabel("Profil horaire de consommation (24 valeurs, séparées par des virgules) :")); inputPanel.add(hourConsumptionField);
-        inputPanel.add(new JLabel("Inclure l'horizon :")); inputPanel.add(useHorizonCheck);
-        inputPanel.add(new JLabel("Horizon utilisateur (8 valeurs, séparées par des virgules) :")); inputPanel.add(userHorizonField);
-        inputPanel.add(new JLabel("Format de sortie :")); inputPanel.add(outputFormatField);
-        inputPanel.add(new JLabel("Browser :")); inputPanel.add(browserCheck);
+    // Ajout des labels et champs au panneau d'entrée (UI) — labels au-dessus des champs
+    JPanel row;
+    JLabel lbl;
 
-        // --- Boutons d'action ---
-        JButton estimateButton = new JButton("Estimer la production");
-        // Lance l'estimation lorsque l'utilisateur clique
-        estimateButton.addActionListener((ActionEvent e) -> estimerProduction());
-        JButton graphButton = new JButton("Voir graphes");
-        // Affiche les graphes en utilisant les données JSON existantes
-        graphButton.addActionListener(e -> afficherGraphes());
-    JButton exportPdfButton = new JButton("Exporter résultats en PDF");
-    // Exporte les résultats dans un fichier PDF (exécuté en arrière-plan pour éviter invokeAndWait sur l'EDT)
+    lbl = new JLabel("Latitude :*");
+    row = new JPanel(); row.setLayout(new BoxLayout(row, BoxLayout.Y_AXIS)); row.add(lbl); row.add(latField); row.setBorder(javax.swing.BorderFactory.createEmptyBorder(1,0,1,0)); row.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT); inputPanel.add(row);
+
+    lbl = new JLabel("Longitude :*");
+    row = new JPanel(); row.setLayout(new BoxLayout(row, BoxLayout.Y_AXIS)); row.add(lbl); row.add(lonField); row.setBorder(javax.swing.BorderFactory.createEmptyBorder(1,0,1,0)); row.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT); inputPanel.add(row);
+
+    lbl = new JLabel("Base de données de radiation :");
+    row = new JPanel(); row.setLayout(new BoxLayout(row, BoxLayout.Y_AXIS)); row.add(lbl); row.add(radDatabaseCombo); row.setBorder(javax.swing.BorderFactory.createEmptyBorder(1,0,1,0)); row.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT); inputPanel.add(row);
+
+    lbl = new JLabel("Puissance PV crête (W) :*");
+    row = new JPanel(); row.setLayout(new BoxLayout(row, BoxLayout.Y_AXIS)); row.add(lbl); row.add(peakPowerField); row.setBorder(javax.swing.BorderFactory.createEmptyBorder(1,0,1,0)); row.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT); inputPanel.add(row);
+
+    lbl = new JLabel("Inclinaison (°) :");
+    row = new JPanel(); row.setLayout(new BoxLayout(row, BoxLayout.Y_AXIS)); row.add(lbl); row.add(angleField); row.setBorder(javax.swing.BorderFactory.createEmptyBorder(1,0,1,0)); row.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT); inputPanel.add(row);
+
+    lbl = new JLabel("Azimut (°) :");
+    row = new JPanel(); row.setLayout(new BoxLayout(row, BoxLayout.Y_AXIS)); row.add(lbl); row.add(aspectField); row.setBorder(javax.swing.BorderFactory.createEmptyBorder(1,0,1,0)); row.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT); inputPanel.add(row);
+
+    lbl = new JLabel("Capacité batterie (Wh) :*");
+    row = new JPanel(); row.setLayout(new BoxLayout(row, BoxLayout.Y_AXIS)); row.add(lbl); row.add(batterySizeField); row.setBorder(javax.swing.BorderFactory.createEmptyBorder(1,0,1,0)); row.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT); inputPanel.add(row);
+
+    lbl = new JLabel("Limite de décharge (%) :*");
+    row = new JPanel(); row.setLayout(new BoxLayout(row, BoxLayout.Y_AXIS)); row.add(lbl); row.add(cutoffField); row.setBorder(javax.swing.BorderFactory.createEmptyBorder(1,0,1,0)); row.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT); inputPanel.add(row);
+
+    lbl = new JLabel("Consommation par jour (Wh) :*");
+    row = new JPanel(); row.setLayout(new BoxLayout(row, BoxLayout.Y_AXIS)); row.add(lbl); row.add(consumptionDayField); row.setBorder(javax.swing.BorderFactory.createEmptyBorder(1,0,1,0)); row.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT); inputPanel.add(row);
+
+    lbl = new JLabel("<html>Profil horaire de consommation<br/>(24 valeurs, séparées par des virgules) :</html>");
+    row = new JPanel(); row.setLayout(new BoxLayout(row, BoxLayout.Y_AXIS)); row.add(lbl); row.add(hourConsumptionField); row.setBorder(javax.swing.BorderFactory.createEmptyBorder(1,0,1,0)); row.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT); inputPanel.add(row);
+
+    lbl = new JLabel("Inclure l'horizon :");
+    row = new JPanel(); row.setLayout(new BoxLayout(row, BoxLayout.Y_AXIS)); row.add(lbl); row.add(useHorizonCheck); row.setBorder(javax.swing.BorderFactory.createEmptyBorder(1,0,1,0)); row.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT); inputPanel.add(row);
+
+    lbl = new JLabel("<html>Horizon utilisateur<br/>(8 valeurs, séparées par des virgules) :</html>");
+    row = new JPanel(); row.setLayout(new BoxLayout(row, BoxLayout.Y_AXIS)); row.add(lbl); row.add(userHorizonField); row.setBorder(javax.swing.BorderFactory.createEmptyBorder(1,0,1,0)); row.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT); inputPanel.add(row);
+
+    lbl = new JLabel("Format de sortie :");
+    row = new JPanel(); row.setLayout(new BoxLayout(row, BoxLayout.Y_AXIS)); row.add(lbl); row.add(outputFormatField); row.setBorder(javax.swing.BorderFactory.createEmptyBorder(1,0,1,0)); row.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT); inputPanel.add(row);
+
+    lbl = new JLabel("Browser :");
+    row = new JPanel(); row.setLayout(new BoxLayout(row, BoxLayout.Y_AXIS)); row.add(lbl); row.add(browserCheck); row.setBorder(javax.swing.BorderFactory.createEmptyBorder(1,0,1,0)); row.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT); inputPanel.add(row);
+    // --- Boutons d'action ---
+    // Crée d'abord le bouton Estimer (déclaré avant d'être ajouté au formulaire)
+    JButton estimateButton = new JButton("Estimer la production");
+    // Icônes locales depuis UIManager (fallback si null)
+    javax.swing.Icon estIcon = javax.swing.UIManager.getIcon("FileView.computerIcon");
+    if (estIcon != null) estimateButton.setIcon(estIcon);
+    estimateButton.setToolTipText("Lancer l'estimation avec les paramètres saisis (Alt+E)");
+    // Applique un style réutilisable au bouton Estimer
+    ButtonStyleUtil.applyActionButtonStyle(estimateButton, new java.awt.Color(76, 175, 80), java.awt.Color.WHITE, new java.awt.Color(34, 139, 34), new java.awt.Insets(6, 12, 6, 12));
+    // Lance l'estimation lorsque l'utilisateur clique
+    estimateButton.addActionListener((ActionEvent e) -> estimerProduction());
+
+    // Place le bouton Estimer à l'intérieur du formulaire pour qu'il défile avec les champs
+    JPanel estimatePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+    estimatePanel.add(estimateButton);
+    // Pour respecter le GridLayout 2-colonnes, on ajoute un placeholder puis le panneau centré
+    inputPanel.add(new JLabel(""));
+    inputPanel.add(estimatePanel);
+
+    // graph/export buttons are instance fields so we can enable/disable them from other methods
+    graphButton = new JButton("Voir graphes");
+    javax.swing.Icon graphIcon = javax.swing.UIManager.getIcon("FileView.directoryIcon");
+    if (graphIcon != null) graphButton.setIcon(graphIcon);
+    graphButton.setToolTipText("Afficher les graphiques (disponible après estimation)");
+    graphButton.setEnabled(false);
+    graphButton.addActionListener(e -> afficherGraphes());
+    // Style réutilisable pour le bouton Voir graphes
+    ButtonStyleUtil.applyActionButtonStyle(graphButton, new java.awt.Color(255, 204, 51), java.awt.Color.BLACK, new java.awt.Color(140, 100, 0), new java.awt.Insets(4, 8, 4, 8));
+
+    // Nous remplaçons les boutons d'export par un menu "Export" pour regrouper les options
+    exportPdfButton = new JButton("Exporter résultats en PDF");
+    javax.swing.Icon pdfIcon = javax.swing.UIManager.getIcon("FileView.fileIcon");
+    if (pdfIcon != null) exportPdfButton.setIcon(pdfIcon);
+    exportPdfButton.setToolTipText("Exporter tout au format PDF (disponible après estimation)");
+    exportPdfButton.setEnabled(false);
     exportPdfButton.addActionListener(e -> new Thread(() -> exporterResultatsEnPDF()).start());
-        JButton financeButton = new JButton("Données financières");
-        // Ouvre le formulaire financier
-        financeButton.addActionListener(e -> ouvrirFormulaireFinancier());
-        JButton exportCsvButton = new JButton("Exporter en CSV");
-        // Exporte le tableau mensuel au format CSV
-        exportCsvButton.addActionListener(e -> exporterResultatsEnCSV());
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        buttonPanel.add(estimateButton);
-        buttonPanel.add(graphButton);
-        buttonPanel.add(exportPdfButton);
-        buttonPanel.add(financeButton);
-        buttonPanel.add(exportCsvButton);
 
-        // --- Construction du panneau principal vertical ---
-        JPanel verticalPanel = new JPanel();
-        verticalPanel.setLayout(new BoxLayout(verticalPanel, BoxLayout.Y_AXIS));
-        // Ajoute le formulaire avec un JScrollPane pour la disponibilité sur petites fenêtres
-        verticalPanel.add(new JScrollPane(inputPanel));
-        // Ajoute la rangée de boutons
-        verticalPanel.add(buttonPanel);
+    exportCsvButton = new JButton("Exporter en CSV");
+    javax.swing.Icon csvIcon = javax.swing.UIManager.getIcon("FileView.fileIcon");
+    if (csvIcon != null) exportCsvButton.setIcon(csvIcon);
+    exportCsvButton.setToolTipText("Exporter les résultats au format CSV (disponible après estimation)");
+    exportCsvButton.setEnabled(false);
+    exportCsvButton.addActionListener(e -> exporterResultatsEnCSV());
 
-        // --- Zone de statut utilisateur ---
-        statusLabel = new JLabel("En attente d'une estimation."); // texte initial
-        statusLabel.setOpaque(true); // permet d'afficher un fond coloré
-        statusLabel.setBackground(new java.awt.Color(220, 220, 220)); // gris clair
-        statusLabel.setForeground(java.awt.Color.BLACK);
-        statusLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        statusLabel.setPreferredSize(new Dimension(400, 30));
-        JPanel statusPanel = new JPanel();
-        statusPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-        statusPanel.add(statusLabel);
-        verticalPanel.add(statusPanel);
+    // Création du bouton Export qui affichera un JPopupMenu
+    exportMenuButton = new javax.swing.JButton("Export");
+    exportMenuButton.setToolTipText("Options d'export");
+    // Désactivé par défaut jusqu'à réception des données PVGIS
+    exportMenuButton.setEnabled(false);
+    javax.swing.Icon exportIcon = javax.swing.UIManager.getIcon("FileView.hardDriveIcon");
+    if (exportIcon != null) exportMenuButton.setIcon(exportIcon);
+    // Style réutilisable pour le bouton Export
+    ButtonStyleUtil.applyActionButtonStyle(exportMenuButton, new java.awt.Color(255, 204, 51), java.awt.Color.BLACK, new java.awt.Color(140, 100, 0), new java.awt.Insets(4, 8, 4, 8));
+    // menu déroulant
+    javax.swing.JPopupMenu exportPopup = new javax.swing.JPopupMenu();
+    exportPdfMenuItem = new javax.swing.JMenuItem("Exporter en PDF");
+    exportPdfMenuItem.setEnabled(false);
+    exportPdfMenuItem.addActionListener(e -> new Thread(() -> exporterResultatsEnPDF()).start());
+    exportCsvMenuItem = new javax.swing.JMenuItem("Exporter en CSV");
+    exportCsvMenuItem.setEnabled(false);
+    exportCsvMenuItem.addActionListener(e -> exporterResultatsEnCSV());
+    exportPopup.add(exportPdfMenuItem);
+    exportPopup.add(exportCsvMenuItem);
+    exportMenuButton.addActionListener(e -> exportPopup.show(exportMenuButton, 0, exportMenuButton.getHeight()));
 
-        // --- Zone d'affichage des graphes (scrollable) ---
-        graphPanel = new JPanel();
-        graphPanel.setLayout(new BoxLayout(graphPanel, BoxLayout.Y_AXIS));
-        JScrollPane graphScrollPane = new JScrollPane(graphPanel);
-        graphScrollPane.setPreferredSize(new Dimension(900, 700));
-        verticalPanel.add(graphScrollPane);
-
-        // Ajoute le panneau vertical au centre du panneau principal
-        add(verticalPanel, BorderLayout.CENTER);
+    financeButton = new JButton("Finances");
+    javax.swing.Icon finIcon = javax.swing.UIManager.getIcon("OptionPane.informationIcon");
+    if (finIcon != null) {
+    try {
+            // Try to match the height of the graph button's icon when available
+            int targetHeight = 16; // sensible default
+            if (graphButton != null && graphButton.getIcon() != null && graphButton.getIcon().getIconHeight() > 0) {
+                targetHeight = graphButton.getIcon().getIconHeight();
+            }
+            if (finIcon instanceof javax.swing.ImageIcon) {
+                java.awt.Image img = ((javax.swing.ImageIcon) finIcon).getImage();
+                java.awt.Image scaled = img.getScaledInstance(-1, targetHeight, java.awt.Image.SCALE_SMOOTH);
+                financeButton.setIcon(new javax.swing.ImageIcon(scaled));
+            } else {
+                // Render generic Icon to BufferedImage then scale
+                java.awt.image.BufferedImage bi = new java.awt.image.BufferedImage(finIcon.getIconWidth(), finIcon.getIconHeight(), java.awt.image.BufferedImage.TYPE_INT_ARGB);
+                java.awt.Graphics g = bi.getGraphics();
+                finIcon.paintIcon(null, g, 0, 0);
+                g.dispose();
+                java.awt.Image scaled = bi.getScaledInstance(-1, targetHeight, java.awt.Image.SCALE_SMOOTH);
+                financeButton.setIcon(new javax.swing.ImageIcon(scaled));
+            }
+    } catch (RuntimeException ex) {
+            // fallback to original icon if scaling fails
+            financeButton.setIcon(finIcon);
+        }
     }
+    financeButton.setToolTipText("Paramètres financiers et graphiques");
+    // Ouvre le formulaire financier
+    financeButton.addActionListener(e -> ouvrirFormulaireFinancier());
+    // Masque le bouton tant que nous n'avons pas encore reçu de données PVGIS
+    financeButton.setVisible(false);
+    // Style réutilisable pour le bouton Finances
+    ButtonStyleUtil.applyActionButtonStyle(financeButton, new java.awt.Color(255, 204, 51), java.awt.Color.BLACK, new java.awt.Color(140, 100, 0), new java.awt.Insets(4, 8, 4, 8));
+
+    // Les actions d'export sont maintenant disponibles via le menu "Export" (exportPdfMenuItem / exportCsvMenuItem)
+
+    // Remplace la rangée de boutons par une toolbar pour meilleure hiérarchie visuelle
+    javax.swing.JToolBar toolBar = new javax.swing.JToolBar();
+    toolBar.setFloatable(false);
+    // estimateButton est déplacé hors de la toolbar et placé à la fin du formulaire
+    toolBar.add(graphButton);
+    toolBar.addSeparator();
+    // ajoute le bouton Export (menu) au lieu des boutons individuels
+    toolBar.add(exportMenuButton);
+    toolBar.addSeparator();
+    toolBar.add(financeButton);
+    JPanel buttonPanel = new JPanel(new BorderLayout());
+    buttonPanel.add(toolBar, BorderLayout.CENTER);
+
+    // --- Construction: split pane formulaire (gauche) / graphes (droite) ---
+    // Formulaire gauche: titre, input + toolbar
+    JPanel leftPanel = new JPanel();
+    leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
+    // Titre du formulaire (stylisé)
+    JLabel formTitle = new JLabel("<html><div style='text-align:center;'>PV-GIS HORS RÉSEAU</div></html>");
+    formTitle.setFont(formTitle.getFont().deriveFont(java.awt.Font.BOLD, 16f));
+    formTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+    formTitle.setAlignmentX(java.awt.Component.CENTER_ALIGNMENT);
+    formTitle.setForeground(new java.awt.Color(0, 100, 0)); // un vert un peu plus soutenu
+    formTitle.setOpaque(true);
+    formTitle.setBackground(new java.awt.Color(245, 253, 245)); // fond très pâle vert
+    formTitle.setBorder(javax.swing.BorderFactory.createCompoundBorder(
+        javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(200, 230, 200)),
+        javax.swing.BorderFactory.createEmptyBorder(8, 6, 8, 6)
+    ));
+    formTitle.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
+    leftPanel.add(formTitle);
+    JScrollPane inputScroll = new JScrollPane(inputPanel);
+    inputScroll.setPreferredSize(new Dimension(180, 700));
+    leftPanel.add(inputScroll);
+    leftPanel.add(buttonPanel);
+    leftPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(3, 3, 3, 3));
+
+    // Zone d'affichage des graphes (droite)
+    graphPanel = new JPanel();
+    graphPanel.setLayout(new BoxLayout(graphPanel, BoxLayout.Y_AXIS));
+    JScrollPane graphScrollPane = new JScrollPane(graphPanel);
+    graphScrollPane.setPreferredSize(new Dimension(900, 700));
+
+    // JSplitPane horizontal pour permettre redimensionnement
+    javax.swing.JSplitPane split = new javax.swing.JSplitPane(javax.swing.JSplitPane.HORIZONTAL_SPLIT, leftPanel, graphScrollPane);
+    split.setResizeWeight(0.35); // donne ~35% au panneau de gauche
+    split.setOneTouchExpandable(true);
+    add(split, BorderLayout.CENTER);
+
+    // --- Zone de statut utilisateur (barre fixe en bas) ---
+    statusLabel = new JLabel("En attente d'une estimation."); // texte initial
+    statusLabel.setOpaque(true); // permet d'afficher un fond coloré
+    statusLabel.setBackground(new java.awt.Color(220, 220, 220)); // gris clair
+    statusLabel.setForeground(java.awt.Color.BLACK);
+    statusLabel.setHorizontalAlignment(SwingConstants.CENTER);
+    statusLabel.setPreferredSize(new Dimension(400, 30));
+    JPanel statusPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+    statusPanel.add(statusLabel);
+    add(statusPanel, BorderLayout.SOUTH);
+    }
+
+    // Button styling moved to vue.ui.ButtonStyleUtil
 
     /**
      * Exporte les résultats mensuels (production, énergie perdue, % jours batterie pleine/vide) dans un fichier CSV.
@@ -204,9 +410,13 @@ public class PageEstimationPVGISOffGrid extends JPanel {
             // Estimation du nombre de jours par mois (approx.)
             java.util.List<Double> jours = java.util.Arrays.asList(31.,28.,31.,30.,31.,30.,31.,31.,30.,31.,30.,31.);
             // Convertit JSONArray en liste de JSONObject de manière sûre
-            java.util.List<org.json.JSONObject> monthlyList = monthly.toList().stream().map(o -> new org.json.JSONObject((java.util.Map)o)).toList();
+            java.util.List<org.json.JSONObject> monthlyList = new java.util.ArrayList<>();
+            for (int i = 0; i < monthly.length(); i++) {
+                monthlyList.add(monthly.getJSONObject(i));
+            }
             // Écriture du CSV en UTF-8 avec PrintWriter (try-with-resources)
             try (java.io.PrintWriter writer = new java.io.PrintWriter(csvFile, java.nio.charset.StandardCharsets.UTF_8)) {
+                // Section 1: monthly results (existing)
                 writer.println("Mois;Production (Wh);Energie perdue (Wh);% jours batt. pleine;% jours batt. vide");
                 for (org.json.JSONObject m : monthlyList) {
                     int idxMois = m.getInt("month") - 1;
@@ -217,12 +427,34 @@ public class PageEstimationPVGISOffGrid extends JPanel {
                     double fe = m.getDouble("f_e");
                     writer.printf("%s;%.0f;%.0f;%.1f;%.1f\n", nomMois, prod, lost, ff, fe);
                 }
+
+                // Blank line separator
+                writer.println();
+
+                // Section 2: financial data (if available)
+                if (financialAnnees != null && !financialAnnees.isEmpty()) {
+                    writer.println("# Donnees financieres utilisees pour les graphes");
+                    writer.println("Annee;Cash-flow cumule (euro);Recettes (euro);Depenses (euro);VAN actualise (euro)");
+                    int rows = Math.min(financialAnnees.size(), financialCashFlowCumule.size());
+                    for (int i = 0; i < rows; i++) {
+                        String an = financialAnnees.get(i);
+                        double cf = financialCashFlowCumule.get(i);
+                        String rec = (i < financialRecettes.size()) ? String.format(Locale.US, "%.2f", financialRecettes.get(i)) : "";
+                        String dep = (i < financialDepenses.size()) ? String.format(Locale.US, "%.2f", financialDepenses.get(i)) : "";
+                        String vanStr = (i < financialVAN.size()) ? String.format(Locale.US, "%.2f", financialVAN.get(i)) : "";
+                        writer.printf("%s;%.2f;%s;%s;%s\n", an, cf, rec, dep, vanStr);
+                    }
+                    writer.println();
+                    writer.printf("VAN totale (hors investissement);%.2f\n", financialVANTotal);
+                } else {
+                    writer.println("# Donnees financieres : aucune donnee financiere disponible. Utilisez le formulaire 'Donnees financieres' pour tracer et sauvegarder.");
+                }
             }
             // Affiche un message de succès
             JOptionPane.showMessageDialog(this, "CSV exporté avec succès !", "Succès", JOptionPane.INFORMATION_MESSAGE);
-        } catch (Exception ex) {
+        } catch (java.io.IOException | org.json.JSONException ex) {
             // En cas d'erreur, log et message d'erreur
-            ex.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Erreur export CSV", ex);
             JOptionPane.showMessageDialog(this, "Erreur lors de l'export CSV : " + ex.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
         }
     }
@@ -265,8 +497,18 @@ public class PageEstimationPVGISOffGrid extends JPanel {
                     statusLabel.setText("Succès : données reçues");
                     statusLabel.setBackground(new java.awt.Color(0, 180, 0)); // vert
                     statusLabel.setForeground(java.awt.Color.WHITE);
+                    // Rendre le bouton financier visible maintenant que nous avons des données
+                    if (financeButton != null) financeButton.setVisible(true);
+                    // Activer les boutons de la toolbar
+                    if (graphButton != null) graphButton.setEnabled(true);
+                    if (exportPdfButton != null) exportPdfButton.setEnabled(true);
+                    if (exportCsvButton != null) exportCsvButton.setEnabled(true);
+                    if (exportMenuButton != null) exportMenuButton.setEnabled(true);
+                    if (exportPdfMenuItem != null) exportPdfMenuItem.setEnabled(true);
+                    if (exportCsvMenuItem != null) exportCsvMenuItem.setEnabled(true);
                 });
-            } catch (Exception ex) {
+            } catch (java.io.IOException | InterruptedException ex) {
+                LOGGER.log(Level.SEVERE, "Erreur lors de la requête PVGIS", ex);
                 SwingUtilities.invokeLater(() -> {
                     statusLabel.setText("Erreur lors de la requête : " + ex.getMessage());
                     statusLabel.setBackground(new java.awt.Color(200, 0, 0)); // rouge
@@ -287,22 +529,7 @@ public class PageEstimationPVGISOffGrid extends JPanel {
         }
         try {
             // Prépare des structures temporaires pour d'éventuels graphiques financiers
-            java.util.List<String> annees = new java.util.ArrayList<>();
-            java.util.List<Double> cashFlowCumule = new java.util.ArrayList<>();
-            java.util.List<String> anneesRD = new java.util.ArrayList<>();
-            java.util.List<Double> recettes = new java.util.ArrayList<>();
-            java.util.List<Double> depenses = new java.util.ArrayList<>();
-            java.util.List<Double> van = new java.util.ArrayList<>();
-
-            // Remplissage d'exemple (si l'utilisateur n'a pas saisi de paramètres financiers)
-            for (int i = 0; i < 10; i++) {
-                annees.add("202" + i);
-                cashFlowCumule.add((double) i * 1000);
-                anneesRD.add("202" + i);
-                recettes.add((double) i * 500);
-                depenses.add((double) i * 300);
-                van.add((double) i * 200);
-            }
+            // (les vrais graphes financiers seront ajoutés plus bas s'ils existent)
 
             // 1. Choix du fichier PDF — effectuer le FileChooser sur l'EDT via invokeAndWait
             final java.io.File[] pdfFileHolder = new java.io.File[1];
@@ -321,7 +548,7 @@ public class PageEstimationPVGISOffGrid extends JPanel {
                     pdfFileHolder[0] = sel;
                 });
             } catch (Exception e) {
-                // Échec d'affichage du FileChooser
+                // Échec d'affichage du FileChooser — affiche message sur l'EDT
                 SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(this, "Erreur lors de la sélection du fichier : " + e.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE));
                 return;
             }
@@ -337,7 +564,10 @@ public class PageEstimationPVGISOffGrid extends JPanel {
             java.util.List<String> mois = new java.util.ArrayList<>();
             java.util.List<Double> prod = new java.util.ArrayList<>();
             java.util.List<Double> jours = java.util.Arrays.asList(31.,28.,31.,30.,31.,30.,31.,31.,30.,31.,30.,31.);
-            java.util.List<org.json.JSONObject> monthlyList = monthly.toList().stream().map(o -> new org.json.JSONObject((java.util.Map<String, Object>) o)).toList();
+            java.util.List<org.json.JSONObject> monthlyList = new java.util.ArrayList<>();
+            for (int i = 0; i < monthly.length(); i++) {
+                monthlyList.add(monthly.getJSONObject(i));
+            }
             for (org.json.JSONObject m : monthlyList) {
                 int idxMois = m.getInt("month") - 1;
                 String nomMois = (idxMois >= 0 && idxMois < 12) ? moisFrancais[idxMois] : ("Mois " + m.getInt("month"));
@@ -358,7 +588,9 @@ public class PageEstimationPVGISOffGrid extends JPanel {
             chartImages.add(org.knowm.xchart.BitmapEncoder.getBufferedImage(chart2));
             java.util.List<String> csLabels = new java.util.ArrayList<>();
             java.util.List<Double> fcs = new java.util.ArrayList<>();
-            for (org.json.JSONObject h : outputs.getJSONArray("histogram").toList().stream().map(o -> new org.json.JSONObject((java.util.Map<String, Object>) o)).toList()) {
+            org.json.JSONArray histogramArr = outputs.getJSONArray("histogram");
+            for (int i = 0; i < histogramArr.length(); i++) {
+                org.json.JSONObject h = histogramArr.getJSONObject(i);
                 csLabels.add(h.getDouble("CS_min") + "-" + h.getDouble("CS_max"));
                 fcs.add(h.getDouble("f_CS"));
             }
@@ -383,12 +615,12 @@ public class PageEstimationPVGISOffGrid extends JPanel {
             try {
                 // Demande au thread EDT de (re)tracer les graphes financiers et attend la fin
                 SwingUtilities.invokeAndWait(() -> tracerGraphesFinanciers(lastInvestissement, lastSubvention, lastPrixVente, lastTauxInjection, lastCoutAnnuel, lastDuree, lastTauxActualisation, lastAnneeDepart));
-            } catch (Exception ignored) {
-                // Si le tracé automatique échoue on continue et on insère ce qui existe
+            } catch (InterruptedException | java.lang.reflect.InvocationTargetException ite) {
+                LOGGER.log(Level.WARNING, "Impossible de (re)tracer automatiquement les graphes financiers", ite);
             }
             chartImages.addAll(graphesFinanciersImages);
             // 4. Générer le PDF avec PDFBox
-            org.apache.pdfbox.pdmodel.PDDocument doc = new org.apache.pdfbox.pdmodel.PDDocument();
+            try (org.apache.pdfbox.pdmodel.PDDocument doc = new org.apache.pdfbox.pdmodel.PDDocument()) {
             org.apache.pdfbox.pdmodel.PDPage page = new org.apache.pdfbox.pdmodel.PDPage();
             doc.addPage(page);
             org.apache.pdfbox.pdmodel.PDPageContentStream content = new org.apache.pdfbox.pdmodel.PDPageContentStream(doc, page);
@@ -434,7 +666,7 @@ public class PageEstimationPVGISOffGrid extends JPanel {
             }
             y -= 10;
             // Tableau des résultats mensuels
-            float tableStartY = y;
+            // tableStartY removed (unused)
             float tableStartX = 50;
             float rowHeight = 18;
             float tableWidth = 480;
@@ -489,6 +721,123 @@ public class PageEstimationPVGISOffGrid extends JPanel {
                 y = 750;
             }
             // Insertion des graphes sous forme d'images
+            // --- Insertion d'un tableau récapitulatif des données financières ---
+            if (!financialAnnees.isEmpty()) {
+                // Titre section financière
+                if (y < 200) {
+                    content.close();
+                    page = new org.apache.pdfbox.pdmodel.PDPage();
+                    doc.addPage(page);
+                    content = new org.apache.pdfbox.pdmodel.PDPageContentStream(doc, page);
+                    y = 750;
+                }
+                // petite marge avant le titre pour éviter la superposition avec le tableau précédent
+                y -= 10;
+                content.beginText();
+                content.setFont(org.apache.pdfbox.pdmodel.font.PDType1Font.HELVETICA_BOLD, 12);
+                content.newLineAtOffset(50, y);
+                content.showText("Données financières utilisées pour les graphiques :");
+                content.endText();
+                y -= 18;
+
+                // Table header
+                float finTableX = 50f;
+                float finRowH = 16f;
+                float finTableW = 500f;
+                float[] finColW = {60f, 100f, 100f, 100f, 100f};
+                String[] finHeaders = {"Année", "Cash-flow cumulé (€)", "Recettes (€)", "Dépenses (€)", "VAN actualisé (€)"};
+                // Draw header background
+                content.setNonStrokingColor(Color.LIGHT_GRAY);
+                content.addRect(finTableX, y - finRowH, finTableW, finRowH);
+                content.fill();
+                content.setNonStrokingColor(Color.BLACK);
+                float fx = finTableX;
+                for (int i = 0; i < finHeaders.length; i++) {
+                    content.beginText();
+                    content.setFont(org.apache.pdfbox.pdmodel.font.PDType1Font.HELVETICA_BOLD, 9);
+                    content.newLineAtOffset(fx + 2, y - finRowH + 4);
+                    content.showText(finHeaders[i]);
+                    content.endText();
+                    fx += finColW[i];
+                }
+                y -= finRowH;
+
+                // Rows
+                int rows = Math.min(financialAnnees.size(), financialCashFlowCumule.size());
+                for (int i = 0; i < rows; i++) {
+                    fx = finTableX;
+                    // Draw row border
+                    for (int c = 0; c < finColW.length; c++) {
+                        content.setStrokingColor(Color.BLACK);
+                        content.addRect(fx, y - finRowH, finColW[c], finRowH);
+                        content.stroke();
+                        fx += finColW[c];
+                    }
+                    // Fill texts
+                    fx = finTableX;
+                    content.beginText();
+                    content.setFont(org.apache.pdfbox.pdmodel.font.PDType1Font.HELVETICA, 9);
+                    content.newLineAtOffset(fx + 2, y - finRowH + 4);
+                    content.showText(financialAnnees.get(i));
+                    content.endText();
+                    fx += finColW[0];
+
+                    content.beginText();
+                    content.setFont(org.apache.pdfbox.pdmodel.font.PDType1Font.HELVETICA, 9);
+                    content.newLineAtOffset(fx + 2, y - finRowH + 4);
+                    content.showText(String.format("%.2f", financialCashFlowCumule.get(i)));
+                    content.endText();
+                    fx += finColW[1];
+
+                    // recettes
+                    if (i < financialRecettes.size()) {
+                        content.beginText();
+                        content.setFont(org.apache.pdfbox.pdmodel.font.PDType1Font.HELVETICA, 9);
+                        content.newLineAtOffset(fx + 2, y - finRowH + 4);
+                        content.showText(String.format("%.2f", financialRecettes.get(i)));
+                        content.endText();
+                    }
+                    fx += finColW[2];
+
+                    // depenses
+                    if (i < financialDepenses.size()) {
+                        content.beginText();
+                        content.setFont(org.apache.pdfbox.pdmodel.font.PDType1Font.HELVETICA, 9);
+                        content.newLineAtOffset(fx + 2, y - finRowH + 4);
+                        content.showText(String.format("%.2f", financialDepenses.get(i)));
+                        content.endText();
+                    }
+                    fx += finColW[3];
+
+                    // van
+                    if (i < financialVAN.size()) {
+                        content.beginText();
+                        content.setFont(org.apache.pdfbox.pdmodel.font.PDType1Font.HELVETICA, 9);
+                        content.newLineAtOffset(fx + 2, y - finRowH + 4);
+                        content.showText(String.format("%.2f", financialVAN.get(i)));
+                        content.endText();
+                    }
+
+                    y -= finRowH;
+                    // page break if needed
+                    if (y < 200) {
+                        content.close();
+                        page = new org.apache.pdfbox.pdmodel.PDPage();
+                        doc.addPage(page);
+                        content = new org.apache.pdfbox.pdmodel.PDPageContentStream(doc, page);
+                        y = 750;
+                    }
+                }
+
+                // Summary line for total VAN
+                content.beginText();
+                content.setFont(org.apache.pdfbox.pdmodel.font.PDType1Font.HELVETICA_BOLD, 10);
+                content.newLineAtOffset(50, y - 6);
+                content.showText(String.format("VAN totale (hors investissement) : %.2f €", financialVANTotal));
+                content.endText();
+                // augmente l'espacement après le tableau financier pour améliorer la lisibilité
+                y -= 40;
+            }
             for (java.awt.image.BufferedImage img : chartImages) {
                 org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject pdImage = org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory.createFromImage(doc, img);
                 if (y < 350) {
@@ -503,19 +852,21 @@ public class PageEstimationPVGISOffGrid extends JPanel {
             }
             content.close();
             doc.save(pdfFile);
-            doc.close();
+            }
             JOptionPane.showMessageDialog(this, "PDF exporté avec succès !", "Succès", JOptionPane.INFORMATION_MESSAGE);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Erreur lors de l'export PDF : " + ex.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
-        }
+            } catch (java.io.IOException | RuntimeException ex) {
+                LOGGER.log(Level.SEVERE, "Erreur export PDF", ex);
+                JOptionPane.showMessageDialog(this, "Erreur lors de l'export PDF : " + ex.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
+            }
     }
 
     
     // Formulaire financier
     private void ouvrirFormulaireFinancier() {
         JDialog dialog = new JDialog((Frame) SwingUtilities.getWindowAncestor(this), "Entrées financières", true);
-        JPanel panel = new JPanel(new GridLayout(0, 2, 5, 5));
+    JPanel panel = new JPanel(new GridLayout(0, 2, 5, 5));
+    // Ajoute des marges autour du formulaire financier (haut, gauche, bas, droite)
+    panel.setBorder(javax.swing.BorderFactory.createEmptyBorder(12, 12, 12, 12));
         JTextField investissementField = new JTextField();
         JTextField subventionField = new JTextField();
         JTextField prixVenteField = new JTextField();
@@ -546,10 +897,12 @@ public class PageEstimationPVGISOffGrid extends JPanel {
             dialog.dispose();
             tracerGraphesFinanciers(lastInvestissement, lastSubvention, lastPrixVente, lastTauxInjection, lastCoutAnnuel, lastDuree, lastTauxActualisation, lastAnneeDepart);
         });
-        JPanel bottomPanel = new JPanel();
-        bottomPanel.add(tracerButton);
-        dialog.getContentPane().add(panel, BorderLayout.CENTER);
-        dialog.getContentPane().add(bottomPanel, BorderLayout.SOUTH);
+    JPanel bottomPanel = new JPanel();
+    // Petite marge autour du panneau bas pour espacer le bouton
+    bottomPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(6, 12, 12, 12));
+    bottomPanel.add(tracerButton);
+    dialog.getContentPane().add(panel, BorderLayout.CENTER);
+    dialog.getContentPane().add(bottomPanel, BorderLayout.SOUTH);
         dialog.pack();
         dialog.setLocationRelativeTo(this);
         dialog.setVisible(true);
@@ -573,20 +926,24 @@ public class PageEstimationPVGISOffGrid extends JPanel {
             if (lastJson != null && !lastJson.isEmpty()) {
                 org.json.JSONObject obj = new org.json.JSONObject(lastJson);
                 org.json.JSONObject outputs = obj.getJSONObject("outputs");
-                java.util.List<org.json.JSONObject> monthlyList = outputs.getJSONArray("monthly").toList().stream()
-                    .map(o -> new org.json.JSONObject((java.util.Map<String, Object>) o)).toList();
+                org.json.JSONArray monthlyArr = outputs.getJSONArray("monthly");
+                java.util.List<org.json.JSONObject> monthlyList = new java.util.ArrayList<>();
+                for (int idx = 0; idx < monthlyArr.length(); idx++) {
+                    monthlyList.add(monthlyArr.getJSONObject(idx));
+                }
                 for (org.json.JSONObject m : monthlyList) {
                     productionAnnuelle += m.getDouble("E_d") * (m.getInt("month") == 2 ? 28 : (m.getInt("month") == 4 || m.getInt("month") == 6 || m.getInt("month") == 9 || m.getInt("month") == 11 ? 30 : 31));
                 }
                 productionAnnuelle /= 1000.0; // conversion Wh -> kWh
             }
         } catch (Exception ex) {
-            JLabel label = new JLabel("Erreur extraction production annuelle : " + ex.getMessage());
-            graphPanel.add(label);
-            graphPanel.revalidate();
-            graphPanel.repaint();
-            return;
-        }
+                LOGGER.log(Level.WARNING, "Erreur extraction production annuelle", ex);
+                JLabel label = new JLabel("Erreur extraction production annuelle : " + ex.getMessage());
+                graphPanel.add(label);
+                graphPanel.revalidate();
+                graphPanel.repaint();
+                return;
+            }
         // Conversion des entrées
         double investissementInitial = Double.parseDouble(investissement);
         double subventionVal = Double.parseDouble(subvention);
@@ -653,15 +1010,30 @@ public class PageEstimationPVGISOffGrid extends JPanel {
         // Met à jour la liste d'images des graphes financiers pour l'export PDF
         graphesFinanciersImages.clear();
                 for (org.knowm.xchart.CategoryChart ch : financialCharts) {
-            try {
-                // S'assure que la rotation est appliquée avant de générer l'image
-                ch.getStyler().setXAxisLabelRotation(45);
-                graphesFinanciersImages.add(org.knowm.xchart.BitmapEncoder.getBufferedImage(ch));
-            } catch (Exception ex) {
-                // Si la génération d'image échoue pour un graphique, on continue avec les autres
-                ex.printStackTrace();
+                try {
+                    // S'assure que la rotation est appliquée avant de générer l'image
+                    ch.getStyler().setXAxisLabelRotation(45);
+                    graphesFinanciersImages.add(org.knowm.xchart.BitmapEncoder.getBufferedImage(ch));
+                } catch (RuntimeException ex) {
+                    // Si la génération d'image échoue pour un graphique, on log et on continue
+                    LOGGER.log(Level.WARNING, "Impossible de générer l'image d'un graphe financier", ex);
+                }
             }
-        }
+
+    // Sauvegarde des tableaux de résultats financiers pour l'export PDF
+    financialAnnees.clear();
+    financialCashFlowCumule.clear();
+    financialAnneesRD.clear();
+    financialRecettes.clear();
+    financialDepenses.clear();
+    financialVAN.clear();
+    financialVANTotal = valeurActualiseeNette;
+    financialAnnees.addAll(annees);
+    financialCashFlowCumule.addAll(cashFlowCumule);
+    financialAnneesRD.addAll(anneesRD);
+    financialRecettes.addAll(recettes);
+    financialDepenses.addAll(depenses);
+    financialVAN.addAll(van);
 
         JLabel labelVAN = new JLabel(String.format("Valeur Actualisée Nette (VAN) totale : %.2f €", valeurActualiseeNette));
         graphPanel.add(labelVAN);
@@ -669,12 +1041,7 @@ public class PageEstimationPVGISOffGrid extends JPanel {
         graphPanel.repaint();
     }
 
-    // Méthode utilitaire pour mettre à jour le statut (améliore lisibilité)
-    private void updateStatus(String message, Color backgroundColor, Color foregroundColor) {
-        statusLabel.setText(message);
-        statusLabel.setBackground(backgroundColor);
-        statusLabel.setForeground(foregroundColor);
-    }
+    // updateStatus removed (unused)
 
     // Ajoute un graphique XChart au panneau et rafraîchit l'affichage
     private void addGraphToPanel(org.knowm.xchart.CategoryChart chart) {
@@ -704,17 +1071,16 @@ public class PageEstimationPVGISOffGrid extends JPanel {
         }
         // Tente de parser le JSON et générer les graphiques
         try {
-            // --- PARSING JSON ---
             org.json.JSONObject obj = new org.json.JSONObject(lastJson);
             org.json.JSONObject outputs = obj.getJSONObject("outputs");
-            // Graphique 1 : Production mensuelle
             // Liste des mois en français
             String[] moisFrancais = {"Jan", "Fév", "Mars", "Avril", "Mai", "Juin", "Juil", "Août", "Sep", "Oct", "Nov", "Déc"};
             java.util.List<String> mois = new java.util.ArrayList<>();
             java.util.List<Double> prod = new java.util.ArrayList<>();
             java.util.List<Double> jours = java.util.Arrays.asList(31.,28.,31.,30.,31.,30.,31.,31.,30.,31.,30.,31.);
-            java.util.List<org.json.JSONObject> monthlyList = outputs.getJSONArray("monthly").toList().stream()
-                .map(o -> new org.json.JSONObject((java.util.Map<String, Object>) o)).toList();
+            org.json.JSONArray monthlyArr = outputs.getJSONArray("monthly");
+            java.util.List<org.json.JSONObject> monthlyList = new java.util.ArrayList<>();
+            for (int i = 0; i < monthlyArr.length(); i++) monthlyList.add(monthlyArr.getJSONObject(i));
             for (org.json.JSONObject m : monthlyList) {
                 int idxMois = m.getInt("month") - 1;
                 String nomMois = (idxMois >= 0 && idxMois < 12) ? moisFrancais[idxMois] : ("Mois " + m.getInt("month"));
@@ -722,20 +1088,25 @@ public class PageEstimationPVGISOffGrid extends JPanel {
                 prod.add(m.getDouble("E_d") * jours.get(m.getInt("month")-1));
             }
             addGraphToPanel(createChart("Production mensuelle", "Mois", "Wh", mois, prod));
+
             // Graphique 2 : Énergie perdue mensuelle
             java.util.List<Double> lost = new java.util.ArrayList<>();
             for (org.json.JSONObject m : monthlyList) {
                 lost.add(m.getDouble("E_lost_d") * jours.get(m.getInt("month")-1));
             }
             addGraphToPanel(createChart("Énergie perdue mensuelle", "Mois", "Wh", mois, lost));
+
             // Graphique 3 : Histogramme des états de charge
             java.util.List<String> csLabels = new java.util.ArrayList<>();
             java.util.List<Double> fcs = new java.util.ArrayList<>();
-            for (org.json.JSONObject h : outputs.getJSONArray("histogram").toList().stream().map(o -> new org.json.JSONObject((java.util.Map<String, Object>) o)).toList()) {
+            org.json.JSONArray histArr = outputs.getJSONArray("histogram");
+            for (int i = 0; i < histArr.length(); i++) {
+                org.json.JSONObject h = histArr.getJSONObject(i);
                 csLabels.add(h.getDouble("CS_min") + "-" + h.getDouble("CS_max"));
                 fcs.add(h.getDouble("f_CS"));
             }
             addGraphToPanel(createChart("Histogramme états de charge", "% charge", "% jours", csLabels, fcs));
+
             // Graphique 4 : % jours batterie pleine vs vide
             java.util.List<Double> ff = new java.util.ArrayList<>();
             java.util.List<Double> fe = new java.util.ArrayList<>();
@@ -744,14 +1115,15 @@ public class PageEstimationPVGISOffGrid extends JPanel {
                 fe.add(m.getDouble("f_e"));
             }
             org.knowm.xchart.CategoryChart chart4 = new org.knowm.xchart.CategoryChartBuilder().width(600).height(300).title("% jours batterie pleine vs vide").xAxisTitle("Mois").yAxisTitle("% jours").build();
-            // Incline les labels de l'axe X pour ce graphique spécifique
             chart4.getStyler().setXAxisLabelRotation(45);
             chart4.addSeries("Batterie pleine", mois, ff);
             chart4.addSeries("Batterie vide", mois, fe);
             graphPanel.add(new org.knowm.xchart.XChartPanel<>(chart4));
+
             graphPanel.revalidate();
             graphPanel.repaint();
         } catch (Exception ex) {
+            LOGGER.log(Level.WARNING, "Erreur lors du tracé des graphes", ex);
             JLabel label = new JLabel("Erreur lors du tracé des graphes : " + ex.getMessage());
             graphPanel.add(label);
             graphPanel.revalidate();
