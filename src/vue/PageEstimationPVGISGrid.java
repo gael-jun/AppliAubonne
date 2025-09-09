@@ -1,11 +1,16 @@
 package vue;
 
+import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
+import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -23,6 +28,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import vue.ui.ButtonStyleUtil;
+import vue.ui.TitleBanner;
 
 /**
  * Page d'estimation PVGIS pour systèmes photovoltaïques couplés au réseau (grid-connected).
@@ -122,6 +128,9 @@ public class PageEstimationPVGISGrid extends JPanel {
      */
     public PageEstimationPVGISGrid() {
     setLayout(new BorderLayout());
+
+    // Titre imposant en haut de page, bleu avec surbrillance sur les bords
+    add(new TitleBanner("ESTIMATION DE LA PRODUCTION"), BorderLayout.NORTH);
 
     JPanel inputPanel = new JPanel(new GridBagLayout());
     // Ajoute un espacement en haut entre le titre et le début du formulaire
@@ -301,10 +310,10 @@ public class PageEstimationPVGISGrid extends JPanel {
     // Colonne gauche: en-tête vert + formulaire scrollable + toolbar
     JPanel leftPanel = new JPanel(new BorderLayout());
     JPanel headerPanel = new JPanel(new BorderLayout());
-    headerPanel.setBackground(new java.awt.Color(210, 235, 210));
-    JLabel headerLabel = new JLabel("Formulaire pour PV couplé au réseau");
+    headerPanel.setBackground(new java.awt.Color(235, 235, 235));
+    JLabel headerLabel = new JLabel("Système PV Couplé Au Réseau");
     headerLabel.setHorizontalAlignment(SwingConstants.CENTER);
-    headerLabel.setForeground(new java.awt.Color(0, 100, 0));
+    headerLabel.setForeground(java.awt.Color.BLACK);
     headerLabel.setBorder(javax.swing.BorderFactory.createEmptyBorder(6, 8, 6, 8));
     headerPanel.add(headerLabel, BorderLayout.CENTER);
     leftPanel.add(headerPanel, BorderLayout.NORTH);
@@ -1116,3 +1125,5 @@ public class PageEstimationPVGISGrid extends JPanel {
         }
     }
 }
+
+// TitleBanner is now shared in vue.ui.TitleBanner

@@ -23,6 +23,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import vue.ui.ButtonStyleUtil;
+import vue.ui.TitleBanner;
 
 /**
  * Page d'estimation PVGIS pour systèmes photovoltaïques suiveurs (tracker).
@@ -122,6 +123,8 @@ public class PageEstimationPVGISTracker extends JPanel {
      */
     public PageEstimationPVGISTracker() {
     setLayout(new BorderLayout());
+    // Bandeau de titre harmonisé
+    add(new TitleBanner("ESTIMATION DE LA PRODUCTION"), BorderLayout.NORTH);
 
     JPanel inputPanel = new JPanel(new GridBagLayout());
     // Ajoute un espacement en haut entre le titre et le début du formulaire
@@ -296,13 +299,13 @@ public class PageEstimationPVGISTracker extends JPanel {
     JPanel buttonPanel = new JPanel(new BorderLayout());
     buttonPanel.add(toolBar, BorderLayout.CENTER);
 
-    // Colonne gauche: en-tête vert + formulaire + toolbar
+    // Colonne gauche: en-tête gris + formulaire + toolbar
     JPanel leftPanel = new JPanel(new BorderLayout());
     JPanel headerPanel = new JPanel(new BorderLayout());
-    headerPanel.setBackground(new java.awt.Color(210, 235, 210));
-    JLabel headerLabel = new JLabel("Formulaire pour PV suiveur (Tracker)");
+    headerPanel.setBackground(new java.awt.Color(235, 235, 235));
+    JLabel headerLabel = new JLabel("Système PV Suiveur (Tracker)");
     headerLabel.setHorizontalAlignment(SwingConstants.CENTER);
-    headerLabel.setForeground(new java.awt.Color(0, 100, 0));
+    headerLabel.setForeground(java.awt.Color.BLACK);
     headerLabel.setBorder(javax.swing.BorderFactory.createEmptyBorder(6, 8, 6, 8));
     headerPanel.add(headerLabel, BorderLayout.CENTER);
     leftPanel.add(headerPanel, BorderLayout.NORTH);

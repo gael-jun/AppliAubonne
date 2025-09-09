@@ -61,16 +61,26 @@ public class PageSurface {
 
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         buttonPanel.setBackground(Color.WHITE);
-        JButton boutonAjouterPente = new JButton("Ajouter Pente");
+    JButton boutonAjouterPente = new JButton("Ajouter Pente");
         JButton boutonRetirerPente = new JButton("Retirer Pente");
 
         boutonAjouterPente.addActionListener(Main.controleur);
         boutonRetirerPente.addActionListener(Main.controleur);
-
         buttonPanel.add(boutonRetirerPente);
         buttonPanel.add(boutonAjouterPente);
         pageSurface.add(buttonPanel, BorderLayout.NORTH);
         pageSurface.add(testPanel, BorderLayout.CENTER);
+
+    // Barre inférieure: boutons Exporter / Calculer pour la pré-étude
+    javax.swing.JPanel bottomBar = new javax.swing.JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
+    bottomBar.setBackground(Color.WHITE);
+    javax.swing.JButton boutonExporter = new javax.swing.JButton("Exporter");
+    javax.swing.JButton boutonCalculer = new javax.swing.JButton("Calculer");
+    boutonExporter.addActionListener(main.Main.controleur);
+    boutonCalculer.addActionListener(main.Main.controleur);
+    bottomBar.add(boutonExporter);
+    bottomBar.add(boutonCalculer);
+    pageSurface.add(bottomBar, BorderLayout.SOUTH);
     }
 
     /**

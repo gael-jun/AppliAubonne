@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -189,7 +190,8 @@ public class PageCablesProtections extends JPanel {
         setLayout(new BorderLayout());
         setBackground(Color.WHITE);
 
-        // Création du panel principal
+    // En-tête local: le bouton Accueil local est retiré, utiliser le bouton global
+    add(new JPanel(), BorderLayout.NORTH);
         JPanel panelPrincipal = new JPanel();
         panelPrincipal.setBackground(getBackground());
         panelPrincipal.setLayout(new GridBagLayout());
@@ -471,7 +473,18 @@ public class PageCablesProtections extends JPanel {
         scrollPane.getViewport().setBackground(getBackground());
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
         scrollPane.getVerticalScrollBar().setBlockIncrement(100);
-        add(scrollPane, BorderLayout.CENTER);
+    add(scrollPane, BorderLayout.CENTER);
+
+    // Barre inférieure: boutons Exporter / Calculer (pré-étude)
+    javax.swing.JPanel bottomBar = new javax.swing.JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
+    bottomBar.setBackground(getBackground());
+    javax.swing.JButton boutonExporter = new javax.swing.JButton("Exporter");
+    javax.swing.JButton boutonCalculer = new javax.swing.JButton("Calculer");
+    boutonExporter.addActionListener(main.Main.controleur);
+    boutonCalculer.addActionListener(main.Main.controleur);
+    bottomBar.add(boutonExporter);
+    bottomBar.add(boutonCalculer);
+    add(bottomBar, BorderLayout.SOUTH);
     }
     
     /**

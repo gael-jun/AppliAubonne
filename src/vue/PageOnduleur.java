@@ -112,15 +112,27 @@ public class PageOnduleur {
         
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         buttonPanel.setBackground(Color.WHITE);
-        JButton boutonAjouterOnduleur = new JButton("Ajouter Onduleur");
+    JButton boutonAjouterOnduleur = new JButton("Ajouter Onduleur");
         JButton boutonRetirerOnduleur = new JButton("Retirer Onduleur");
 
         boutonAjouterOnduleur.addActionListener(Main.controleur);
         boutonRetirerOnduleur.addActionListener(Main.controleur);
 
-        buttonPanel.add(boutonRetirerOnduleur);
+    buttonPanel.add(boutonRetirerOnduleur);
         buttonPanel.add(boutonAjouterOnduleur);
-        pageOnduleur.add(buttonPanel, BorderLayout.NORTH);
+    // Bouton Accueil retiré ici; utiliser l'Accueil global en haut
+    pageOnduleur.add(buttonPanel, BorderLayout.NORTH);
+
+    // Barre inférieure: boutons Exporter / Calculer pour la pré-étude
+    javax.swing.JPanel bottomBar = new javax.swing.JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
+    bottomBar.setBackground(Color.WHITE);
+    javax.swing.JButton boutonExporter = new javax.swing.JButton("Exporter");
+    javax.swing.JButton boutonCalculer = new javax.swing.JButton("Calculer");
+    boutonExporter.addActionListener(main.Main.controleur);
+    boutonCalculer.addActionListener(main.Main.controleur);
+    bottomBar.add(boutonExporter);
+    bottomBar.add(boutonCalculer);
+    pageOnduleur.add(bottomBar, BorderLayout.SOUTH);
     }
     
     /**

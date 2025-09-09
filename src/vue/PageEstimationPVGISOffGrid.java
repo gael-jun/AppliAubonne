@@ -23,6 +23,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import vue.ui.TitleBanner;
 
 import modele.HistogramBucket;
 import modele.MonthlyResult;
@@ -119,6 +120,8 @@ public class PageEstimationPVGISOffGrid extends JPanel implements OffGridView {
     public PageEstimationPVGISOffGrid() {
         // Définit le layout principal du panneau en BorderLayout
         setLayout(new BorderLayout());
+    // Bandeau de titre harmonisé
+    add(new TitleBanner("ESTIMATION DE LA PRODUCTION"), BorderLayout.NORTH);
     // Crée un panneau d'entrée avec un GridLayout 2 colonnes (espacements réduits)
     // Réduit l'espace horizontal entre les deux colonnes à 0 et vertical à 0 pour coller les champs.
     JPanel inputPanel = new JPanel(new GridLayout(0, 2, 0, 0));
@@ -326,6 +329,7 @@ public class PageEstimationPVGISOffGrid extends JPanel implements OffGridView {
     // Remplace la rangée de boutons par une toolbar pour meilleure hiérarchie visuelle
     javax.swing.JToolBar toolBar = new javax.swing.JToolBar();
     toolBar.setFloatable(false);
+    // Bouton Accueil retiré ici; utiliser le bouton global en haut de la fenêtre
     // estimateButton est déplacé hors de la toolbar et placé à la fin du formulaire
     toolBar.add(graphButton);
     toolBar.addSeparator();
@@ -339,12 +343,12 @@ public class PageEstimationPVGISOffGrid extends JPanel implements OffGridView {
     // --- Composition UI conservant l'apparence d'origine (formulaire + barre de boutons) ---
     JPanel leftPanel = new JPanel();
     leftPanel.setLayout(new BorderLayout());
-    // En-tête local du formulaire (vert foncé sur fond vert clair)
+    // En-tête local du formulaire (gris pâle + texte noir, comme Grid)
     JPanel headerPanel = new JPanel(new BorderLayout());
-    headerPanel.setBackground(new java.awt.Color(210, 235, 210)); // vert clair
-    JLabel headerLabel = new JLabel("Formulaire pour PV hors réseau");
+    headerPanel.setBackground(new java.awt.Color(235, 235, 235));
+    JLabel headerLabel = new JLabel("Système PV Hors Réseau");
     headerLabel.setHorizontalAlignment(SwingConstants.CENTER);
-    headerLabel.setForeground(new java.awt.Color(0, 100, 0)); // vert foncé
+    headerLabel.setForeground(java.awt.Color.BLACK);
     headerLabel.setBorder(javax.swing.BorderFactory.createEmptyBorder(6, 8, 6, 8));
     headerPanel.add(headerLabel, BorderLayout.CENTER);
     leftPanel.add(headerPanel, BorderLayout.NORTH);

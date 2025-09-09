@@ -27,6 +27,8 @@ public class PagePuissance {
      */
     public PagePuissance() {
         pagePuissance = new JPanel(new BorderLayout());
+    // En-tête local sans bouton Accueil (utiliser le bouton global en haut de la fenêtre)
+    pagePuissance.add(new JPanel(), BorderLayout.NORTH);
 
         String[] colonnes1 = {"", "T STC", "T min", "T max"};
         Object[][] donnees1 = new Object[6][4];
@@ -108,7 +110,18 @@ public class PagePuissance {
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, scrollPane1, rightPanel);
         splitPane.setResizeWeight(0.5);
 
-        pagePuissance.add(splitPane, BorderLayout.CENTER);
+    pagePuissance.add(splitPane, BorderLayout.CENTER);
+
+    // Barre inférieure: boutons Exporter / Calculer (pré-étude)
+    javax.swing.JPanel bottomBar = new javax.swing.JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
+    bottomBar.setBackground(Color.WHITE);
+    javax.swing.JButton boutonExporter = new javax.swing.JButton("Exporter");
+    javax.swing.JButton boutonCalculer = new javax.swing.JButton("Calculer");
+    boutonExporter.addActionListener(main.Main.controleur);
+    boutonCalculer.addActionListener(main.Main.controleur);
+    bottomBar.add(boutonExporter);
+    bottomBar.add(boutonCalculer);
+    pagePuissance.add(bottomBar, BorderLayout.SOUTH);
     }
 
     /**
