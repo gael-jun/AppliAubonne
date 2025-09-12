@@ -28,6 +28,9 @@ import javax.swing.Icon;
 
 import main.Main;
 import vue.ui.ButtonStyleUtil;
+import vue.EstimationProd.PageEstimationPVGISGrid;
+import vue.EstimationProd.PageEstimationPVGISTracker;
+import vue.EstimationProd.PageEstimationPVGISOffGrid;
 
 /**
  * Classe représentant la fenêtre principale de l'application.
@@ -77,8 +80,37 @@ public class FenetrePrincipale {
         UIManager.put("Button.border", new EmptyBorder(5, 15, 5, 15));
         UIManager.put("Button.focus", new Color(0, 120, 215));
 
+        // Robust logo loading: try several classpath locations + filesystem fallback
         java.net.URL logoUrl = FenetrePrincipale.class.getResource("/logo.png");
-        logo = new ImageIcon(logoUrl);
+        if (logoUrl == null) {
+            logoUrl = FenetrePrincipale.class.getResource("/ressources/logo.png");
+        }
+        if (logoUrl == null) {
+            logoUrl = FenetrePrincipale.class.getResource("logo.png");
+        }
+        if (logoUrl == null) {
+            java.io.File f = new java.io.File("ressources/logo.png");
+            if (f.exists()) {
+                logo = new ImageIcon(f.getAbsolutePath());
+            }
+        }
+        if (logo == null) {
+            if (logoUrl != null) {
+                logo = new ImageIcon(logoUrl);
+            } else {
+                // Fallback: create a placeholder icon
+                java.awt.image.BufferedImage img = new java.awt.image.BufferedImage(64, 64, java.awt.image.BufferedImage.TYPE_INT_ARGB);
+                java.awt.Graphics2D g2 = img.createGraphics();
+                g2.setColor(Color.LIGHT_GRAY);
+                g2.fillRect(0,0,64,64);
+                g2.setColor(Color.DARK_GRAY);
+                g2.drawString("LOGO", 10, 32);
+                g2.dispose();
+                logo = new ImageIcon(img);
+            }
+        } else if (logo == null && logoUrl != null) {
+            logo = new ImageIcon(logoUrl);
+        }
         
         fenetre = new JFrame("E-AUBONNE pré-études");
         fenetre.setIconImage(logo.getImage());

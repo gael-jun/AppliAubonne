@@ -1,0 +1,744 @@
+[0.079s][warning][cds] A jar file is not the one used while building the shared archive file: C:\Users\user\AppData\Roaming\Code\User\globalStorage\pleiades.java-extension-pack-jdk\java\21\lib\modules
+[0.081s][warning][cds] A jar file is not the one used while building the shared archive file: C:\Users\user\AppData\Roaming\Code\User\globalStorage\pleiades.java-extension-pack-jdk\java\21\lib\modules
+[0.081s][warning][cds] C:\Users\user\AppData\Roaming\Code\User\globalStorage\pleiades.java-extension-pack-jdk\java\21\lib\modules timestamp has changed.
+Apache Maven 3.9.11 (3e54c93a704957b63ee3494413a2b544fd3d825b)
+Maven home: C:\Users\user\AppData\Roaming\Code\User\globalStorage\pleiades.java-extension-pack-jdk\maven\latest
+Java version: 21.0.7, vendor: Eclipse Adoptium, runtime: C:\Users\user\AppData\Roaming\Code\User\globalStorage\pleiades.java-extension-pack-jdk\java\21
+Default locale: fr_FR, platform encoding: UTF-8
+OS name: "windows 10", version: "10.0", arch: "amd64", family: "windows"
+[DEBUG] Created new class realm maven.api
+[DEBUG] Importing foreign packages into class realm maven.api
+[DEBUG]   Imported: javax.annotation.* < plexus.core
+[DEBUG]   Imported: javax.annotation.security.* < plexus.core
+[DEBUG]   Imported: javax.inject.* < plexus.core
+[DEBUG]   Imported: org.apache.maven.* < plexus.core
+[DEBUG]   Imported: org.apache.maven.artifact < plexus.core
+[DEBUG]   Imported: org.apache.maven.classrealm < plexus.core
+[DEBUG]   Imported: org.apache.maven.cli < plexus.core
+[DEBUG]   Imported: org.apache.maven.configuration < plexus.core
+[DEBUG]   Imported: org.apache.maven.exception < plexus.core
+[DEBUG]   Imported: org.apache.maven.execution < plexus.core
+[DEBUG]   Imported: org.apache.maven.execution.scope < plexus.core
+[DEBUG]   Imported: org.apache.maven.graph < plexus.core
+[DEBUG]   Imported: org.apache.maven.lifecycle < plexus.core
+[DEBUG]   Imported: org.apache.maven.model < plexus.core
+[DEBUG]   Imported: org.apache.maven.monitor < plexus.core
+[DEBUG]   Imported: org.apache.maven.plugin < plexus.core
+[DEBUG]   Imported: org.apache.maven.profiles < plexus.core
+[DEBUG]   Imported: org.apache.maven.project < plexus.core
+[DEBUG]   Imported: org.apache.maven.reporting < plexus.core
+[DEBUG]   Imported: org.apache.maven.repository < plexus.core
+[DEBUG]   Imported: org.apache.maven.rtinfo < plexus.core
+[DEBUG]   Imported: org.apache.maven.settings < plexus.core
+[DEBUG]   Imported: org.apache.maven.toolchain < plexus.core
+[DEBUG]   Imported: org.apache.maven.usability < plexus.core
+[DEBUG]   Imported: org.apache.maven.wagon.* < plexus.core
+[DEBUG]   Imported: org.apache.maven.wagon.authentication < plexus.core
+[DEBUG]   Imported: org.apache.maven.wagon.authorization < plexus.core
+[DEBUG]   Imported: org.apache.maven.wagon.events < plexus.core
+[DEBUG]   Imported: org.apache.maven.wagon.observers < plexus.core
+[DEBUG]   Imported: org.apache.maven.wagon.proxy < plexus.core
+[DEBUG]   Imported: org.apache.maven.wagon.repository < plexus.core
+[DEBUG]   Imported: org.apache.maven.wagon.resource < plexus.core
+[DEBUG]   Imported: org.codehaus.classworlds < plexus.core
+[DEBUG]   Imported: org.codehaus.plexus.* < plexus.core
+[DEBUG]   Imported: org.codehaus.plexus.classworlds < plexus.core
+[DEBUG]   Imported: org.codehaus.plexus.component < plexus.core
+[DEBUG]   Imported: org.codehaus.plexus.configuration < plexus.core
+[DEBUG]   Imported: org.codehaus.plexus.container < plexus.core
+[DEBUG]   Imported: org.codehaus.plexus.context < plexus.core
+[DEBUG]   Imported: org.codehaus.plexus.lifecycle < plexus.core
+[DEBUG]   Imported: org.codehaus.plexus.logging < plexus.core
+[DEBUG]   Imported: org.codehaus.plexus.personality < plexus.core
+[DEBUG]   Imported: org.codehaus.plexus.util.xml.Xpp3Dom < plexus.core
+[DEBUG]   Imported: org.codehaus.plexus.util.xml.pull.XmlPullParser < plexus.core
+[DEBUG]   Imported: org.codehaus.plexus.util.xml.pull.XmlPullParserException < plexus.core
+[DEBUG]   Imported: org.codehaus.plexus.util.xml.pull.XmlSerializer < plexus.core
+[DEBUG]   Imported: org.eclipse.aether.* < plexus.core
+[DEBUG]   Imported: org.eclipse.aether.artifact < plexus.core
+[DEBUG]   Imported: org.eclipse.aether.collection < plexus.core
+[DEBUG]   Imported: org.eclipse.aether.deployment < plexus.core
+[DEBUG]   Imported: org.eclipse.aether.graph < plexus.core
+[DEBUG]   Imported: org.eclipse.aether.impl < plexus.core
+[DEBUG]   Imported: org.eclipse.aether.installation < plexus.core
+[DEBUG]   Imported: org.eclipse.aether.internal.impl < plexus.core
+[DEBUG]   Imported: org.eclipse.aether.metadata < plexus.core
+[DEBUG]   Imported: org.eclipse.aether.repository < plexus.core
+[DEBUG]   Imported: org.eclipse.aether.resolution < plexus.core
+[DEBUG]   Imported: org.eclipse.aether.spi < plexus.core
+[DEBUG]   Imported: org.eclipse.aether.transfer < plexus.core
+[DEBUG]   Imported: org.eclipse.aether.util < plexus.core
+[DEBUG]   Imported: org.eclipse.aether.version < plexus.core
+[DEBUG]   Imported: org.fusesource.jansi.* < plexus.core
+[DEBUG]   Imported: org.slf4j.* < plexus.core
+[DEBUG]   Imported: org.slf4j.event.* < plexus.core
+[DEBUG]   Imported: org.slf4j.helpers.* < plexus.core
+[DEBUG]   Imported: org.slf4j.spi.* < plexus.core
+[DEBUG] Populating class realm maven.api
+[DEBUG] Created adapter factory; available factories [file-lock, rwlock-local, semaphore-local, noop]; available name mappers [discriminating, file-gav, file-hgav, file-static, gav, static]
+[INFO] Error stacktraces are turned on.
+[DEBUG] Message scheme: color
+[DEBUG] Message styles: debug info warning error success failure strong mojo project
+[DEBUG] Reading global settings from C:\Users\user\AppData\Roaming\Code\User\globalStorage\pleiades.java-extension-pack-jdk\maven\latest\conf\settings.xml
+[DEBUG] Reading user settings from C:\Users\user\.m2\settings.xml
+[DEBUG] Reading global toolchains from C:\Users\user\AppData\Roaming\Code\User\globalStorage\pleiades.java-extension-pack-jdk\maven\latest\conf\toolchains.xml
+[DEBUG] Reading user toolchains from C:\Users\user\.m2\toolchains.xml
+[DEBUG] Using local repository at C:\Users\user\.m2\repository
+[DEBUG] Using manager EnhancedLocalRepositoryManager with priority 10.0 for C:\Users\user\.m2\repository
+[INFO] Scanning for projects...
+[DEBUG] Extension realms for project appli_pre_etudes:appli_pre_etudes:jar:0.0.1-SNAPSHOT: (none)
+[DEBUG] Looking up lifecycle mappings for packaging jar from ClassRealm[plexus.core, parent: null]
+[DEBUG] === REACTOR BUILD PLAN ================================================
+[DEBUG] Project: appli_pre_etudes:appli_pre_etudes:jar:0.0.1-SNAPSHOT
+[DEBUG] Tasks:   [compile]
+[DEBUG] Style:   Regular
+[DEBUG] =======================================================================
+[INFO] 
+[INFO] -----------------< appli_pre_etudes:appli_pre_etudes >------------------
+[INFO] Building appli_pre_etudes 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[DEBUG] Lifecycle clean -> [pre-clean, clean, post-clean]
+[DEBUG] Lifecycle default -> [validate, initialize, generate-sources, process-sources, generate-resources, process-resources, compile, process-classes, generate-test-sources, process-test-sources, generate-test-resources, process-test-resources, test-compile, process-test-classes, test, prepare-package, package, pre-integration-test, integration-test, post-integration-test, verify, install, deploy]
+[DEBUG] Lifecycle site -> [pre-site, site, post-site, site-deploy]
+[DEBUG] Creating adapter using nameMapper 'gav' and factory 'rwlock-local'
+[DEBUG] Lifecycle clean -> [pre-clean, clean, post-clean]
+[DEBUG] Lifecycle default -> [validate, initialize, generate-sources, process-sources, generate-resources, process-resources, compile, process-classes, generate-test-sources, process-test-sources, generate-test-resources, process-test-resources, test-compile, process-test-classes, test, prepare-package, package, pre-integration-test, integration-test, post-integration-test, verify, install, deploy]
+[DEBUG] Lifecycle site -> [pre-site, site, post-site, site-deploy]
+[DEBUG] Lifecycle clean -> [pre-clean, clean, post-clean]
+[DEBUG] Lifecycle default -> [validate, initialize, generate-sources, process-sources, generate-resources, process-resources, compile, process-classes, generate-test-sources, process-test-sources, generate-test-resources, process-test-resources, test-compile, process-test-classes, test, prepare-package, package, pre-integration-test, integration-test, post-integration-test, verify, install, deploy]
+[DEBUG] Lifecycle site -> [pre-site, site, post-site, site-deploy]
+[DEBUG] Lifecycle clean -> [pre-clean, clean, post-clean]
+[DEBUG] Lifecycle default -> [validate, initialize, generate-sources, process-sources, generate-resources, process-resources, compile, process-classes, generate-test-sources, process-test-sources, generate-test-resources, process-test-resources, test-compile, process-test-classes, test, prepare-package, package, pre-integration-test, integration-test, post-integration-test, verify, install, deploy]
+[DEBUG] Lifecycle site -> [pre-site, site, post-site, site-deploy]
+[DEBUG] === PROJECT BUILD PLAN ================================================
+[DEBUG] Project:       appli_pre_etudes:appli_pre_etudes:0.0.1-SNAPSHOT
+[DEBUG] Dependencies (collect): []
+[DEBUG] Dependencies (resolve): [compile]
+[DEBUG] Repositories (dependencies): [central (https://repo.maven.apache.org/maven2, default, releases)]
+[DEBUG] Repositories (plugins)     : [central (https://repo.maven.apache.org/maven2, default, releases)]
+[DEBUG] -----------------------------------------------------------------------
+[DEBUG] Goal:          org.codehaus.mojo:build-helper-maven-plugin:3.5.0:add-source (add-additional-source)
+[DEBUG] Style:         Regular
+[DEBUG] Configuration: <?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <project default-value="${project}"/>
+  <skipAddSource default-value="false">${buildhelper.addsource.skip}</skipAddSource>
+  <skipAddSourceIfMissing default-value="false">${buildhelper.addsource.skipIfMissing}</skipAddSourceIfMissing>
+  <sources>
+    <source>src/main</source>${sources}</sources>
+</configuration>
+[DEBUG] -----------------------------------------------------------------------
+[DEBUG] Goal:          org.apache.maven.plugins:maven-resources-plugin:3.3.1:resources (default-resources)
+[DEBUG] Style:         Regular
+[DEBUG] Configuration: <?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <addDefaultExcludes default-value="true"/>
+  <buildFilters default-value="${project.build.filters}"/>
+  <encoding default-value="${project.build.sourceEncoding}"/>
+  <escapeWindowsPaths default-value="true"/>
+  <fileNameFiltering default-value="false"/>
+  <includeEmptyDirs default-value="false"/>
+  <outputDirectory default-value="${project.build.outputDirectory}"/>
+  <overwrite default-value="false"/>
+  <project default-value="${project}"/>
+  <resources default-value="${project.resources}"/>
+  <session default-value="${session}"/>
+  <skip default-value="false">${maven.resources.skip}</skip>
+  <supportMultiLineFiltering default-value="false"/>
+  <useBuildFilters default-value="true"/>
+  <useDefaultDelimiters default-value="true"/>
+</configuration>
+[DEBUG] -----------------------------------------------------------------------
+[DEBUG] Goal:          org.apache.maven.plugins:maven-compiler-plugin:3.11.0:compile (default-compile)
+[DEBUG] Style:         Regular
+[DEBUG] Configuration: <?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <basedir default-value="${basedir}"/>
+  <buildDirectory default-value="${project.build.directory}"/>
+  <compilePath default-value="${project.compileClasspathElements}"/>
+  <compileSourceRoots default-value="${project.compileSourceRoots}"/>
+  <compilerId default-value="javac">${maven.compiler.compilerId}</compilerId>
+  <compilerReuseStrategy default-value="${reuseCreated}">${maven.compiler.compilerReuseStrategy}</compilerReuseStrategy>
+  <compilerVersion>${maven.compiler.compilerVersion}</compilerVersion>
+  <createMissingPackageInfoClass default-value="true">${maven.compiler.createMissingPackageInfoClass}</createMissingPackageInfoClass>
+  <debug default-value="true">${maven.compiler.debug}</debug>
+  <debugFileName default-value="javac"/>
+  <debuglevel>${maven.compiler.debuglevel}</debuglevel>
+  <enablePreview default-value="false">${maven.compiler.enablePreview}</enablePreview>
+  <encoding default-value="${project.build.sourceEncoding}">${encoding}</encoding>
+  <executable>${maven.compiler.executable}</executable>
+  <failOnError default-value="true">${maven.compiler.failOnError}</failOnError>
+  <failOnWarning default-value="false">${maven.compiler.failOnWarning}</failOnWarning>
+  <forceJavacCompilerUse default-value="false">${maven.compiler.forceJavacCompilerUse}</forceJavacCompilerUse>
+  <fork default-value="false">${maven.compiler.fork}</fork>
+  <generatedSourcesDirectory default-value="${project.build.directory}/generated-sources/annotations"/>
+  <implicit>${maven.compiler.implicit}</implicit>
+  <maxmem>${maven.compiler.maxmem}</maxmem>
+  <meminitial>${maven.compiler.meminitial}</meminitial>
+  <mojoExecution default-value="${mojoExecution}"/>
+  <optimize default-value="false">${maven.compiler.optimize}</optimize>
+  <outputDirectory default-value="${project.build.outputDirectory}"/>
+  <parameters default-value="false">${maven.compiler.parameters}</parameters>
+  <project default-value="${project}"/>
+  <projectArtifact default-value="${project.artifact}"/>
+  <release>21</release>
+  <session default-value="${session}"/>
+  <showCompilationChanges default-value="false">${maven.compiler.showCompilationChanges}</showCompilationChanges>
+  <showDeprecation default-value="false">${maven.compiler.showDeprecation}</showDeprecation>
+  <showWarnings default-value="true">${maven.compiler.showWarnings}</showWarnings>
+  <skipMain>${maven.main.skip}</skipMain>
+  <skipMultiThreadWarning default-value="false">${maven.compiler.skipMultiThreadWarning}</skipMultiThreadWarning>
+  <source default-value="1.8">${maven.compiler.source}</source>
+  <staleMillis default-value="0">${lastModGranularityMs}</staleMillis>
+  <target default-value="1.8">${maven.compiler.target}</target>
+  <useIncrementalCompilation default-value="true">${maven.compiler.useIncrementalCompilation}</useIncrementalCompilation>
+  <verbose default-value="false">${maven.compiler.verbose}</verbose>
+</configuration>
+[DEBUG] =======================================================================
+[DEBUG] Using mirror maven-default-http-blocker (http://0.0.0.0/) for apache.snapshots (http://repository.apache.org/snapshots).
+[DEBUG] Dependency collection stats {ConflictMarker.analyzeTime=8189200, ConflictMarker.markTime=139100, ConflictMarker.nodeCount=38, ConflictIdSorter.graphTime=3540800, ConflictIdSorter.topsortTime=996400, ConflictIdSorter.conflictIdCount=22, ConflictIdSorter.conflictIdCycleCount=0, ConflictResolver.totalTime=9772100, ConflictResolver.conflictItemCount=31, DfDependencyCollector.collectTime=1309441800, DfDependencyCollector.transformTime=25394900}
+[DEBUG] appli_pre_etudes:appli_pre_etudes:jar:0.0.1-SNAPSHOT
+[DEBUG]    org.apache.poi:poi:jar:5.3.0:compile
+[DEBUG]       commons-codec:commons-codec:jar:1.17.0:compile
+[DEBUG]       org.apache.commons:commons-collections4:jar:4.4:compile
+[DEBUG]       org.apache.commons:commons-math3:jar:3.6.1:compile
+[DEBUG]       commons-io:commons-io:jar:2.16.1:compile
+[DEBUG]       com.zaxxer:SparseBitSet:jar:1.3:compile
+[DEBUG]       org.apache.logging.log4j:log4j-api:jar:2.23.1:compile
+[DEBUG]    org.apache.poi:poi-ooxml:jar:5.3.0:compile
+[DEBUG]       org.apache.poi:poi-ooxml-lite:jar:5.3.0:compile
+[DEBUG]       org.apache.xmlbeans:xmlbeans:jar:5.2.1:compile
+[DEBUG]       org.apache.commons:commons-compress:jar:1.26.2:compile
+[DEBUG]          org.apache.commons:commons-lang3:jar:3.14.0:compile
+[DEBUG]       com.github.virtuald:curvesapi:jar:1.08:compile
+[DEBUG]    org.json:json:jar:20231013:compile
+[DEBUG]    org.knowm.xchart:xchart:jar:3.8.6:compile
+[DEBUG]       de.erichseifert.vectorgraphics2d:VectorGraphics2D:jar:0.13:compile
+[DEBUG]       de.rototor.pdfbox:graphics2d:jar:3.0.0:compile
+[DEBUG]       com.madgag:animated-gif-lib:jar:1.4:compile
+[DEBUG]    org.apache.pdfbox:pdfbox:jar:2.0.30:compile
+[DEBUG]       org.apache.pdfbox:fontbox:jar:2.0.30:compile
+[DEBUG]       commons-logging:commons-logging:jar:1.2:compile
+[INFO] 
+[INFO] --- build-helper:3.5.0:add-source (add-additional-source) @ appli_pre_etudes ---
+[DEBUG] Dependency collection stats {ConflictMarker.analyzeTime=102500, ConflictMarker.markTime=269600, ConflictMarker.nodeCount=8, ConflictIdSorter.graphTime=34900, ConflictIdSorter.topsortTime=36600, ConflictIdSorter.conflictIdCount=6, ConflictIdSorter.conflictIdCycleCount=0, ConflictResolver.totalTime=87222000, ConflictResolver.conflictItemCount=8, DfDependencyCollector.collectTime=306829500, DfDependencyCollector.transformTime=87705200}
+[DEBUG] org.codehaus.mojo:build-helper-maven-plugin:jar:3.5.0
+[DEBUG]    org.codehaus.plexus:plexus-utils:jar:4.0.0:compile
+[DEBUG]    org.apache-extras.beanshell:bsh:jar:2.0b6:compile
+[DEBUG]    org.apache.maven.shared:file-management:jar:3.1.0:compile
+[DEBUG]       commons-io:commons-io:jar:2.11.0:compile
+[DEBUG]    org.slf4j:slf4j-api:jar:1.7.36:compile
+[DEBUG] Created new class realm plugin>org.codehaus.mojo:build-helper-maven-plugin:3.5.0
+[DEBUG] Importing foreign packages into class realm plugin>org.codehaus.mojo:build-helper-maven-plugin:3.5.0
+[DEBUG]   Imported:  < maven.api
+[DEBUG] Populating class realm plugin>org.codehaus.mojo:build-helper-maven-plugin:3.5.0
+[DEBUG]   Included: org.codehaus.mojo:build-helper-maven-plugin:jar:3.5.0
+[DEBUG]   Included: org.codehaus.plexus:plexus-utils:jar:4.0.0
+[DEBUG]   Included: org.apache-extras.beanshell:bsh:jar:2.0b6
+[DEBUG]   Included: org.apache.maven.shared:file-management:jar:3.1.0
+[DEBUG]   Included: commons-io:commons-io:jar:2.11.0
+[DEBUG] Loading mojo org.codehaus.mojo:build-helper-maven-plugin:3.5.0:add-source from plugin realm ClassRealm[plugin>org.codehaus.mojo:build-helper-maven-plugin:3.5.0, parent: jdk.internal.loader.ClassLoaders$AppClassLoader@1376c05c]
+[DEBUG] Configuring mojo execution 'org.codehaus.mojo:build-helper-maven-plugin:3.5.0:add-source:add-additional-source' with basic configurator -->
+[DEBUG]   (f) project = MavenProject: appli_pre_etudes:appli_pre_etudes:0.0.1-SNAPSHOT @ C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\pom.xml
+[DEBUG]   (f) skipAddSource = false
+[DEBUG]   (f) skipAddSourceIfMissing = false
+[DEBUG]   (f) sources = [C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\main]
+[DEBUG] -- end configuration --
+[INFO] Source directory: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\main added.
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ appli_pre_etudes ---
+[DEBUG] Dependency collection stats {ConflictMarker.analyzeTime=439100, ConflictMarker.markTime=72700, ConflictMarker.nodeCount=13, ConflictIdSorter.graphTime=18700, ConflictIdSorter.topsortTime=17500, ConflictIdSorter.conflictIdCount=9, ConflictIdSorter.conflictIdCycleCount=0, ConflictResolver.totalTime=434700, ConflictResolver.conflictItemCount=13, DfDependencyCollector.collectTime=196913000, DfDependencyCollector.transformTime=1002400}
+[DEBUG] org.apache.maven.plugins:maven-resources-plugin:jar:3.3.1
+[DEBUG]    org.codehaus.plexus:plexus-interpolation:jar:1.26:runtime
+[DEBUG]    org.codehaus.plexus:plexus-utils:jar:3.5.1:compile
+[DEBUG]    org.apache.maven.shared:maven-filtering:jar:3.3.1:compile
+[DEBUG]       javax.inject:javax.inject:jar:1:compile
+[DEBUG]       org.slf4j:slf4j-api:jar:1.7.36:compile
+[DEBUG]       org.sonatype.plexus:plexus-build-api:jar:0.0.7:compile
+[DEBUG]    commons-io:commons-io:jar:2.11.0:compile
+[DEBUG]    org.apache.commons:commons-lang3:jar:3.12.0:compile
+[DEBUG] Created new class realm plugin>org.apache.maven.plugins:maven-resources-plugin:3.3.1
+[DEBUG] Importing foreign packages into class realm plugin>org.apache.maven.plugins:maven-resources-plugin:3.3.1
+[DEBUG]   Imported:  < maven.api
+[DEBUG] Populating class realm plugin>org.apache.maven.plugins:maven-resources-plugin:3.3.1
+[DEBUG]   Included: org.apache.maven.plugins:maven-resources-plugin:jar:3.3.1
+[DEBUG]   Included: org.codehaus.plexus:plexus-interpolation:jar:1.26
+[DEBUG]   Included: org.codehaus.plexus:plexus-utils:jar:3.5.1
+[DEBUG]   Included: org.apache.maven.shared:maven-filtering:jar:3.3.1
+[DEBUG]   Included: org.sonatype.plexus:plexus-build-api:jar:0.0.7
+[DEBUG]   Included: commons-io:commons-io:jar:2.11.0
+[DEBUG]   Included: org.apache.commons:commons-lang3:jar:3.12.0
+[DEBUG] Loading mojo org.apache.maven.plugins:maven-resources-plugin:3.3.1:resources from plugin realm ClassRealm[plugin>org.apache.maven.plugins:maven-resources-plugin:3.3.1, parent: jdk.internal.loader.ClassLoaders$AppClassLoader@1376c05c]
+[DEBUG] Configuring mojo execution 'org.apache.maven.plugins:maven-resources-plugin:3.3.1:resources:default-resources' with basic configurator -->
+[DEBUG]   (f) addDefaultExcludes = true
+[DEBUG]   (f) buildFilters = []
+[DEBUG]   (f) encoding = UTF-8
+[DEBUG]   (f) escapeWindowsPaths = true
+[DEBUG]   (f) fileNameFiltering = false
+[DEBUG]   (s) includeEmptyDirs = false
+[DEBUG]   (s) outputDirectory = C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\target\classes
+[DEBUG]   (s) overwrite = false
+[DEBUG]   (f) project = MavenProject: appli_pre_etudes:appli_pre_etudes:0.0.1-SNAPSHOT @ C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\pom.xml
+[DEBUG]   (s) resources = [Resource {targetPath: null, filtering: false, FileSet {directory: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src, PatternSet [includes: {}, excludes: {**/*.java, vue/ui/actions/**}]}}, Resource {targetPath: null, filtering: false, FileSet {directory: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\img, PatternSet [includes: {}, excludes: {**/*.java}]}}, Resource {targetPath: null, filtering: false, FileSet {directory: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\main\img, PatternSet [includes: {}, excludes: {}]}}, Resource {targetPath: null, filtering: false, FileSet {directory: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\main\ressources, PatternSet [includes: {}, excludes: {}]}}]
+[DEBUG]   (f) session = org.apache.maven.execution.MavenSession@1bb15351
+[DEBUG]   (f) skip = false
+[DEBUG]   (f) supportMultiLineFiltering = false
+[DEBUG]   (f) useBuildFilters = true
+[DEBUG]   (s) useDefaultDelimiters = true
+[DEBUG] -- end configuration --
+[DEBUG] properties used:
+[DEBUG] classworlds.conf: C:\Users\user\AppData\Roaming\Code\User\globalStorage\pleiades.java-extension-pack-jdk\maven\latest\bin\m2.conf
+[DEBUG] env.=C:: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes
+[DEBUG] env.=EXITCODE: 00000000
+[DEBUG] env.ALLUSERSPROFILE: C:\ProgramData
+[DEBUG] env.APPDATA: C:\Users\user\AppData\Roaming
+[DEBUG] env.CHROME_CRASHPAD_PIPE_NAME: \\.\pipe\crashpad_16016_FDQYZYMZTNTYRDPW
+[DEBUG] env.CLASSWORLDS_JAR: "C:\Users\user\AppData\Roaming\Code\User\globalStorage\pleiades.java-extension-pack-jdk\maven\latest\boot\plexus-classworlds-2.9.0.jar"
+[DEBUG] env.CLASSWORLDS_LAUNCHER: org.codehaus.plexus.classworlds.launcher.Launcher
+[DEBUG] env.COLORTERM: truecolor
+[DEBUG] env.COMMONPROGRAMFILES: C:\Program Files\Common Files
+[DEBUG] env.COMMONPROGRAMFILES(X86): C:\Program Files (x86)\Common Files
+[DEBUG] env.COMMONPROGRAMW6432: C:\Program Files\Common Files
+[DEBUG] env.COMPUTERNAME: DESKTOP-6767K38
+[DEBUG] env.COMSPEC: C:\Windows\system32\cmd.exe
+[DEBUG] env.CUDA_PATH: C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.3
+[DEBUG] env.CUDA_PATH_V12_3: C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.3
+[DEBUG] env.DRIVERDATA: C:\Windows\System32\Drivers\DriverData
+[DEBUG] env.ERROR_CODE: 0
+[DEBUG] env.EXEC_DIR: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes
+[DEBUG] env.FPS_BROWSER_APP_PROFILE_STRING: Internet Explorer
+[DEBUG] env.FPS_BROWSER_USER_PROFILE_STRING: Default
+[DEBUG] env.GIT_ASKPASS: c:\Users\user\AppData\Local\Programs\Microsoft VS Code\resources\app\extensions\git\dist\askpass.sh
+[DEBUG] env.GIT_PAGER: cat
+[DEBUG] env.HADOOP_HOME: C:\hadoop-env\hadoop-3.2.1
+[DEBUG] env.HOMEDRIVE: C:
+[DEBUG] env.HOMEPATH: \Users\user
+[DEBUG] env.INTELLIJ IDEA COMMUNITY EDITION: C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2023.2.2\bin;
+[DEBUG] env.JAVACMD: C:\Users\user\AppData\Roaming\Code\User\globalStorage\pleiades.java-extension-pack-jdk\java\21\bin\java.exe
+[DEBUG] env.JAVA_HOME: C:\Users\user\AppData\Roaming\Code\User\globalStorage\pleiades.java-extension-pack-jdk\java\21
+[DEBUG] env.JVMCONFIG: \.mvn\jvm.config
+[DEBUG] env.LANG: en_US.UTF-8
+[DEBUG] env.LOCALAPPDATA: C:\Users\user\AppData\Local
+[DEBUG] env.LOGONSERVER: \\DESKTOP-6767K38
+[DEBUG] env.MAVEN_CMD_LINE_ARGS: -X -DskipTests compile
+[DEBUG] env.MAVEN_HOME: C:\Users\user\AppData\Roaming\Code\User\globalStorage\pleiades.java-extension-pack-jdk\maven\latest
+[DEBUG] env.MAVEN_OPTS: --enable-native-access=ALL-UNNAMED 
+[DEBUG] env.MAVEN_PROJECTBASEDIR: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes
+[DEBUG] env.MOZ_PLUGIN_PATH: C:\Program Files (x86)\Foxit Software\Foxit PDF Reader\plugins\
+[DEBUG] env.NODE_ENV: production
+[DEBUG] env.NUMBER_OF_PROCESSORS: 4
+[DEBUG] env.NVM_HOME: C:\Users\user\AppData\Roaming\nvm
+[DEBUG] env.NVM_SYMLINK: C:\Program Files\nodejs
+[DEBUG] env.ONEDRIVE: C:\Users\user\OneDrive
+[DEBUG] env.ONEDRIVECONSUMER: C:\Users\user\OneDrive
+[DEBUG] env.ORIGINAL_XDG_CURRENT_DESKTOP: undefined
+[DEBUG] env.OS: Windows_NT
+[DEBUG] env.PATH: C:\Users\user\AppData\Roaming\Code\User\globalStorage\pleiades.java-extension-pack-jdk\gradle\latest\bin;C:\Users\user\AppData\Roaming\Code\User\globalStorage\pleiades.java-extension-pack-jdk\maven\latest\bin;C:\Users\user\AppData\Roaming\Code\User\globalStorage\pleiades.java-extension-pack-jdk\java\21\bin;C:\Program Files\NVIDIA\CUDNN\v9.0\bin;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.3\bin;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.3\libnvvp;C:\Program Files\Common Files\Oracle\Java\javapath;C:\Program Files\Python311\Scripts\;C:\Program Files\Python311\;C:\Program Files (x86)\VMware\VMware Player\bin\;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\ProgramData\ComposerSetup\bin;C:\Program Files\Git\cmd;C:\Program Files\Python312\Scripts\pip;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\130\Tools\Binn\;C:\Program Files (x86)\Microsoft SQL Server\140\Tools\Binn\;C:\Program Files\Microsoft SQL Server\140\Tools\Binn\;C:\Program Files\Microsoft SQL Server\140\DTS\Binn\;C:\Program Files (x86)\Microsoft SQL Server\140\DTS\Binn\;C:\Program Files (x86)\Microsoft SQL Server\150\DTS\Binn\;C:\Program Files\Azure Data Studio\bin;C:\Program Files\NVIDIA Corporation\Nsight Compute 2023.3.1\;C:\Program Files\swipl\bin;C:\src\flutter\flutter\bin;C:\Program Files\Racket;C:\Users\user\AppData\Roaming\nvm;C:\Program Files\nodejs;C:\Program Files\nodejs;C:\Users\user\AppData\Roaming\nvm\v21.6.2;C:\Users\user\AppData\Roaming\nvm;C:\Program Files\dotnet\;C:\msys64\usr\bin;C:\Program Files\Java\jdk-22\bin;C:\Program Files\Java\jdk-22\bin;C:\Program Files\Java\jdk-22\bin;C:\hadoop-env\hadoop-3.2.1\bin;C:\Users\user\AppData\Local\Programs\Python\Launcher\;C:\Users\user\AppData\Local\Microsoft\WindowsApps;C:\Program Files\PostgreSQL\15\bin;C:\Users\user\AppData\Local\Programs\Microsoft VS Code\bin;C:\MinGW\bin;C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2023.2.2\bin;;C:\php;C:\Users\user\AppData\Roaming\Composer\vendor\bin;C:\Program Files\Python312\;C:\Program Files\Python312\Scripts\;C:\Program Files\Python311\Scripts\;C:\Program Files\Python311\;C:\Program Files\Java\jdk-17\bin;C:\Program Files\Azure Data Studio\bin;C:\Program Files\JetBrains\PyCharm Community Edition 2023.3.3\bin;;C:\Users\user\AppData\Roaming\npm;C:\Program Files\Racket;C:\Users\user\AppData\Roaming\nvm;C:\Program Files\nodejs;C:\Program Files\nodejs;C:\Users\user\AppData\Roaming\nvm\v21.6.2;C:\Users\user\AppData\Roaming\nvm;C:\Users\user\.dotnet\tools;C:\msys64\usr\bin;c:\Users\user\AppData\Roaming\Code\User\globalStorage\github.copilot-chat\debugCommand
+[DEBUG] env.PATHEXT: .COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC;.PY;.PYW
+[DEBUG] env.PROCESSOR_ARCHITECTURE: AMD64
+[DEBUG] env.PROCESSOR_IDENTIFIER: Intel64 Family 6 Model 94 Stepping 3, GenuineIntel
+[DEBUG] env.PROCESSOR_LEVEL: 6
+[DEBUG] env.PROCESSOR_REVISION: 5e03
+[DEBUG] env.PROGRAMDATA: C:\ProgramData
+[DEBUG] env.PROGRAMFILES: C:\Program Files
+[DEBUG] env.PROGRAMFILES(X86): C:\Program Files (x86)
+[DEBUG] env.PROGRAMW6432: C:\Program Files
+[DEBUG] env.PROMPT: $P$G
+[DEBUG] env.PSMODULEPATH: C:\Program Files\WindowsPowerShell\Modules;C:\Windows\system32\WindowsPowerShell\v1.0\Modules;C:\Program Files (x86)\Microsoft SQL Server\140\Tools\PowerShell\Modules\
+[DEBUG] env.PT8HOME: C:\Program Files\Cisco Packet Tracer 8.2.1
+[DEBUG] env.PUBLIC: C:\Users\Public
+[DEBUG] env.PYCHARM COMMUNITY EDITION: C:\Program Files\JetBrains\PyCharm Community Edition 2023.3.3\bin;
+[DEBUG] env.PYTHON_BASIC_REPL: 1
+[DEBUG] env.SESSIONNAME: Console
+[DEBUG] env.SYSTEMDRIVE: C:
+[DEBUG] env.SYSTEMROOT: C:\Windows
+[DEBUG] env.TEMP: C:\Users\user\AppData\Local\Temp
+[DEBUG] env.TERM_PROGRAM: vscode
+[DEBUG] env.TERM_PROGRAM_VERSION: 1.103.2
+[DEBUG] env.TMP: C:\Users\user\AppData\Local\Temp
+[DEBUG] env.USERDOMAIN: DESKTOP-6767K38
+[DEBUG] env.USERDOMAIN_ROAMINGPROFILE: DESKTOP-6767K38
+[DEBUG] env.USERNAME: user
+[DEBUG] env.USERPROFILE: C:\Users\user
+[DEBUG] env.VBOX_MSI_INSTALL_PATH: C:\Program Files\Oracle\VirtualBox\
+[DEBUG] env.VSCODE_GIT_ASKPASS_EXTRA_ARGS: 
+[DEBUG] env.VSCODE_GIT_ASKPASS_MAIN: c:\Users\user\AppData\Local\Programs\Microsoft VS Code\resources\app\extensions\git\dist\askpass-main.js
+[DEBUG] env.VSCODE_GIT_ASKPASS_NODE: C:\Users\user\AppData\Local\Programs\Microsoft VS Code\Code.exe
+[DEBUG] env.VSCODE_GIT_IPC_HANDLE: \\.\pipe\vscode-git-2ad08d9178-sock
+[DEBUG] env.WDIR: C:\
+[DEBUG] env.WINDIR: C:\Windows
+[DEBUG] env.ZES_ENABLE_SYSMAN: 1
+[DEBUG] file.encoding: UTF-8
+[DEBUG] file.separator: \
+[DEBUG] java.class.path: C:\Users\user\AppData\Roaming\Code\User\globalStorage\pleiades.java-extension-pack-jdk\maven\latest\boot\plexus-classworlds-2.9.0.jar
+[DEBUG] java.class.version: 65.0
+[DEBUG] java.home: C:\Users\user\AppData\Roaming\Code\User\globalStorage\pleiades.java-extension-pack-jdk\java\21
+[DEBUG] java.io.tmpdir: C:\Users\user\AppData\Local\Temp\
+[DEBUG] java.library.path: C:\Users\user\AppData\Roaming\Code\User\globalStorage\pleiades.java-extension-pack-jdk\java\21\bin;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;C:\Users\user\AppData\Roaming\Code\User\globalStorage\pleiades.java-extension-pack-jdk\gradle\latest\bin;C:\Users\user\AppData\Roaming\Code\User\globalStorage\pleiades.java-extension-pack-jdk\maven\latest\bin;C:\Users\user\AppData\Roaming\Code\User\globalStorage\pleiades.java-extension-pack-jdk\java\21\bin;C:\Program Files\NVIDIA\CUDNN\v9.0\bin;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.3\bin;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.3\libnvvp;C:\Program Files\Common Files\Oracle\Java\javapath;C:\Program Files\Python311\Scripts\;C:\Program Files\Python311\;C:\Program Files (x86)\VMware\VMware Player\bin\;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\ProgramData\ComposerSetup\bin;C:\Program Files\Git\cmd;C:\Program Files\Python312\Scripts\pip;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\130\Tools\Binn\;C:\Program Files (x86)\Microsoft SQL Server\140\Tools\Binn\;C:\Program Files\Microsoft SQL Server\140\Tools\Binn\;C:\Program Files\Microsoft SQL Server\140\DTS\Binn\;C:\Program Files (x86)\Microsoft SQL Server\140\DTS\Binn\;C:\Program Files (x86)\Microsoft SQL Server\150\DTS\Binn\;C:\Program Files\Azure Data Studio\bin;C:\Program Files\NVIDIA Corporation\Nsight Compute 2023.3.1\;C:\Program Files\swipl\bin;C:\src\flutter\flutter\bin;C:\Program Files\Racket;C:\Users\user\AppData\Roaming\nvm;C:\Program Files\nodejs;C:\Program Files\nodejs;C:\Users\user\AppData\Roaming\nvm\v21.6.2;C:\Users\user\AppData\Roaming\nvm;C:\Program Files\dotnet\;C:\msys64\usr\bin;C:\Program Files\Java\jdk-22\bin;C:\Program Files\Java\jdk-22\bin;C:\Program Files\Java\jdk-22\bin;C:\hadoop-env\hadoop-3.2.1\bin;C:\Users\user\AppData\Local\Programs\Python\Launcher\;C:\Users\user\AppData\Local\Microsoft\WindowsApps;C:\Program Files\PostgreSQL\15\bin;C:\Users\user\AppData\Local\Programs\Microsoft VS Code\bin;C:\MinGW\bin;C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2023.2.2\bin;;C:\php;C:\Users\user\AppData\Roaming\Composer\vendor\bin;C:\Program Files\Python312\;C:\Program Files\Python312\Scripts\;C:\Program Files\Python311\Scripts\;C:\Program Files\Python311\;C:\Program Files\Java\jdk-17\bin;C:\Program Files\Azure Data Studio\bin;C:\Program Files\JetBrains\PyCharm Community Edition 2023.3.3\bin;;C:\Users\user\AppData\Roaming\npm;C:\Program Files\Racket;C:\Users\user\AppData\Roaming\nvm;C:\Program Files\nodejs;C:\Program Files\nodejs;C:\Users\user\AppData\Roaming\nvm\v21.6.2;C:\Users\user\AppData\Roaming\nvm;C:\Users\user\.dotnet\tools;C:\msys64\usr\bin;c:\Users\user\AppData\Roaming\Code\User\globalStorage\github.copilot-chat\debugCommand;.
+[DEBUG] java.runtime.name: OpenJDK Runtime Environment
+[DEBUG] java.runtime.version: 21.0.7+6-LTS
+[DEBUG] java.specification.name: Java Platform API Specification
+[DEBUG] java.specification.vendor: Oracle Corporation
+[DEBUG] java.specification.version: 21
+[DEBUG] java.vendor: Eclipse Adoptium
+[DEBUG] java.vendor.url: https://adoptium.net/
+[DEBUG] java.vendor.url.bug: https://github.com/adoptium/adoptium-support/issues
+[DEBUG] java.vendor.version: Temurin-21.0.7+6
+[DEBUG] java.version: 21.0.7
+[DEBUG] java.version.date: 2025-04-15
+[DEBUG] java.vm.compressedOopsMode: Zero based
+[DEBUG] java.vm.info: mixed mode
+[DEBUG] java.vm.name: OpenJDK 64-Bit Server VM
+[DEBUG] java.vm.specification.name: Java Virtual Machine Specification
+[DEBUG] java.vm.specification.vendor: Oracle Corporation
+[DEBUG] java.vm.specification.version: 21
+[DEBUG] java.vm.vendor: Eclipse Adoptium
+[DEBUG] java.vm.version: 21.0.8+9-LTS
+[DEBUG] jdk.debug: release
+[DEBUG] library.jansi.path: C:\Users\user\AppData\Roaming\Code\User\globalStorage\pleiades.java-extension-pack-jdk\maven\latest\lib\jansi-native
+[DEBUG] line.separator: 
+
+[DEBUG] maven.build.timestamp: 2025-09-10T23:53:10Z
+[DEBUG] maven.build.version: Apache Maven 3.9.11 (3e54c93a704957b63ee3494413a2b544fd3d825b)
+[DEBUG] maven.conf: C:\Users\user\AppData\Roaming\Code\User\globalStorage\pleiades.java-extension-pack-jdk\maven\latest/conf
+[DEBUG] maven.home: C:\Users\user\AppData\Roaming\Code\User\globalStorage\pleiades.java-extension-pack-jdk\maven\latest
+[DEBUG] maven.multiModuleProjectDirectory: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes
+[DEBUG] maven.version: 3.9.11
+[DEBUG] native.encoding: Cp1252
+[DEBUG] os.arch: amd64
+[DEBUG] os.name: Windows 10
+[DEBUG] os.version: 10.0
+[DEBUG] path.separator: ;
+[DEBUG] project.baseUri: file:/C:/Users/user/Downloads/appli_pre_etudes/appli_pre_etudes/
+[DEBUG] project.build.sourceEncoding: UTF-8
+[DEBUG] project.reporting.outputEncoding: UTF-8
+[DEBUG] skipTests: true
+[DEBUG] stderr.encoding: Cp1252
+[DEBUG] stdout.encoding: Cp1252
+[DEBUG] sun.arch.data.model: 64
+[DEBUG] sun.boot.library.path: C:\Users\user\AppData\Roaming\Code\User\globalStorage\pleiades.java-extension-pack-jdk\java\21\bin
+[DEBUG] sun.cpu.endian: little
+[DEBUG] sun.cpu.isalist: amd64
+[DEBUG] sun.io.unicode.encoding: UnicodeLittle
+[DEBUG] sun.java.command: org.codehaus.plexus.classworlds.launcher.Launcher -X -DskipTests compile
+[DEBUG] sun.java.launcher: SUN_STANDARD
+[DEBUG] sun.jnu.encoding: Cp1252
+[DEBUG] sun.management.compiler: HotSpot 64-Bit Tiered Compilers
+[DEBUG] sun.os.patch.level: 
+[DEBUG] user.country: FR
+[DEBUG] user.dir: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes
+[DEBUG] user.home: C:\Users\user
+[DEBUG] user.language: fr
+[DEBUG] user.name: user
+[DEBUG] user.script: 
+[DEBUG] user.variant: 
+[DEBUG] Using 'UTF-8' encoding to copy filtered resources.
+[DEBUG] Using 'UTF-8' encoding to copy filtered properties files.
+[DEBUG] resource with targetPath null
+directory C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src
+excludes [**/*.java, vue/ui/actions/**]
+includes []
+[DEBUG] ignoreDelta true
+[INFO] Copying 1 resource from src to target\classes
+[DEBUG] Copying file vue\util\README.md
+[DEBUG] file README.md has a filtered file extension
+[DEBUG] Using 'UTF-8' encoding to copy filtered resource 'README.md'.
+[DEBUG] copy C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\vue\util\README.md to C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\target\classes\vue\util\README.md
+[DEBUG] resource with targetPath null
+directory C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\img
+excludes [**/*.java]
+includes []
+[INFO] skip non existing resourceDirectory C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\img
+[DEBUG] resource with targetPath null
+directory C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\main\img
+excludes []
+includes []
+[INFO] skip non existing resourceDirectory C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\main\img
+[DEBUG] resource with targetPath null
+directory C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\main\ressources
+excludes []
+includes []
+[INFO] skip non existing resourceDirectory C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\main\ressources
+[DEBUG] no user filter components
+[INFO] 
+[INFO] --- compiler:3.11.0:compile (default-compile) @ appli_pre_etudes ---
+[DEBUG] Dependency collection stats {ConflictMarker.analyzeTime=108600, ConflictMarker.markTime=73600, ConflictMarker.nodeCount=17, ConflictIdSorter.graphTime=35800, ConflictIdSorter.topsortTime=42800, ConflictIdSorter.conflictIdCount=12, ConflictIdSorter.conflictIdCycleCount=0, ConflictResolver.totalTime=793400, ConflictResolver.conflictItemCount=17, DfDependencyCollector.collectTime=335043800, DfDependencyCollector.transformTime=1096200}
+[DEBUG] org.apache.maven.plugins:maven-compiler-plugin:jar:3.11.0
+[DEBUG]    org.apache.maven.shared:maven-shared-utils:jar:3.3.4:compile
+[DEBUG]       commons-io:commons-io:jar:2.6:compile
+[DEBUG]    org.apache.maven.shared:maven-shared-incremental:jar:1.1:compile
+[DEBUG]       org.codehaus.plexus:plexus-component-annotations:jar:1.5.5:compile
+[DEBUG]    org.codehaus.plexus:plexus-java:jar:1.1.2:compile
+[DEBUG]       org.ow2.asm:asm:jar:9.4:compile
+[DEBUG]       com.thoughtworks.qdox:qdox:jar:2.0.3:compile (version managed from default)
+[DEBUG]    org.codehaus.plexus:plexus-compiler-api:jar:2.13.0:compile
+[DEBUG]       org.codehaus.plexus:plexus-utils:jar:3.5.0:compile (version managed from default)
+[DEBUG]    org.codehaus.plexus:plexus-compiler-manager:jar:2.13.0:compile
+[DEBUG]    org.codehaus.plexus:plexus-compiler-javac:jar:2.13.0:runtime
+[DEBUG] Created new class realm plugin>org.apache.maven.plugins:maven-compiler-plugin:3.11.0
+[DEBUG] Importing foreign packages into class realm plugin>org.apache.maven.plugins:maven-compiler-plugin:3.11.0
+[DEBUG]   Imported:  < maven.api
+[DEBUG] Populating class realm plugin>org.apache.maven.plugins:maven-compiler-plugin:3.11.0
+[DEBUG]   Included: org.apache.maven.plugins:maven-compiler-plugin:jar:3.11.0
+[DEBUG]   Included: org.apache.maven.shared:maven-shared-utils:jar:3.3.4
+[DEBUG]   Included: commons-io:commons-io:jar:2.6
+[DEBUG]   Included: org.apache.maven.shared:maven-shared-incremental:jar:1.1
+[DEBUG]   Included: org.codehaus.plexus:plexus-component-annotations:jar:1.5.5
+[DEBUG]   Included: org.codehaus.plexus:plexus-java:jar:1.1.2
+[DEBUG]   Included: org.ow2.asm:asm:jar:9.4
+[DEBUG]   Included: com.thoughtworks.qdox:qdox:jar:2.0.3
+[DEBUG]   Included: org.codehaus.plexus:plexus-compiler-api:jar:2.13.0
+[DEBUG]   Included: org.codehaus.plexus:plexus-utils:jar:3.5.0
+[DEBUG]   Included: org.codehaus.plexus:plexus-compiler-manager:jar:2.13.0
+[DEBUG]   Included: org.codehaus.plexus:plexus-compiler-javac:jar:2.13.0
+[DEBUG] Loading mojo org.apache.maven.plugins:maven-compiler-plugin:3.11.0:compile from plugin realm ClassRealm[plugin>org.apache.maven.plugins:maven-compiler-plugin:3.11.0, parent: jdk.internal.loader.ClassLoaders$AppClassLoader@1376c05c]
+[DEBUG] Configuring mojo execution 'org.apache.maven.plugins:maven-compiler-plugin:3.11.0:compile:default-compile' with basic configurator -->
+[DEBUG]   (f) basedir = C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes
+[DEBUG]   (f) buildDirectory = C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\target
+[DEBUG]   (f) compilePath = [C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\target\classes, C:\Users\user\.m2\repository\org\apache\poi\poi\5.3.0\poi-5.3.0.jar, C:\Users\user\.m2\repository\commons-codec\commons-codec\1.17.0\commons-codec-1.17.0.jar, C:\Users\user\.m2\repository\org\apache\commons\commons-collections4\4.4\commons-collections4-4.4.jar, C:\Users\user\.m2\repository\org\apache\commons\commons-math3\3.6.1\commons-math3-3.6.1.jar, C:\Users\user\.m2\repository\commons-io\commons-io\2.16.1\commons-io-2.16.1.jar, C:\Users\user\.m2\repository\com\zaxxer\SparseBitSet\1.3\SparseBitSet-1.3.jar, C:\Users\user\.m2\repository\org\apache\logging\log4j\log4j-api\2.23.1\log4j-api-2.23.1.jar, C:\Users\user\.m2\repository\org\apache\poi\poi-ooxml\5.3.0\poi-ooxml-5.3.0.jar, C:\Users\user\.m2\repository\org\apache\poi\poi-ooxml-lite\5.3.0\poi-ooxml-lite-5.3.0.jar, C:\Users\user\.m2\repository\org\apache\xmlbeans\xmlbeans\5.2.1\xmlbeans-5.2.1.jar, C:\Users\user\.m2\repository\org\apache\commons\commons-compress\1.26.2\commons-compress-1.26.2.jar, C:\Users\user\.m2\repository\org\apache\commons\commons-lang3\3.14.0\commons-lang3-3.14.0.jar, C:\Users\user\.m2\repository\com\github\virtuald\curvesapi\1.08\curvesapi-1.08.jar, C:\Users\user\.m2\repository\org\json\json\20231013\json-20231013.jar, C:\Users\user\.m2\repository\org\knowm\xchart\xchart\3.8.6\xchart-3.8.6.jar, C:\Users\user\.m2\repository\de\erichseifert\vectorgraphics2d\VectorGraphics2D\0.13\VectorGraphics2D-0.13.jar, C:\Users\user\.m2\repository\de\rototor\pdfbox\graphics2d\3.0.0\graphics2d-3.0.0.jar, C:\Users\user\.m2\repository\com\madgag\animated-gif-lib\1.4\animated-gif-lib-1.4.jar, C:\Users\user\.m2\repository\org\apache\pdfbox\pdfbox\2.0.30\pdfbox-2.0.30.jar, C:\Users\user\.m2\repository\org\apache\pdfbox\fontbox\2.0.30\fontbox-2.0.30.jar, C:\Users\user\.m2\repository\commons-logging\commons-logging\1.2\commons-logging-1.2.jar]
+[DEBUG]   (f) compileSourceRoots = [C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src, C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\main]
+[DEBUG]   (f) compilerId = javac
+[DEBUG]   (f) createMissingPackageInfoClass = true
+[DEBUG]   (f) debug = true
+[DEBUG]   (f) debugFileName = javac
+[DEBUG]   (f) enablePreview = false
+[DEBUG]   (f) encoding = UTF-8
+[DEBUG]   (f) failOnError = true
+[DEBUG]   (f) failOnWarning = false
+[DEBUG]   (f) forceJavacCompilerUse = false
+[DEBUG]   (f) fork = false
+[DEBUG]   (f) generatedSourcesDirectory = C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\target\generated-sources\annotations
+[DEBUG]   (f) mojoExecution = org.apache.maven.plugins:maven-compiler-plugin:3.11.0:compile {execution: default-compile}
+[DEBUG]   (f) optimize = false
+[DEBUG]   (f) outputDirectory = C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\target\classes
+[DEBUG]   (f) parameters = false
+[DEBUG]   (f) project = MavenProject: appli_pre_etudes:appli_pre_etudes:0.0.1-SNAPSHOT @ C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\pom.xml
+[DEBUG]   (f) projectArtifact = appli_pre_etudes:appli_pre_etudes:jar:0.0.1-SNAPSHOT
+[DEBUG]   (s) release = 21
+[DEBUG]   (f) session = org.apache.maven.execution.MavenSession@1bb15351
+[DEBUG]   (f) showCompilationChanges = false
+[DEBUG]   (f) showDeprecation = false
+[DEBUG]   (f) showWarnings = true
+[DEBUG]   (f) skipMultiThreadWarning = false
+[DEBUG]   (f) source = 1.8
+[DEBUG]   (f) staleMillis = 0
+[DEBUG]   (s) target = 1.8
+[DEBUG]   (f) useIncrementalCompilation = true
+[DEBUG]   (f) verbose = false
+[DEBUG] -- end configuration --
+[DEBUG] Using compiler 'javac'.
+[DEBUG] Adding C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\target\generated-sources\annotations to compile source roots:
+  C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src
+  C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\main
+[DEBUG] New compile source roots:
+  C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src
+  C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\main
+  C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\target\generated-sources\annotations
+[DEBUG] CompilerReuseStrategy: reuseCreated
+[DEBUG] useIncrementalCompilation enabled
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\service\finance\FinancialCalculator.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\vue\PageAccueil.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\controller\GridController.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\modele\cablesetprotections\ParafoudresAC.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\modele\cablesetprotections\ParafoudreDC.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\vue\PageCablesProtections.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\modele\EtudeDUnePente.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\vue\cablesetprotections\Tables.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\vue\PageEstimationHub.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\vue\Styles.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\vue\cablesetprotections\FenetreSurgissanteAide.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\export\ExportStrategy.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\modele\pvgis\PVGridAndTrackerRequest.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\vue\ui\UIConstants.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\modele\cablesetprotections\DisjoncteurACOnduleur.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\vue\EstimationProd\PageEstimationPVGISTracker.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\modele\cablesetprotections\DisjoncteursACOnduleur.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\modele\finance\FinancialResult.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\vue\PagePuissance.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\vue\ui\GraphsPanel.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\export\PdfExportStrategy.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\modele\cablesetprotections\Fusible.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\vue\util\ExportWorkerFactory.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\vue\util\ChartsFactory.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\service\pvgis\PVGISParser.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\vue\cablesetprotections\vue\cablesetprotections\customrenderers\CustomRendererTableDisjoncteurAssocieAuParafoudreAC.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\modele\EtudeDUnModule.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\vue\EstimationProd\PageEstimationPVGISGrid.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\export\ExportFacade.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\vue\ui\ToolbarPanel.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\modele\pvgis\PVGISModel.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\vue\util\FinancialCharts.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\modele\NullDataException.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\modele\cablesetprotections\InterrupteurSectionneurDC.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\modele\pvgis\MonthlyResult.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\modele\cablesetprotections\ParafoudresDC.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\modele\EFU.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\modele\Onduleur.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\controller\OffGridController.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\vue\cablesetprotections\vue\cablesetprotections\customrenderers\CustomRendererTableInterrupteursSectionneurs.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\vue\FenetrePrincipale.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\vue\ui\TitleBanner.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\modele\Module.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\vue\util\FinancialChartsRenderer.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\modele\InvalidFormatException.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\export\ExportContext.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\modele\cablesetprotections\Fusibles.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\modele\pvgis\HistogramBucket.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\vue\cablesetprotections\vue\cablesetprotections\customrenderers\CustomRendererTableParafoudreAC.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\modele\EtudeDUnOnduleur.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\export\CsvExportStrategy.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\modele\cablesetprotections\DisjoncteurACGeneral.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\vue\PageEstimationPVGISOffGrid.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\modele\cablesetprotections\ProtectionDifferentielle.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\modele\Pente.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\vue\PageEstimationPVGISGrid.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\controller\TrackerController.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\service\pvgis\HttpClientPVGIS.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\modele\cablesetprotections\FamilleDElements.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\modele\cablesetprotections\Element.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\vue\Exportation.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\service\pvgis\PVGISService.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\vue\PageEstimationPVGISTracker.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\vue\util\StatusBarUtil.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\modele\pvgis\PVGISResult.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\vue\util\ChartFactory.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\vue\cablesetprotections\ZonesDeTexte.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\controleur\Controleur.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\vue\PageSurface.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\modele\cablesetprotections\FusiblegPVACouteaux.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\modele\cablesetprotections\FusiblegPVCylindrique.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\modele\cablesetprotections\InterrupteursSectionneursDC.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\modele\pvgis\PVOffGridRequest.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\modele\cablesetprotections\ParafoudreAC.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\modele\cablesetprotections\DisjoncteursACGeneraux.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\vue\EstimationProd\PageEstimationPVGISOffGrid.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\modele\Calcul.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\modele\cablesetprotections\ProtectionsDifferentielles.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\modele\cablesetprotections\CalculCablesEtProtections.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\vue\cablesetprotections\vue\cablesetprotections\customrenderers\CustomRendererTableDisjoncteurACGeneral.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\main\Main.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\vue\cablesetprotections\ImagePanel.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\export\pdf\PdfDocumentBuilder.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\service\pvgis\PVGISClient.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\vue\cablesetprotections\vue\cablesetprotections\customrenderers\CustomRendererTableParafoudreDC.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\vue\ui\ButtonStyleUtil.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\modele\finance\FinancialParams.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\vue\cablesetprotections\vue\cablesetprotections\customrenderers\CustomRendererTableChuteDeTensionTotaleDCMaximumARespecter.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\vue\PageOnduleur.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\modele\cablesetprotections\BDD.java
+[DEBUG] Stale source detected: C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\vue\cablesetprotections\vue\cablesetprotections\customrenderers\CustomRendererTableDisjoncteursACAssociesAuxOnduleurs.java
+[INFO] Changes detected - recompiling the module! :source
+[DEBUG] Classpath:
+[DEBUG]  C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\target\classes
+[DEBUG]  C:\Users\user\.m2\repository\org\apache\poi\poi\5.3.0\poi-5.3.0.jar
+[DEBUG]  C:\Users\user\.m2\repository\commons-codec\commons-codec\1.17.0\commons-codec-1.17.0.jar
+[DEBUG]  C:\Users\user\.m2\repository\org\apache\commons\commons-collections4\4.4\commons-collections4-4.4.jar
+[DEBUG]  C:\Users\user\.m2\repository\org\apache\commons\commons-math3\3.6.1\commons-math3-3.6.1.jar
+[DEBUG]  C:\Users\user\.m2\repository\commons-io\commons-io\2.16.1\commons-io-2.16.1.jar
+[DEBUG]  C:\Users\user\.m2\repository\com\zaxxer\SparseBitSet\1.3\SparseBitSet-1.3.jar
+[DEBUG]  C:\Users\user\.m2\repository\org\apache\logging\log4j\log4j-api\2.23.1\log4j-api-2.23.1.jar
+[DEBUG]  C:\Users\user\.m2\repository\org\apache\poi\poi-ooxml\5.3.0\poi-ooxml-5.3.0.jar
+[DEBUG]  C:\Users\user\.m2\repository\org\apache\poi\poi-ooxml-lite\5.3.0\poi-ooxml-lite-5.3.0.jar
+[DEBUG]  C:\Users\user\.m2\repository\org\apache\xmlbeans\xmlbeans\5.2.1\xmlbeans-5.2.1.jar
+[DEBUG]  C:\Users\user\.m2\repository\org\apache\commons\commons-compress\1.26.2\commons-compress-1.26.2.jar
+[DEBUG]  C:\Users\user\.m2\repository\org\apache\commons\commons-lang3\3.14.0\commons-lang3-3.14.0.jar
+[DEBUG]  C:\Users\user\.m2\repository\com\github\virtuald\curvesapi\1.08\curvesapi-1.08.jar
+[DEBUG]  C:\Users\user\.m2\repository\org\json\json\20231013\json-20231013.jar
+[DEBUG]  C:\Users\user\.m2\repository\org\knowm\xchart\xchart\3.8.6\xchart-3.8.6.jar
+[DEBUG]  C:\Users\user\.m2\repository\de\erichseifert\vectorgraphics2d\VectorGraphics2D\0.13\VectorGraphics2D-0.13.jar
+[DEBUG]  C:\Users\user\.m2\repository\de\rototor\pdfbox\graphics2d\3.0.0\graphics2d-3.0.0.jar
+[DEBUG]  C:\Users\user\.m2\repository\com\madgag\animated-gif-lib\1.4\animated-gif-lib-1.4.jar
+[DEBUG]  C:\Users\user\.m2\repository\org\apache\pdfbox\pdfbox\2.0.30\pdfbox-2.0.30.jar
+[DEBUG]  C:\Users\user\.m2\repository\org\apache\pdfbox\fontbox\2.0.30\fontbox-2.0.30.jar
+[DEBUG]  C:\Users\user\.m2\repository\commons-logging\commons-logging\1.2\commons-logging-1.2.jar
+[DEBUG] Source roots:
+[DEBUG]  C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src
+[DEBUG]  C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\main
+[DEBUG]  C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\target\generated-sources\annotations
+[DEBUG] Command line options:
+[DEBUG] -d C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\target\classes -classpath C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\target\classes;C:\Users\user\.m2\repository\org\apache\poi\poi\5.3.0\poi-5.3.0.jar;C:\Users\user\.m2\repository\commons-codec\commons-codec\1.17.0\commons-codec-1.17.0.jar;C:\Users\user\.m2\repository\org\apache\commons\commons-collections4\4.4\commons-collections4-4.4.jar;C:\Users\user\.m2\repository\org\apache\commons\commons-math3\3.6.1\commons-math3-3.6.1.jar;C:\Users\user\.m2\repository\commons-io\commons-io\2.16.1\commons-io-2.16.1.jar;C:\Users\user\.m2\repository\com\zaxxer\SparseBitSet\1.3\SparseBitSet-1.3.jar;C:\Users\user\.m2\repository\org\apache\logging\log4j\log4j-api\2.23.1\log4j-api-2.23.1.jar;C:\Users\user\.m2\repository\org\apache\poi\poi-ooxml\5.3.0\poi-ooxml-5.3.0.jar;C:\Users\user\.m2\repository\org\apache\poi\poi-ooxml-lite\5.3.0\poi-ooxml-lite-5.3.0.jar;C:\Users\user\.m2\repository\org\apache\xmlbeans\xmlbeans\5.2.1\xmlbeans-5.2.1.jar;C:\Users\user\.m2\repository\org\apache\commons\commons-compress\1.26.2\commons-compress-1.26.2.jar;C:\Users\user\.m2\repository\org\apache\commons\commons-lang3\3.14.0\commons-lang3-3.14.0.jar;C:\Users\user\.m2\repository\com\github\virtuald\curvesapi\1.08\curvesapi-1.08.jar;C:\Users\user\.m2\repository\org\json\json\20231013\json-20231013.jar;C:\Users\user\.m2\repository\org\knowm\xchart\xchart\3.8.6\xchart-3.8.6.jar;C:\Users\user\.m2\repository\de\erichseifert\vectorgraphics2d\VectorGraphics2D\0.13\VectorGraphics2D-0.13.jar;C:\Users\user\.m2\repository\de\rototor\pdfbox\graphics2d\3.0.0\graphics2d-3.0.0.jar;C:\Users\user\.m2\repository\com\madgag\animated-gif-lib\1.4\animated-gif-lib-1.4.jar;C:\Users\user\.m2\repository\org\apache\pdfbox\pdfbox\2.0.30\pdfbox-2.0.30.jar;C:\Users\user\.m2\repository\org\apache\pdfbox\fontbox\2.0.30\fontbox-2.0.30.jar;C:\Users\user\.m2\repository\commons-logging\commons-logging\1.2\commons-logging-1.2.jar; -sourcepath C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src;C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\src\main;C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\target\generated-sources\annotations; -s C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\target\generated-sources\annotations -g --release 21 -encoding UTF-8
+[DEBUG] incrementalBuildHelper#beforeRebuildExecution
+[INFO] Compiling 91 source files with javac [debug release 21] to target\classes
+[DEBUG] incrementalBuildHelper#afterRebuildExecution
+[INFO] -------------------------------------------------------------
+[ERROR] COMPILATION ERROR : 
+[INFO] -------------------------------------------------------------
+[ERROR] /C:/Users/user/Downloads/appli_pre_etudes/appli_pre_etudes/src/vue/util/FinancialChartsRenderer.java:[11,14] class FinancialCharts is public, should be declared in a file named FinancialCharts.java
+[ERROR] /C:/Users/user/Downloads/appli_pre_etudes/appli_pre_etudes/src/vue/util/ChartFactory.java:[15,14] class ChartsFactory is public, should be declared in a file named ChartsFactory.java
+[ERROR] /C:/Users/user/Downloads/appli_pre_etudes/appli_pre_etudes/src/vue/util/ChartsFactory.java:[15,14] duplicate class: vue.util.ChartsFactory
+[INFO] 3 errors 
+[INFO] -------------------------------------------------------------
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  17.081 s
+[INFO] Finished at: 2025-09-11T01:53:22+02:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.11.0:compile (default-compile) on project appli_pre_etudes: Compilation failure: Compilation failure: 
+[ERROR] /C:/Users/user/Downloads/appli_pre_etudes/appli_pre_etudes/src/vue/util/FinancialChartsRenderer.java:[11,14] class FinancialCharts is public, should be declared in a file named FinancialCharts.java
+[ERROR] /C:/Users/user/Downloads/appli_pre_etudes/appli_pre_etudes/src/vue/util/ChartFactory.java:[15,14] class ChartsFactory is public, should be declared in a file named ChartsFactory.java
+[ERROR] /C:/Users/user/Downloads/appli_pre_etudes/appli_pre_etudes/src/vue/util/ChartsFactory.java:[15,14] duplicate class: vue.util.ChartsFactory
+[ERROR] -> [Help 1]
+org.apache.maven.lifecycle.LifecycleExecutionException: Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.11.0:compile (default-compile) on project appli_pre_etudes: Compilation failure
+    at org.apache.maven.lifecycle.internal.MojoExecutor.doExecute2 (MojoExecutor.java:333)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.doExecute (MojoExecutor.java:316)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:212)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:174)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.access$000 (MojoExecutor.java:75)
+    at org.apache.maven.lifecycle.internal.MojoExecutor$1.run (MojoExecutor.java:162)
+    at org.apache.maven.plugin.DefaultMojosExecutionStrategy.execute (DefaultMojosExecutionStrategy.java:39)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:159)
+    at org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject (LifecycleModuleBuilder.java:105)
+    at org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject (LifecycleModuleBuilder.java:73)
+    at org.apache.maven.lifecycle.internal.builder.singlethreaded.SingleThreadedBuilder.build (SingleThreadedBuilder.java:53)
+    at org.apache.maven.lifecycle.internal.LifecycleStarter.execute (LifecycleStarter.java:118)
+    at org.apache.maven.DefaultMaven.doExecute (DefaultMaven.java:261)
+    at org.apache.maven.DefaultMaven.doExecute (DefaultMaven.java:173)
+    at org.apache.maven.DefaultMaven.execute (DefaultMaven.java:101)
+    at org.apache.maven.cli.MavenCli.execute (MavenCli.java:906)
+    at org.apache.maven.cli.MavenCli.doMain (MavenCli.java:283)
+    at org.apache.maven.cli.MavenCli.main (MavenCli.java:206)
+    at jdk.internal.reflect.DirectMethodHandleAccessor.invoke (DirectMethodHandleAccessor.java:103)
+    at java.lang.reflect.Method.invoke (Method.java:580)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.launchEnhanced (Launcher.java:255)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.launch (Launcher.java:201)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.mainWithExitCode (Launcher.java:361)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.main (Launcher.java:314)
+Caused by: org.apache.maven.plugin.compiler.CompilationFailureException: Compilation failure
+    at org.apache.maven.plugin.compiler.AbstractCompilerMojo.execute (AbstractCompilerMojo.java:1212)
+    at org.apache.maven.plugin.compiler.CompilerMojo.execute (CompilerMojo.java:193)
+    at org.apache.maven.plugin.DefaultBuildPluginManager.executeMojo (DefaultBuildPluginManager.java:126)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.doExecute2 (MojoExecutor.java:328)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.doExecute (MojoExecutor.java:316)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:212)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:174)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.access$000 (MojoExecutor.java:75)
+    at org.apache.maven.lifecycle.internal.MojoExecutor$1.run (MojoExecutor.java:162)
+    at org.apache.maven.plugin.DefaultMojosExecutionStrategy.execute (DefaultMojosExecutionStrategy.java:39)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:159)
+    at org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject (LifecycleModuleBuilder.java:105)
+    at org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject (LifecycleModuleBuilder.java:73)
+    at org.apache.maven.lifecycle.internal.builder.singlethreaded.SingleThreadedBuilder.build (SingleThreadedBuilder.java:53)
+    at org.apache.maven.lifecycle.internal.LifecycleStarter.execute (LifecycleStarter.java:118)
+    at org.apache.maven.DefaultMaven.doExecute (DefaultMaven.java:261)
+    at org.apache.maven.DefaultMaven.doExecute (DefaultMaven.java:173)
+    at org.apache.maven.DefaultMaven.execute (DefaultMaven.java:101)
+    at org.apache.maven.cli.MavenCli.execute (MavenCli.java:906)
+    at org.apache.maven.cli.MavenCli.doMain (MavenCli.java:283)
+    at org.apache.maven.cli.MavenCli.main (MavenCli.java:206)
+    at jdk.internal.reflect.DirectMethodHandleAccessor.invoke (DirectMethodHandleAccessor.java:103)
+    at java.lang.reflect.Method.invoke (Method.java:580)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.launchEnhanced (Launcher.java:255)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.launch (Launcher.java:201)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.mainWithExitCode (Launcher.java:361)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.main (Launcher.java:314)
+[ERROR] 
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException
+[DEBUG] Shutting down adapter factory; available factories [file-lock, rwlock-local, semaphore-local, noop]; available name mappers [discriminating, file-gav, file-hgav, file-static, gav, static]
+[DEBUG] Shutting down 'file-lock' factory
+[DEBUG] Shutting down 'rwlock-local' factory
+[DEBUG] Shutting down 'semaphore-local' factory
+[DEBUG] Shutting down 'noop' factory
