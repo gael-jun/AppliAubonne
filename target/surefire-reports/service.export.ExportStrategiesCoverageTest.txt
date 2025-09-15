@@ -1,0 +1,5 @@
+-------------------------------------------------------------------------------
+Test set: service.export.ExportStrategiesCoverageTest
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.399 s -- in service.export.ExportStrategiesCoverageTest
+service.export.ExportStrategiesCoverageTest.csvAndPdfMinimal -- Time elapsed: 2.335 s

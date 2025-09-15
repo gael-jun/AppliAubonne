@@ -1,0 +1,7 @@
+-------------------------------------------------------------------------------
+Test set: service.pvgis.PVOffGridServiceUrlBuildTest
+-------------------------------------------------------------------------------
+Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.133 s -- in service.pvgis.PVOffGridServiceUrlBuildTest
+service.pvgis.PVOffGridServiceUrlBuildTest.no_optional_parameters_added -- Time elapsed: 0.073 s
+service.pvgis.PVOffGridServiceUrlBuildTest.all_optional_parameters_present -- Time elapsed: 0.002 s
+service.pvgis.PVOffGridServiceUrlBuildTest.single_optional_parameter_hourConsumption -- Time elapsed: 0.001 s

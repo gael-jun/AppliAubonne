@@ -1,0 +1,5 @@
+-------------------------------------------------------------------------------
+Test set: basic.SanityTest
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.094 s -- in basic.SanityTest
+basic.SanityTest.addition -- Time elapsed: 0.045 s

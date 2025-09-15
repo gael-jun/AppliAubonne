@@ -1,0 +1,19 @@
+-------------------------------------------------------------------------------
+Test set: service.validation.InputValidatorTest
+-------------------------------------------------------------------------------
+Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.160 s -- in service.validation.InputValidatorTest
+service.validation.InputValidatorTest.angleInvalid -- Time elapsed: 0.047 s
+service.validation.InputValidatorTest.aspectInvalid -- Time elapsed: 0.002 s
+service.validation.InputValidatorTest.latitudeInvalidHigh -- Time elapsed: 0.003 s
+service.validation.InputValidatorTest.peakPowerInvalidNegative -- Time elapsed: 0.002 s
+service.validation.InputValidatorTest.projectDurationInvalid -- Time elapsed: 0.002 s
+service.validation.InputValidatorTest.projectDurationValid -- Time elapsed: 0.003 s
+service.validation.InputValidatorTest.parseInvalidNumberMessage -- Time elapsed: 0.003 s
+service.validation.InputValidatorTest.lossPercentValidEdge -- Time elapsed: 0.001 s
+service.validation.InputValidatorTest.longitudeInvalid -- Time elapsed: 0.002 s
+service.validation.InputValidatorTest.latitudeValid -- Time elapsed: 0.001 s
+service.validation.InputValidatorTest.aspectValid -- Time elapsed: 0.002 s
+service.validation.InputValidatorTest.lossPercentInvalid -- Time elapsed: 0.002 s
+service.validation.InputValidatorTest.angleBlankIgnored -- Time elapsed: 0.002 s
+service.validation.InputValidatorTest.injectionRatioInvalid -- Time elapsed: 0.002 s
+service.validation.InputValidatorTest.injectionRatioValid -- Time elapsed: 0.003 s

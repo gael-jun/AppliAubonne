@@ -71,4 +71,71 @@ public class FinancialCalculatorTest {
         assertTrue(r.annees.isEmpty());
         assertEquals(0.0, r.vanTotale, 1e-9);
     }
+
+    @Test
+    void testCompute_horizonSingleYear() {
+        PVGISResult p = buildPVGISWithConstantDailyWh(4000);
+        FinancialParams params = new FinancialParams(500, 0, 0.2, 0.7, 50, 1, 0.05, 2025);
+        FinancialResult r = new FinancialCalculator().compute(p, params);
+        // duree =1 => annees = 2 (année 0 + 1)
+        assertEquals(2, r.annees.size());
+        assertEquals(1, r.recettes.size());
+        assertEquals(1, r.van.size());
+    }
+
+    @Test
+    void testCompute_longHorizonProducesExpectedSizes() {
+        PVGISResult p = buildPVGISWithConstantDailyWh(2500);
+        int horizon = 30;
+        FinancialParams params = new FinancialParams(2000, 100, 0.18, 0.6, 40, horizon, 0.04, 2025);
+        FinancialResult r = new FinancialCalculator().compute(p, params);
+        assertEquals(horizon + 1, r.annees.size());
+        assertEquals(horizon, r.recettes.size());
+        assertEquals(horizon, r.van.size());
+    }
+
+    @Test
+    void testCompute_incompleteMonthsData() {
+        // 6 mois seulement
+        List<MonthlyResult> months = java.util.stream.IntStream.rangeClosed(1,6)
+                .mapToObj(m -> new MonthlyResult(m, 3000, 0.0, 0.0, 0.0))
+                .toList();
+        PVGISResult partial = new PVGISResult(months, List.of());
+        FinancialParams params = new FinancialParams(800, 0, 0.2, 0.5, 30, 5, 0.05, 2025);
+        FinancialResult r = new FinancialCalculator().compute(partial, params);
+        // Horizon = 5 => 5 années de flux (année 1..5)
+        assertEquals(5, r.recettes.size());
+        assertEquals(5, r.van.size());
+        // Vérifie que la VAN est calculée (peut être négative ou positive selon paramètres)
+        assertNotNull(r.vanTotale);
+    }
+
+    @Test
+    void testCompute_zeroInvestmentStillComputesVan() {
+        PVGISResult p = buildPVGISWithConstantDailyWh(3200);
+        FinancialParams params = new FinancialParams(0, 0, 0.22, 0.8, 0, 4, 0.05, 2025);
+        FinancialResult r = new FinancialCalculator().compute(p, params);
+        assertTrue(r.vanTotale > 0); // Pas d'investissement initial => VAN devrait être positive si recettes > 0
+    }
+
+    @Test
+    void testCompute_partialInjectionRate() {
+        PVGISResult p = buildPVGISWithConstantDailyWh(3000);
+        FinancialParams params35 = new FinancialParams(1000, 0, 0.2, 0.35, 20, 3, 0.05, 2025);
+        FinancialParams params70 = new FinancialParams(1000, 0, 0.2, 0.70, 20, 3, 0.05, 2025);
+        FinancialCalculator calc = new FinancialCalculator();
+        FinancialResult r35 = calc.compute(p, params35);
+        FinancialResult r70 = calc.compute(p, params70);
+        assertTrue(r70.recettes.get(0) > r35.recettes.get(0));
+    }
+
+    @Test
+    void testCompute_allNegativeCashFlowsRemainNegativeVan() {
+        // Rend les recettes nulles: injection 0 => flux = -coutAnnuel => VAN négative
+        PVGISResult p = buildPVGISWithConstantDailyWh(4000);
+        FinancialParams params = new FinancialParams(500, 0, 0.2, 0.0, 100, 6, 0.05, 2025);
+        FinancialResult r = new FinancialCalculator().compute(p, params);
+        assertTrue(r.van.stream().allMatch(v -> v < 0));
+        assertTrue(r.vanTotale < 0);
+    }
 }

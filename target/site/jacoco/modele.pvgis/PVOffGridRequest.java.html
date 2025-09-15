@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PVOffGridRequest.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">appli_pre_etudes</a> &gt; <a href="index.source.html" class="el_package">modele.pvgis</a> &gt; <span class="el_source">PVOffGridRequest.java</span></div><h1>PVOffGridRequest.java</h1><pre class="source lang-java linenums">package modele.pvgis;
+
+import java.util.Objects;
+
+/**
+ * Requête Off-Grid (endpoint SHScalc) vers l'API PVGIS.
+ * Champs conservés sous forme de String car envoyés tels quels dans l'URL.
+ * Immuable et thread-safe.
+ */
+public final class PVOffGridRequest {
+    /** Latitude décimale (ex: &quot;46.2&quot;). */
+    public final String lat;
+    /** Longitude décimale (ex: &quot;6.1&quot;). */
+    public final String lon;
+    /** Puissance crête installée kWc. */
+    public final String peakPower;
+    /** Capacité batterie (Wh). */
+    public final String batterySize;
+    /** Tension/cutoff (%) ou paramètre de coupure selon API. */
+    public final String cutoff;
+    /** Consommation moyenne journalière (Wh/j). */
+    public final String consumptionDay;
+    /** Inclinaison (°) facultative. */
+    public final String angle;
+    /** Azimut (°) facultatif (0 = sud). */
+    public final String aspect;
+    /** Base de données d'irradiation sélectionnée. */
+    public final String radDatabase;
+    /** Utilisation de l'horizon (1/0). */
+    public final boolean useHorizon;
+    /** Horizon utilisateur format API si fourni. */
+    public final String userHorizon;
+    /** Profil de consommation horaire CSV inline éventuel. */
+    public final String hourConsumption;
+    /** Format de sortie (json). */
+    public final String outputFormat;
+    /** Indique appel navigateur (pour API). */
+    public final boolean browser;
+
+    public PVOffGridRequest(String lat, String lon, String peakPower, String batterySize, String cutoff,
+                        String consumptionDay, String angle, String aspect, String radDatabase,
+                        boolean useHorizon, String userHorizon, String hourConsumption,
+<span class="fc" id="L43">                        String outputFormat, boolean browser) {</span>
+<span class="fc" id="L44">        this.lat = lat; this.lon = lon; this.peakPower = peakPower; this.batterySize = batterySize; this.cutoff = cutoff;</span>
+<span class="fc" id="L45">        this.consumptionDay = consumptionDay; this.angle = angle; this.aspect = aspect; this.radDatabase = radDatabase;</span>
+<span class="fc" id="L46">        this.useHorizon = useHorizon; this.userHorizon = userHorizon; this.hourConsumption = hourConsumption;</span>
+<span class="fc" id="L47">        this.outputFormat = outputFormat; this.browser = browser;</span>
+<span class="fc" id="L48">    }</span>
+
+<span class="nc" id="L50">    @Override public String toString() { return &quot;PVGISRequest{&quot; + lat+&quot;,&quot;+lon+&quot;}&quot;; }</span>
+<span class="fc" id="L51">    @Override public int hashCode() { return Objects.hash(lat, lon, peakPower, batterySize, cutoff, consumptionDay, angle, aspect, radDatabase, useHorizon, userHorizon, hourConsumption, outputFormat, browser); }</span>
+    @Override public boolean equals(Object o) {
+<span class="pc bpc" id="L53" title="1 of 2 branches missed.">        if (this == o) return true;</span>
+<span class="pc bpc" id="L54" title="1 of 2 branches missed.">        if (!(o instanceof PVOffGridRequest other)) return false;</span>
+<span class="pc bpc" id="L55" title="2 of 4 branches missed.">        return browser == other.browser &amp;&amp; useHorizon == other.useHorizon &amp;&amp;</span>
+<span class="pc bpc" id="L56" title="1 of 4 branches missed.">                Objects.equals(lat, other.lat) &amp;&amp; Objects.equals(lon, other.lon) &amp;&amp;</span>
+<span class="pc bpc" id="L57" title="2 of 4 branches missed.">                Objects.equals(peakPower, other.peakPower) &amp;&amp; Objects.equals(batterySize, other.batterySize) &amp;&amp;</span>
+<span class="pc bpc" id="L58" title="2 of 4 branches missed.">                Objects.equals(cutoff, other.cutoff) &amp;&amp; Objects.equals(consumptionDay, other.consumptionDay) &amp;&amp;</span>
+<span class="pc bpc" id="L59" title="2 of 4 branches missed.">                Objects.equals(angle, other.angle) &amp;&amp; Objects.equals(aspect, other.aspect) &amp;&amp;</span>
+<span class="pc bpc" id="L60" title="2 of 4 branches missed.">                Objects.equals(radDatabase, other.radDatabase) &amp;&amp; Objects.equals(userHorizon, other.userHorizon) &amp;&amp;</span>
+<span class="pc bpc" id="L61" title="2 of 4 branches missed.">                Objects.equals(hourConsumption, other.hourConsumption) &amp;&amp; Objects.equals(outputFormat, other.outputFormat);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

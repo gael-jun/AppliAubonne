@@ -1,0 +1,8 @@
+-------------------------------------------------------------------------------
+Test set: service.export.ExportStrategiesTest
+-------------------------------------------------------------------------------
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.470 s -- in service.export.ExportStrategiesTest
+service.export.ExportStrategiesTest.testCsvExport_withFinance -- Time elapsed: 0.128 s
+service.export.ExportStrategiesTest.testPdfExport_emptyData -- Time elapsed: 0.879 s
+service.export.ExportStrategiesTest.testCsvExport_withoutFinance -- Time elapsed: 0.006 s
+service.export.ExportStrategiesTest.testPdfExport_basic -- Time elapsed: 0.392 s

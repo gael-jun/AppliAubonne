@@ -1,0 +1,7 @@
+-------------------------------------------------------------------------------
+Test set: service.pvgis.PVGISServiceTest
+-------------------------------------------------------------------------------
+Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.147 s -- in service.pvgis.PVGISServiceTest
+service.pvgis.PVGISServiceTest.testMalformedJsonGraceful -- Time elapsed: 0.060 s
+service.pvgis.PVGISServiceTest.testOffGridUrlBuild -- Time elapsed: 0.012 s
+service.pvgis.PVGISServiceTest.testPVcalcTrackerUrlBuild -- Time elapsed: 0.005 s

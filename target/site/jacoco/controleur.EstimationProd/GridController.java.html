@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GridController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">appli_pre_etudes</a> &gt; <a href="index.source.html" class="el_package">controleur.EstimationProd</a> &gt; <span class="el_source">GridController.java</span></div><h1>GridController.java</h1><pre class="source lang-java linenums">package controleur.EstimationProd;
+
+import javax.swing.SwingWorker;
+
+import service.export.CsvExportStrategy;
+import service.export.ExportContext;
+import service.export.PdfExportStrategy;
+import service.validation.InputValidator;
+import vue.util.ExportWorkerFactory;
+/**
+ * Thin controller for the Grid-connected PVGIS page.
+ * Encapsulates background estimation and export worker creation.
+ */
+public final class GridController {
+    private final service.pvgis.PVGISService service;
+
+<span class="fc" id="L17">    public GridController(service.pvgis.PVGISService service) {</span>
+<span class="fc" id="L18">        this.service = service;</span>
+<span class="fc" id="L19">    }</span>
+
+    /**
+     * Creates a SwingWorker that calls PVGIS PVcalc endpoint in background.
+     * onSuccess/onError are executed on EDT inside done().
+     */
+    public SwingWorker&lt;modele.pvgis.PVGISResult, Void&gt; createEstimateWorker(
+            final modele.pvgis.PVGridAndTrackerRequest req,
+            final java.util.function.Consumer&lt;modele.pvgis.PVGISResult&gt; onSuccess,
+            final java.util.function.Consumer&lt;Exception&gt; onError
+    ) {
+        // Headless test environments (CI) sometimes do not reliably dispatch Swing EDT callbacks
+        // in the expected timing, causing tests waiting on the success callback (set inside done())
+        // to time out or the build to be interrupted. We mirror the approach used in TrackerController:
+        // if the environment is headless, we invoke the success callback directly from doInBackground
+        // and suppress a second invocation in done().
+<span class="fc" id="L35">        final boolean headless = java.awt.GraphicsEnvironment.isHeadless();</span>
+<span class="fc" id="L36">        final java.util.concurrent.atomic.AtomicBoolean callbackInvoked = new java.util.concurrent.atomic.AtomicBoolean(false);</span>
+<span class="fc" id="L37">        return buildWorker(req, onSuccess, onError, headless, callbackInvoked);</span>
+    }
+
+    private SwingWorker&lt;modele.pvgis.PVGISResult, Void&gt; buildWorker(
+            final modele.pvgis.PVGridAndTrackerRequest req,
+            final java.util.function.Consumer&lt;modele.pvgis.PVGISResult&gt; onSuccess,
+            final java.util.function.Consumer&lt;Exception&gt; onError,
+            final boolean headless,
+            final java.util.concurrent.atomic.AtomicBoolean callbackInvoked) {
+<span class="fc" id="L46">        return new SwingWorker&lt;&gt;() {</span>
+            @Override
+            protected modele.pvgis.PVGISResult doInBackground() throws Exception {
+<span class="fc" id="L49">                performValidation(req); // may throw IllegalArgumentException from validators</span>
+<span class="fc" id="L50">                modele.pvgis.PVGISResult res = service.fetchPVcalc(req);</span>
+<span class="fc" id="L51">                invokeSuccessIfHeadless(headless, onSuccess, callbackInvoked, res);</span>
+<span class="fc" id="L52">                return res;</span>
+            }
+
+            @Override
+            protected void done() {
+                try {
+<span class="fc" id="L58">                    modele.pvgis.PVGISResult res = get();</span>
+<span class="fc" id="L59">                    dispatchSuccessIfNotInvoked(callbackInvoked, onSuccess, res);</span>
+<span class="fc" id="L60">                } catch (java.util.concurrent.ExecutionException ex) {</span>
+<span class="pc bpc" id="L61" title="1 of 2 branches missed.">                    if (onError != null) onError.accept(ex);</span>
+<span class="nc" id="L62">                } catch (InterruptedException ie) {</span>
+                    // Restore interrupt status and propagate to error callback
+<span class="nc" id="L64">                    Thread.currentThread().interrupt();</span>
+<span class="nc bnc" id="L65" title="All 2 branches missed.">                    if (onError != null) onError.accept(ie);</span>
+<span class="fc" id="L66">                }</span>
+<span class="fc" id="L67">            }</span>
+        };
+    }
+
+    private static void invokeSuccessIfHeadless(boolean headless,
+                                                 java.util.function.Consumer&lt;modele.pvgis.PVGISResult&gt; onSuccess,
+                                                 java.util.concurrent.atomic.AtomicBoolean flag,
+                                                 modele.pvgis.PVGISResult res) {
+<span class="pc bpc" id="L75" title="2 of 4 branches missed.">        if (headless &amp;&amp; onSuccess != null) {</span>
+<span class="fc" id="L76">            onSuccess.accept(res);</span>
+<span class="fc" id="L77">            flag.set(true);</span>
+        }
+<span class="fc" id="L79">    }</span>
+
+    private static void dispatchSuccessIfNotInvoked(java.util.concurrent.atomic.AtomicBoolean flag,
+                                                     java.util.function.Consumer&lt;modele.pvgis.PVGISResult&gt; onSuccess,
+                                                     modele.pvgis.PVGISResult res) {
+<span class="pc bpc" id="L84" title="3 of 4 branches missed.">        if (!flag.get() &amp;&amp; onSuccess != null) {</span>
+<span class="nc" id="L85">            onSuccess.accept(res);</span>
+        }
+<span class="fc" id="L87">    }</span>
+
+    // Extracted to reduce cognitive complexity inside anonymous SwingWorker
+    private static void performValidation(modele.pvgis.PVGridAndTrackerRequest req) {
+<span class="fc" id="L91">        InputValidator.validateLatitude(req.lat);</span>
+<span class="fc" id="L92">        InputValidator.validateLongitude(req.lon);</span>
+<span class="fc" id="L93">        InputValidator.validatePeakPower(req.peakPower);</span>
+<span class="fc" id="L94">        InputValidator.validateLossPercent(req.loss);</span>
+<span class="fc" id="L95">        InputValidator.validateAngle(req.angle);</span>
+<span class="fc" id="L96">        InputValidator.validateAspect(req.aspect);</span>
+<span class="fc" id="L97">        InputValidator.validateProjectDuration(req.lifetime);</span>
+<span class="pc bpc" id="L98" title="2 of 4 branches missed.">        if (req.inclinedAxisAngle != null &amp;&amp; !req.inclinedAxisAngle.isBlank()) {</span>
+<span class="nc" id="L99">            InputValidator.validateAngle(req.inclinedAxisAngle);</span>
+        }
+<span class="pc bpc" id="L101" title="2 of 4 branches missed.">        if (req.verticalAxisAngle != null &amp;&amp; !req.verticalAxisAngle.isBlank()) {</span>
+<span class="nc" id="L102">            InputValidator.validateAngle(req.verticalAxisAngle);</span>
+        }
+<span class="fc" id="L104">    }</span>
+
+    /**
+    * Builds a CSV export SwingWorker using the shared ExportWorkerFactory helper.
+     */
+    public SwingWorker&lt;Void, Void&gt; createCsvExportWorker(
+            java.io.File targetFile,
+            java.util.function.Supplier&lt;ExportContext&gt; contextSupplier,
+            java.util.function.Consumer&lt;Exception&gt; onErrorOnEdt,
+            java.lang.Runnable onSuccessOnEdt
+    ) {
+<span class="nc" id="L115">    return ExportWorkerFactory.createExportWorker(</span>
+                targetFile,
+                contextSupplier,
+                new CsvExportStrategy(),
+                null,
+                onErrorOnEdt,
+                onSuccessOnEdt
+        );
+    }
+
+    
+
+    /**
+    * Builds a PDF export SwingWorker using the shared ExportWorkerFactory helper.
+     */
+    public SwingWorker&lt;Void, Void&gt; createPdfExportWorker(
+            java.io.File targetFile,
+            java.util.function.Supplier&lt;ExportContext&gt; contextSupplier,
+            java.lang.Runnable ensureGraphsOnEdt,
+            java.util.function.Consumer&lt;Exception&gt; onErrorOnEdt,
+            java.lang.Runnable onSuccessOnEdt
+    ) {
+<span class="nc" id="L137">    return ExportWorkerFactory.createExportWorker(</span>
+                targetFile,
+                contextSupplier,
+                new PdfExportStrategy(),
+                ensureGraphsOnEdt,
+                onErrorOnEdt,
+                onSuccessOnEdt
+        );
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TrackerController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">appli_pre_etudes</a> &gt; <a href="index.source.html" class="el_package">controleur.EstimationProd</a> &gt; <span class="el_source">TrackerController.java</span></div><h1>TrackerController.java</h1><pre class="source lang-java linenums">package controleur.EstimationProd;
+
+import javax.swing.SwingWorker;
+import service.validation.InputValidator;
+import service.export.ExportContext;
+import service.export.CsvExportStrategy;
+import service.export.PdfExportStrategy;
+import vue.util.ExportWorkerFactory;
+
+/**
+ * Thin controller for the Tracker PVGIS page.
+ * Encapsulates background estimation and export worker creation.
+ */
+public final class TrackerController {
+    private final service.pvgis.PVGISService service;
+
+<span class="fc" id="L17">    public TrackerController(service.pvgis.PVGISService service) {</span>
+<span class="fc" id="L18">        this.service = service;</span>
+<span class="fc" id="L19">    }</span>
+
+    /**
+     * Creates a SwingWorker that calls PVGIS PVcalc endpoint in background.
+     * onSuccess/onError are executed on EDT inside done().
+     */
+    public SwingWorker&lt;modele.pvgis.PVGISResult, Void&gt; createEstimateWorker(
+            modele.pvgis.PVGridAndTrackerRequest req,
+            java.util.function.Consumer&lt;modele.pvgis.PVGISResult&gt; onSuccess,
+            java.util.function.Consumer&lt;Exception&gt; onError
+    ) {
+<span class="fc" id="L30">        final boolean headless = java.awt.GraphicsEnvironment.isHeadless();</span>
+<span class="fc" id="L31">        return new SwingWorker&lt;&gt;() {</span>
+            @Override
+            protected modele.pvgis.PVGISResult doInBackground() throws Exception {
+<span class="fc" id="L34">                InputValidator.validateLatitude(req.lat);</span>
+<span class="fc" id="L35">                InputValidator.validateLongitude(req.lon);</span>
+<span class="fc" id="L36">                InputValidator.validatePeakPower(req.peakPower);</span>
+<span class="fc" id="L37">                InputValidator.validateLossPercent(req.loss);</span>
+<span class="fc" id="L38">                InputValidator.validateAngle(req.angle);</span>
+<span class="fc" id="L39">                InputValidator.validateAspect(req.aspect);</span>
+<span class="fc" id="L40">                InputValidator.validateProjectDuration(req.lifetime);</span>
+<span class="pc bpc" id="L41" title="2 of 4 branches missed.">                if (req.inclinedAxisAngle != null &amp;&amp; !req.inclinedAxisAngle.isBlank()) InputValidator.validateAngle(req.inclinedAxisAngle);</span>
+<span class="pc bpc" id="L42" title="2 of 4 branches missed.">                if (req.verticalAxisAngle != null &amp;&amp; !req.verticalAxisAngle.isBlank()) InputValidator.validateAngle(req.verticalAxisAngle);</span>
+<span class="fc" id="L43">                modele.pvgis.PVGISResult r = service.fetchPVcalc(req);</span>
+                // In headless test environment, Swing EDT callbacks can be delayed; invoke early.
+<span class="pc bpc" id="L45" title="2 of 4 branches missed.">                if (headless &amp;&amp; onSuccess != null) {</span>
+                    try {
+<span class="fc" id="L47">                        onSuccess.accept(r);</span>
+<span class="nc" id="L48">                    } catch (Exception callbackEx) {</span>
+<span class="nc bnc" id="L49" title="All 4 branches missed.">                        if (onError != null) onError.accept(callbackEx instanceof Exception ? (Exception) callbackEx : new RuntimeException(callbackEx));</span>
+<span class="fc" id="L50">                    }</span>
+                }
+<span class="fc" id="L52">                return r;</span>
+            }
+
+            @Override
+            protected void done() {
+                try {
+<span class="fc" id="L58">                    modele.pvgis.PVGISResult res = get();</span>
+                    // Avoid double-calling success if already invoked in headless path
+<span class="pc bpc" id="L60" title="3 of 4 branches missed.">                    if (!headless &amp;&amp; onSuccess != null) onSuccess.accept(res);</span>
+<span class="fc" id="L61">                } catch (java.util.concurrent.ExecutionException | InterruptedException ex) {</span>
+<span class="pc bpc" id="L62" title="1 of 2 branches missed.">                    if (onError != null) onError.accept(ex);</span>
+<span class="fc" id="L63">                }</span>
+<span class="fc" id="L64">            }</span>
+        };
+    }
+
+    public SwingWorker&lt;Void, Void&gt; createCsvExportWorker(
+            java.io.File targetFile,
+            java.util.function.Supplier&lt;ExportContext&gt; contextSupplier,
+            java.util.function.Consumer&lt;Exception&gt; onErrorOnEdt,
+            java.lang.Runnable onSuccessOnEdt
+    ) {
+<span class="nc" id="L74">    return ExportWorkerFactory.createExportWorker(</span>
+                targetFile,
+                contextSupplier,
+                new CsvExportStrategy(),
+                null,
+                onErrorOnEdt,
+                onSuccessOnEdt
+        );
+    }
+
+    public SwingWorker&lt;Void, Void&gt; createPdfExportWorker(
+            java.io.File targetFile,
+            java.util.function.Supplier&lt;ExportContext&gt; contextSupplier,
+            java.lang.Runnable ensureGraphsOnEdt,
+            java.util.function.Consumer&lt;Exception&gt; onErrorOnEdt,
+            java.lang.Runnable onSuccessOnEdt
+    ) {
+<span class="nc" id="L91">    return ExportWorkerFactory.createExportWorker(</span>
+                targetFile,
+                contextSupplier,
+                new PdfExportStrategy(),
+                ensureGraphsOnEdt,
+                onErrorOnEdt,
+                onSuccessOnEdt
+        );
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
