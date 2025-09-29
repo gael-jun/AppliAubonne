@@ -1,13 +1,17 @@
 package service.finance;
 
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Test;
+
 import modele.finance.FinancialParams;
 import modele.finance.FinancialResult;
 import modele.pvgis.MonthlyResult;
 import modele.pvgis.PVGISResult;
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
-
-import java.util.List;
 
 /** Tests principaux pour FinancialCalculator. */
 public class FinancialCalculatorTest {
@@ -37,8 +41,7 @@ public class FinancialCalculatorTest {
         PVGISResult p = buildPVGISWithConstantDailyWh(3000);
         FinancialParams params = new FinancialParams(500, 800, 0.15, 0.5, 20, 5, 0.02, 2025);
         FinancialResult r = new FinancialCalculator().compute(p, params);
-        // Cashflow initial doit être positif (subvention > investissement)
-        assertTrue(r.cashFlowCumule.get(0) > 0);
+        assertTrue(r.cashFlowCumule.get(0) > 0); // Cashflow initial doit être positif (subvention > investissement)
     }
 
     @Test

@@ -16,5 +16,3 @@ Contenu :
 
 4. StatusBarUtil (ex ToolbarUtil)
    - Aide pour mettre à jour de façon cohérente le label de statut (attente, export, succès, erreur). Les anciennes fonctions de gestion des boutons ont été retirées (désormais gérées par ToolbarPanel).
-
-Raisons des renommages : rendre les responsabilités explicites (Factory / Charts / StatusBar) et éviter l'ambiguïté de noms génériques (Workers, Renderer, ToolbarUtil).

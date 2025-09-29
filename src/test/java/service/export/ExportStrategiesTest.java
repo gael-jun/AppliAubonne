@@ -1,18 +1,23 @@
 package service.export;
 
-import modele.finance.FinancialParams;
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.junit.jupiter.api.AfterEach;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Test;
+
 import modele.finance.FinancialResult;
 import modele.pvgis.MonthlyResult;
 import modele.pvgis.PVGISResult;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Test;
-
-import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.util.*;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 /** Tests d'intégration légers pour CsvExportStrategy et PdfExportStrategy. */
 public class ExportStrategiesTest {
