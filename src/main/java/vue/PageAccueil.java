@@ -117,11 +117,11 @@ public class PageAccueil extends JPanel {
     // ----- Composants personnalisés -----
     private static void showTutorielDialog(java.awt.Component parent) {
         String msg = String.join("\n",
-            "Bienvenue dans l'estimation de production :",
+            "Bienvenue dans le tutoriel d'estimation de production :",
             "",
             "1) Accédez à l'estimation",
             "   • Depuis l'accueil: cliquez sur ‘Estimation de production’",
-            "   • OU utilisez le bouton ‘Estimer production’ en haut à droite",
+            "   • Depuis d'autres pages: utilisez le bouton ‘Estimer production’ en haut à droite",
             "",
             "2) Choisissez votre scénario",
             "   • PV couplé au réseau",
@@ -132,13 +132,14 @@ public class PageAccueil extends JPanel {
             "   • Localisation du site, inclinaison/orientation ou suivi pour tracker",
             "   • Puissance crête ou configuration des modules",
             "   • Pertes système et options avancées si nécessaire",
+            "   • Conserver le format JSON pour l'api PVGIS",
             "",
             "4) Lancez le calcul et consultez les résultats",
-            "   • Graphiques standardisés (légende en haut)",
+            "   • Graphiques standardisés ",
             "   • Indicateurs annuels et financiers (cash-flow cumulé)",
             "",
-            "5) Exports",
-            "   • CSV et PDF avec année 0, logo et pagination",
+            "5) Exports des rapports",
+            "   • CSV et PDF avec logo et pagination",
             "",
             "Astuce: dans les pages d'estimation, le menu ‘Pré-étude’ (en haut à droite) donne un accès rapide aux modules (surface, puissance, onduleur, câbles & protections)."
         );

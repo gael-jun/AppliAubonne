@@ -1,0 +1,35 @@
+@startuml seq-estimation
+title UC: Estimer la production (Grid)
+
+actor User
+participant UI
+participant GridController
+participant InputValidator
+participant PVGISService
+participant PVGISClient as HttpClientPVGIS
+participant PVGISParser
+
+User -> UI : saisir paramètres
+UI -> GridController : createEstimateWorker(req)
+activate GridController
+GridController -> InputValidator : validate
+InputValidator --> GridController : ok
+
+GridController -> PVGISService : fetchPVcalc(req)
+activate PVGISService
+PVGISService -> HttpClientPVGIS : GET PVcalc (HTTPS, timeouts, retry)
+HttpClientPVGIS --> PVGISService : JSON
+PVGISService -> PVGISParser : parse(JSON)
+activate PVGISParser
+PVGISParser --> PVGISService : PVGISResult
+deactivate PVGISParser
+PVGISService --> GridController : PVGISResult
+deactivate PVGISService
+
+GridController --> UI : display(monthly, irradiation?, histogram?)
+deactivate GridController
+
+alt Erreur réseau / JSON invalide
+  GridController --> UI : afficher message d'erreur
+end
+@enduml

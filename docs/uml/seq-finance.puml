@@ -1,0 +1,30 @@
+@startuml seq-finance
+title UC: Voir les graphes financiers (inclut l'estimation financière)
+
+actor User
+participant UI
+participant FinancialCalculator
+participant PVGISResult
+participant FinancialParams
+participant ChartsFactory
+'' FinancialResult is a return payload in message text; no lifeline needed
+
+User -> UI : tracerGraphesFinanciers(investissement, subvention, prixVente, ...)
+UI -> FinancialCalculator : compute(pvr, params)
+activate FinancialCalculator
+note right of FinancialCalculator
+  Prod annuelle = Σ(Wh/j * jours)/1000
+  Recettes = prod * prix * tauxInjection
+  VAN = Σ(flux actualisés) - CAPEX initial
+end note
+FinancialCalculator --> UI : FinancialResult (années, cashflows, VAN, VAN totale)
+deactivate FinancialCalculator
+
+UI -> ChartsFactory : createCashFlowChart(années, cashFlowCumule)
+ChartsFactory --> UI : CategoryChart
+UI -> ChartsFactory : createRevenueExpenseChart(annéesRD, recettes, depenses)
+ChartsFactory --> UI : CategoryChart
+UI -> ChartsFactory : createVANChart(annéesRD, van)
+ChartsFactory --> UI : CategoryChart
+UI -> UI : setCharts(charts) et libeller la VAN totale
+@enduml

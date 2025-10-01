@@ -1,7 +1,0 @@
--------------------------------------------------------------------------------
-Test set: service.pvgis.PVGISServiceUrlVariantsTest
--------------------------------------------------------------------------------
-Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.146 s -- in service.pvgis.PVGISServiceUrlVariantsTest
-service.pvgis.PVGISServiceUrlVariantsTest.minimalGridOptionalOmitted -- Time elapsed: 0.072 s
-service.pvgis.PVGISServiceUrlVariantsTest.twoAxisAndGlobalAndAngles -- Time elapsed: 0.004 s
-service.pvgis.PVGISServiceUrlVariantsTest.offGridHorizonAndAngleAspect -- Time elapsed: 0.003 s

@@ -1,7 +1,0 @@
--------------------------------------------------------------------------------
-Test set: controleur.EstimationProd.OffGridControllerTest
--------------------------------------------------------------------------------
-Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.812 s -- in controleur.EstimationProd.OffGridControllerTest
-controleur.EstimationProd.OffGridControllerTest.errorCallback -- Time elapsed: 2.532 s
-controleur.EstimationProd.OffGridControllerTest.invalidLatitudeNoServiceCall -- Time elapsed: 0.106 s
-controleur.EstimationProd.OffGridControllerTest.successCallback -- Time elapsed: 0.078 s

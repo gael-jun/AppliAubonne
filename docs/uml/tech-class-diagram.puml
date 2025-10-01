@@ -1,0 +1,127 @@
+@startuml
+title Diagramme de classes techniques (portée: estimation PV, finance, export, contrôleurs, validation)
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam defaultFontName Arial
+skinparam shadowing false
+
+package "service.pvgis" {
+  interface PVGISClient
+  class HttpClientPVGIS
+  class PVGISService
+  class PVGISParser <<static>>
+}
+
+package "modele.pvgis" {
+  class PVGridAndTrackerRequest
+  class PVOffGridRequest
+  class PVGISResult {
+    +monthly : List<MonthlyResult>
+    +histogram : List<HistogramBucket>
+    +irradiationKWhPerMonth : List<Double>
+  }
+  class MonthlyResult {
+    +month : int
+    +E_d : double  // Wh/jour
+    +E_lost_d : double
+    +f_f : double
+    +f_e : double
+  }
+  class HistogramBucket {
+    +CS_min : double
+    +CS_max : double
+    +f_CS : double
+  }
+}
+
+package "service.finance" {
+  class FinancialCalculator
+}
+
+package "modele.finance" {
+  class FinancialParams
+  class FinancialResult {
+    +annees : List<String>
+    +cashFlowCumule : List<Double>
+    +recettes : List<Double>
+    +depenses : List<Double>
+    +van : List<Double>
+    +vanTotale : double
+  }
+}
+
+package "service.export" {
+  interface ExportStrategy {
+    +exportTo(file: File, ctx: ExportContext)
+  }
+  class PdfExportStrategy
+  class CsvExportStrategy
+  class ExportFacade
+  class ExportContext {
+    +pvgisResult : PVGISResult
+    +financialResult : FinancialResult
+    .. autres champs (titre, paramètres d'entrée, images) ..
+  }
+}
+
+package "service.export.pdf" {
+  class PdfDocumentBuilder
+}
+
+package "controleur.EstimationProd" {
+  class GridController
+  class TrackerController
+  class OffGridController
+}
+
+package "service.validation" {
+  class InputValidator <<static>>
+}
+
+' ---- Relations clés ----
+HttpClientPVGIS ..|> PVGISClient
+PVGISService -> PVGISClient : uses
+PVGISService ..> PVGISParser : parse()
+PVGISService -> PVGISResult : returns
+PVGISService --> PVGridAndTrackerRequest : fetchPVcalc(req)
+PVGISService --> PVOffGridRequest : fetch(req)
+
+PVGISParser ..> PVGISResult : build
+PVGISResult "1" o-- "*" MonthlyResult
+PVGISResult "0..1" o-- "*" HistogramBucket
+
+FinancialCalculator ..> PVGISResult
+FinancialCalculator ..> FinancialParams
+FinancialCalculator -> FinancialResult : returns
+
+ExportFacade -> ExportStrategy : delegates
+PdfExportStrategy ..|> ExportStrategy
+CsvExportStrategy ..|> ExportStrategy
+PdfExportStrategy ..> PdfDocumentBuilder
+ExportStrategy ..> ExportContext
+ExportFacade ..> ExportContext
+
+GridController ..> PVGISService
+TrackerController ..> PVGISService
+OffGridController ..> PVGISService
+GridController ..> InputValidator
+TrackerController ..> InputValidator
+OffGridController ..> InputValidator
+
+note bottom of PVGISParser
+  Parsing JSON tolérant
+  reponses complètes
+  ou partielles des API 
+  (PVcalc/SHScalc)
+  Conversions 
+  (E_m -> Wh/j)
+end note
+
+note top of FinancialCalculator
+  VAN = somme(flux actualisés) 
+  - investissement initial
+  Production annuelle = Σ(Wh/j * jours)/1000
+end note
+
+@enduml

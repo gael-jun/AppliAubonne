@@ -1,0 +1,42 @@
+@startuml seq-export
+title UC: Exporter en PDF / CSV
+
+actor User
+participant UI
+participant ExportWorkerFactory
+participant ExportFacade
+participant ExportStrategy
+participant PdfExportStrategy
+participant CsvExportStrategy
+participant PdfDocumentBuilder
+database FileSystem as FS
+
+User -> UI : Export (choix: PDF/CSV)
+UI -> ExportWorkerFactory : createExportWorker(file, supplier, strategy, ...)
+ExportWorkerFactory --> UI : SwingWorker
+UI -> ExportFacade : export(strategy, file, ctx)
+activate ExportFacade
+ExportFacade -> ExportStrategy : select strategy
+
+alt PDF
+  ExportFacade -> PdfExportStrategy : exportTo(file, ctx)
+  activate PdfExportStrategy
+  PdfExportStrategy -> PdfDocumentBuilder : new()
+  PdfExportStrategy -> PdfDocumentBuilder : addTitle/KeyValueLines/Tables/Images
+  PdfDocumentBuilder --> PdfExportStrategy : pdf ready
+  PdfExportStrategy -> PdfDocumentBuilder : saveTo(file)
+  deactivate PdfExportStrategy
+else CSV
+  ExportFacade -> CsvExportStrategy : exportTo(file, ctx)
+  activate CsvExportStrategy
+  CsvExportStrategy -> FS : write(file.csv, UTF-8, ';')
+  deactivate CsvExportStrategy
+end
+
+ExportFacade --> UI : résultat / message
+deactivate ExportFacade
+
+opt Données manquantes / fichier inaccessible
+  UI -> UI : afficher erreur claire (IOException)
+end
+@enduml
