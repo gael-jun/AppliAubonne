@@ -145,6 +145,25 @@ mvn verify -Pcoverage
 
 Rapport: `target/site/jacoco/index.html`.
 
+Important:
+- Exécutez ces commandes depuis la racine du projet où se trouve le fichier `pom.xml` (chemin: `C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes`).
+- Si vous êtes dans un sous-répertoire (ex. `docs\rapport`), Maven ne trouve pas le POM et affichera: `The requested profile "coverage" could not be activated because it does not exist` suivi de `there is no POM in this directory`.
+- Depuis un sous-dossier vous pouvez lancer quand même en ciblant le POM:
+
+```bat
+mvn -f ..\..\pom.xml verify -Pcoverage
+```
+
+Ou en utilisant un chemin absolu:
+```bat
+mvn -f C:\Users\user\Downloads\appli_pre_etudes\appli_pre_etudes\pom.xml verify -Pcoverage
+```
+
+Après exécution réussie, ouvrez le rapport JaCoCo:
+```bat
+start "" target\site\jacoco\index.html
+```
+
 
 ## 8) Configurer JDK 21 (PATH / JAVA_HOME) sous Windows
 

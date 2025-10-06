@@ -1,17 +1,19 @@
 package service.export;
 
-import modele.pvgis.MonthlyResult;
-
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
+import modele.pvgis.MonthlyResult;
+
 public final class CsvExportStrategy implements ExportStrategy {
     @Override
     public void exportTo(File file, ExportContext context) throws IOException {
-        String[] moisFrancais = {"Jan", "Fév", "Mars", "Avril", "Mai", "Juin", "Juil", "Août", "Sep", "Oct", "Nov", "Déc"};
+        String[] moisFrancais = {"Jan", "Fev", "Mars", "Avril", "Mai", "Juin", "Juil", "Aout", "Sep", "Oct", "Nov", "Dec"};
         List<Double> jours = Arrays.asList(31., 28., 31., 30., 31., 30., 31., 31., 30., 31., 30., 31.);
         try (PrintWriter writer = new PrintWriter(file, StandardCharsets.UTF_8)) {
             writer.println("Mois;Production (Wh);Energie perdue (Wh);% jours batt. pleine;% jours batt. vide");

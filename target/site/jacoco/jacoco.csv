@@ -1,0 +1,26 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+appli_pre_etudes,service.validation,InputValidator,7,178,11,37,0,9,11,22,0,9
+appli_pre_etudes,modele.finance,FinancialParams,0,27,0,0,0,10,0,1,0,1
+appli_pre_etudes,modele.finance,FinancialResult,0,30,0,0,0,9,0,1,0,1
+appli_pre_etudes,service.export.pdf,PdfDocumentBuilder,8,642,7,21,3,142,7,18,0,11
+appli_pre_etudes,service.pvgis,PVGISParser,8,361,9,38,2,60,9,16,0,1
+appli_pre_etudes,service.pvgis,HttpClientPVGIS,111,0,10,0,33,0,8,0,3,0
+appli_pre_etudes,service.pvgis,PVGISService,10,417,2,66,1,50,3,36,1,4
+appli_pre_etudes,service.export,CsvExportStrategy,3,369,3,15,0,29,3,8,0,2
+appli_pre_etudes,service.export,ExportFacade,28,0,2,0,8,0,3,0,2,0
+appli_pre_etudes,service.export,PdfExportStrategy,255,668,59,51,27,86,47,11,0,3
+appli_pre_etudes,service.export,ExportContext,0,26,0,0,0,9,0,2,0,2
+appli_pre_etudes,service.finance,FinancialCalculator,0,197,2,9,0,34,2,8,0,4
+appli_pre_etudes,modele.pvgis,PVGISResult,0,21,0,0,0,7,0,2,0,2
+appli_pre_etudes,modele.pvgis,MonthlyResult,0,18,0,0,0,3,0,1,0,1
+appli_pre_etudes,modele.pvgis,PVGISModel.Status,27,0,0,0,1,0,1,0,1,0
+appli_pre_etudes,modele.pvgis,PVGridAndTrackerRequest,10,413,29,31,1,24,30,4,1,3
+appli_pre_etudes,modele.pvgis,HistogramBucket,0,12,0,0,0,1,0,1,0,1
+appli_pre_etudes,modele.pvgis,PVGISModel,102,0,0,0,15,0,13,0,13,0
+appli_pre_etudes,modele.pvgis,PVOffGridRequest,10,217,15,17,1,16,16,4,1,3
+appli_pre_etudes,controleur.EstimationProd,TrackerController,20,17,0,0,2,5,2,2,2,2
+appli_pre_etudes,controleur.EstimationProd,GridController.new SwingWorker() {...},10,62,3,1,3,11,2,3,0,3
+appli_pre_etudes,controleur.EstimationProd,GridController,31,82,9,7,5,23,10,6,2,6
+appli_pre_etudes,controleur.EstimationProd,TrackerController.new SwingWorker() {...},31,101,14,8,2,21,11,3,0,3
+appli_pre_etudes,controleur.EstimationProd,OffGridController,20,14,0,0,2,4,2,2,2,2
+appli_pre_etudes,controleur.EstimationProd,OffGridController.new SwingWorker() {...},10,64,4,2,3,13,3,3,0,3

@@ -9,12 +9,8 @@
   <version>0.0.1-SNAPSHOT</version>
   
   <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-     <!-- Default empty value so Surefire does not pass a literal "${jacocoArgLine}" token
-       when the coverage profile isn't active. The JaCoCo plugin (when -Pcoverage) will
-       override this property during the initialize phase. -->
-     <jacocoArgLine/>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
   </properties>
   
   <profiles>
@@ -35,8 +31,8 @@
                   <goal>prepare-agent</goal>
                 </goals>
                 <configuration>
-                  <!-- Use a distinct propertyName so we do not clash with any user-defined argLine -->
-                  <propertyName>jacocoArgLine</propertyName>
+                  <!-- Standard integration: inject into Maven's global 'argLine' property that Surefire will use -->
+                  <propertyName>argLine</propertyName>
                   <append>true</append>
                 </configuration>
               </execution>
@@ -51,28 +47,17 @@
                   <outputDirectory>${project.build.directory}/site/jacoco</outputDirectory>
                   <!-- Filter coverage reporting strictly to requested functional scope -->
                   <includes>
-                    <!-- Use only direct package + one-level subpackages for target domains -->
-                    <include>service.pvgis.*</include>
-                    <include>service.finance.*</include>
-                    <include>service.validation.*</include>
-                    <include>service.export.*</include>
-                    <include>service.export.pdf.*</include>
-                    <include>modele.pvgis.*</include>
-                    <include>modele.finance.*</include>
-                    <include>controleur.EstimationProd.*</include>
+                    <!-- Use correct internal form with slashes for class names -->
+                    <include>service/pvgis/*</include>
+                    <include>service/finance/*</include>
+                    <include>service/validation/*</include>
+                    <include>service/export/*</include>
+                    <include>service/export/pdf/*</include>
+                    <include>modele/pvgis/*</include>
+                    <include>modele/finance/*</include>
+                    <include>controleur/EstimationProd/*</include>
                   </includes>
                   <!-- No excludes here: anything not matched by includes is ignored. -->
-                </configuration>
-              </execution>
-              <execution>
-                <id>dump</id>
-                <phase>post-integration-test</phase>
-                <goals>
-                  <goal>dump</goal>
-                </goals>
-                <configuration>
-                  <dump>true</dump>
-                  <output>file</output>
                 </configuration>
               </execution>
             </executions>
@@ -177,12 +162,9 @@
       On réactive un fork isolé mais on désactive le CDS (-Xshare:off) pour supprimer les warnings
       et on force le mode headless pour éviter toute initialisation AWT/Swing pendant les tests. -->
   <forkCount>1</forkCount>
-  <reuseForks>false</reuseForks>
-  <!-- Force forked JVM to match JAVA_HOME (set it to a JDK 21 as in README) -->
-  <jvm>${env.JAVA_HOME}\bin\java</jvm>
-  <!-- Single consolidated argLine includes JaCoCo agent (in ${jacocoArgLine}) plus extra JVM flags -->
-  <!-- Include the JaCoCo injected agent arguments when profile active (property populated at runtime). -->
-  <argLine>${jacocoArgLine} -Xshare:off -Djava.awt.headless=true -Dnet.bytebuddy.experimental=true</argLine>
+  <reuseForks>true</reuseForks>
+  <!-- Single consolidated argLine: JaCoCo agent (in ${argLine} when profile active) + extra JVM flags -->
+  <argLine>${argLine} -Xshare:off -Djava.awt.headless=true -Dnet.bytebuddy.experimental=true</argLine>
           <includes>
             <include>**/*Test.java</include>
           </includes>

@@ -1,0 +1,102 @@
+@startuml component-architecture
+title Architecture par composants (packages et communications)
+
+skinparam componentStyle rectangle
+skinparam wrapWidth 200
+skinparam maxMessageSize 200
+
+package "UI" {
+  component "UI (Swing)\nvue.*" <<UI>> as UId
+}
+
+package "Contrôleurs" {
+  component "Controllers\ncontroleur.*" <<Controller>> as CTRL
+}
+
+package "Validation" {
+  component "Validation Service\nservice.validation.*" <<Service>> as VALID
+  interface IValidation
+  VALID - IValidation
+}
+
+package "PVGIS" {
+  component "PVGIS Service\nservice.pvgis.*" <<Service>> as PVGIS_SVC
+  component "PV Models\nmodele.pvgis.*" <<Data>> as PV_MODELS
+  interface IEstimation
+  PVGIS_SVC - IEstimation
+}
+
+package "Finance" {
+  component "Finance Service\nservice.finance.*" <<Service>> as FIN
+  component "Finance Models\nmodele.finance.*" <<Data>> as FIN_MODELS
+  interface IFinance
+  FIN - IFinance
+}
+
+package "Export" {
+  component "Export Facade\nservice.export.*" <<Service>> as EXP
+  interface IExport
+  EXP - IExport
+
+  component "PDF Export Strategy\nservice.export.pdf.*" <<Service>> as EXP_PDF
+  component "CSV Export Strategy\nservice.export.csv.*" <<Service>> as EXP_CSV
+  interface IExportStrategy
+  EXP_PDF - IExportStrategy
+  EXP_CSV - IExportStrategy
+}
+
+' Modèles partagés (généraux)
+component "Models (partagés)\nmodele.* (extraits)" <<Data>> as DATA
+
+' Bibliothèques
+component "HttpClient (JDK)" <<Library>> as HTTP
+component "org.json" <<Library>> as JSON
+component "XChart" <<Library>> as XCHART
+component "PDFBox" <<Library>> as PDFBOX
+component "Apache POI" <<Library>> as POI
+
+' Systèmes externes
+cloud "PVGIS REST API" <<External>> as PVGIS_API
+node "File System" <<External>> as FS
+
+' Liaisons principales
+UId --> CTRL
+CTRL --> IValidation
+CTRL --> IEstimation
+CTRL --> IFinance
+CTRL --> IExport
+
+PVGIS_SVC --> HTTP
+PVGIS_SVC --> JSON
+PVGIS_SVC --> PVGIS_API
+
+FIN --> XCHART
+
+EXP --> EXP_PDF
+EXP --> EXP_CSV
+EXP_PDF --> PDFBOX
+EXP_CSV --> FS
+
+' Flux de données / partage de modèles
+CTRL --> DATA
+UId --> DATA
+PVGIS_SVC --> PV_MODELS
+FIN --> FIN_MODELS
+EXP --> DATA
+
+note right of CTRL
+Exécute les I/O réseau (PVGIS) et exports
+dans des SwingWorker pour ne pas bloquer l’UI;\n
+mise à jour de l’UI sur l’EDT.
+end note
+
+legend left
+<<UI>>: Interface graphique
+<<Controller>>: Orchestrateur des cas d'usage
+<<Service>>: Services métier / façades
+<<Data>>: Objets de données (DTO/model)
+<<Library>>: Bibliothèques tierces
+<<External>>: Systèmes externes
+endlegend
+
+@enduml

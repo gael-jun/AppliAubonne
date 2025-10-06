@@ -1,14 +1,14 @@
 package service.export;
 
-import modele.pvgis.HistogramBucket;
-import modele.pvgis.MonthlyResult;
-import service.export.pdf.PdfDocumentBuilder;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import modele.pvgis.HistogramBucket;
+import modele.pvgis.MonthlyResult;
+import service.export.pdf.PdfDocumentBuilder;
 
 public final class PdfExportStrategy implements ExportStrategy {
     @Override
@@ -137,7 +137,7 @@ public final class PdfExportStrategy implements ExportStrategy {
                 // Titre de la section au-dessus du tableau financier
                 pdf.addSectionTitle("Données financières utilisées pour les graphiques : ");
                 // Tableau financier
-                String[] finHeaders = {"Année", "Cash-flow cumulé (€)", "Recettes (€)", "Dépenses (€)", "VAN actualisé (€)"};
+                String[] finHeaders = {"Année", "Cash-flow cumule(€)", " Recettes (€)", "Dépenses (€)", "VAN actualisé (€)"};
                 List<List<String>> finRows = new ArrayList<>();
                 int rowsCount = Math.min(context.financialResult.annees.size(), context.financialResult.cashFlowCumule.size());
                 for (int i = 0; i < rowsCount; i++) {

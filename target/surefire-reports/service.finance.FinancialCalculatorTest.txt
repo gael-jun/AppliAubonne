@@ -1,0 +1,15 @@
+-------------------------------------------------------------------------------
+Test set: service.finance.FinancialCalculatorTest
+-------------------------------------------------------------------------------
+Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.044 s -- in service.finance.FinancialCalculatorTest
+service.finance.FinancialCalculatorTest.testCompute_allNegativeCashFlowsRemainNegativeVan -- Time elapsed: 0.006 s
+service.finance.FinancialCalculatorTest.testCompute_longHorizonProducesExpectedSizes -- Time elapsed: 0.001 s
+service.finance.FinancialCalculatorTest.testCompute_tauxActualisationZero -- Time elapsed: 0.001 s
+service.finance.FinancialCalculatorTest.testCompute_scenarioNominal_vanPositive -- Time elapsed: 0.001 s
+service.finance.FinancialCalculatorTest.testCompute_zeroInvestmentStillComputesVan -- Time elapsed: 0 s
+service.finance.FinancialCalculatorTest.testCompute_horizonSingleYear -- Time elapsed: 0.003 s
+service.finance.FinancialCalculatorTest.testCompute_subventionSuperieureInvestissement -- Time elapsed: 0.001 s
+service.finance.FinancialCalculatorTest.testCompute_absenceDonneesPV_retourVide -- Time elapsed: 0.001 s
+service.finance.FinancialCalculatorTest.testCompute_partialInjectionRate -- Time elapsed: 0.004 s
+service.finance.FinancialCalculatorTest.testCompute_incompleteMonthsData -- Time elapsed: 0.002 s
+service.finance.FinancialCalculatorTest.testCompute_autoconsommationBornees -- Time elapsed: 0.001 s

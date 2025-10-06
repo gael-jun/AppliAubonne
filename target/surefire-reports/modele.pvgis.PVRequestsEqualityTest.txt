@@ -1,0 +1,6 @@
+-------------------------------------------------------------------------------
+Test set: modele.pvgis.PVRequestsEqualityTest
+-------------------------------------------------------------------------------
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.032 s -- in modele.pvgis.PVRequestsEqualityTest
+modele.pvgis.PVRequestsEqualityTest.pvcalc_request_equals_and_hashcode -- Time elapsed: 0.016 s
+modele.pvgis.PVRequestsEqualityTest.offgrid_request_equals_and_hashcode -- Time elapsed: 0.016 s

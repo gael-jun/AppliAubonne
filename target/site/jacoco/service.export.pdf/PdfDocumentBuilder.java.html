@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PdfDocumentBuilder.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">appli_pre_etudes</a> &gt; <a href="index.source.html" class="el_package">service.export.pdf</a> &gt; <span class="el_source">PdfDocumentBuilder.java</span></div><h1>PdfDocumentBuilder.java</h1><pre class="source lang-java linenums">package service.export.pdf;
+
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import javax.imageio.ImageIO;
+
+public final class PdfDocumentBuilder implements AutoCloseable {
+<span class="fc" id="L18">    private final PDDocument doc = new PDDocument();</span>
+    private PDPageContentStream content;
+<span class="fc" id="L20">    private float y = 750f;</span>
+
+<span class="fc" id="L22">    public PdfDocumentBuilder() throws IOException {</span>
+<span class="fc" id="L23">        newPage();</span>
+<span class="fc" id="L24">    }</span>
+
+    public PdfDocumentBuilder addTitle(String title) throws IOException {
+<span class="fc" id="L27">        float titleFontSize = 18f;</span>
+<span class="fc" id="L28">        content.setFont(PDType1Font.HELVETICA_BOLD, titleFontSize);</span>
+<span class="fc" id="L29">        float lineTopY = y; // reference top line for logo/title alignment</span>
+<span class="fc" id="L30">        float titleX = 50f;</span>
+<span class="fc" id="L31">        float spacingAfterTitle = 30f; // minimum spacing after the title line</span>
+        // Try to load the logo from classpath first, then from the resources folder
+        try {
+<span class="fc" id="L34">            BufferedImage logoImg = null;</span>
+<span class="fc" id="L35">            java.io.InputStream is = PdfDocumentBuilder.class.getResourceAsStream(&quot;/ressources/logo.png&quot;);</span>
+<span class="pc bpc" id="L36" title="1 of 2 branches missed.">            if (is != null) {</span>
+<span class="nc" id="L37">                logoImg = ImageIO.read(is);</span>
+<span class="nc" id="L38">                is.close();</span>
+            }
+<span class="pc bpc" id="L40" title="1 of 2 branches missed.">            if (logoImg == null) {</span>
+<span class="fc" id="L41">                File f = new File(&quot;ressources/logo.png&quot;);</span>
+<span class="pc bpc" id="L42" title="1 of 2 branches missed.">                if (f.exists()) {</span>
+<span class="fc" id="L43">                    logoImg = ImageIO.read(f);</span>
+                }
+            }
+<span class="pc bpc" id="L46" title="1 of 2 branches missed.">            if (logoImg != null) {</span>
+<span class="fc" id="L47">                PDImageXObject pdLogo = LosslessFactory.createFromImage(doc, logoImg);</span>
+<span class="fc" id="L48">                float desiredH = 72f; // match Grid page (triple size)</span>
+<span class="fc" id="L49">                float desiredW = (float) logoImg.getWidth() * desiredH / (float) logoImg.getHeight();</span>
+                // Draw logo top-aligned with the title line
+<span class="fc" id="L51">                content.drawImage(pdLogo, 50f, lineTopY - desiredH, desiredW, desiredH);</span>
+<span class="fc" id="L52">                titleX = 50f + desiredW + 10f; // place title to the right of the logo</span>
+<span class="fc" id="L53">                spacingAfterTitle = Math.max(spacingAfterTitle, desiredH + 8f); // ensure content starts below the logo</span>
+            }
+<span class="nc" id="L55">        } catch (Exception ignore) {</span>
+            // no logo available; continue without it
+<span class="fc" id="L57">        }</span>
+        // Compute text baseline to top-align with logo using font ascent, then offset slightly downward
+<span class="fc" id="L59">        float ascentPt = 0.72f * titleFontSize; // fallback ascent</span>
+        try {
+<span class="fc" id="L61">            var fd = PDType1Font.HELVETICA_BOLD.getFontDescriptor();</span>
+<span class="pc bpc" id="L62" title="1 of 2 branches missed.">            if (fd != null) ascentPt = (fd.getAscent() / 1000f) * titleFontSize;</span>
+<span class="pc" id="L63">        } catch (Throwable ignore) {}</span>
+<span class="fc" id="L64">        float titleYOffset = 30f; // lower the title a few points without moving the logo</span>
+<span class="fc" id="L65">        content.beginText();</span>
+<span class="fc" id="L66">        content.newLineAtOffset(titleX, lineTopY - ascentPt - titleYOffset);</span>
+<span class="fc" id="L67">        content.showText(title);</span>
+<span class="fc" id="L68">        content.endText();</span>
+<span class="fc" id="L69">        y -= spacingAfterTitle;</span>
+<span class="fc" id="L70">        return this;</span>
+    }
+
+    public PdfDocumentBuilder addKeyValueLines(List&lt;String[]&gt; lines) throws IOException {
+    // Ajoute un interligne supplémentaire sous le titre/logo avant l'inscription
+<span class="fc" id="L75">    y -= 12f;</span>
+<span class="fc" id="L76">    content.setFont(PDType1Font.HELVETICA_BOLD, 12);</span>
+<span class="fc" id="L77">        content.beginText();</span>
+<span class="fc" id="L78">        content.newLineAtOffset(50, y);</span>
+<span class="fc" id="L79">        content.showText(&quot;Paramètres d'entrée :&quot;);</span>
+<span class="fc" id="L80">        content.endText();</span>
+<span class="fc" id="L81">        y -= 18;</span>
+<span class="fc bfc" id="L82" title="All 2 branches covered.">        for (String[] kv : lines) {</span>
+<span class="fc" id="L83">            ensureSpace(18);</span>
+<span class="fc" id="L84">            content.beginText();</span>
+<span class="fc" id="L85">            content.setFont(PDType1Font.HELVETICA, 10);</span>
+<span class="fc" id="L86">            content.newLineAtOffset(55, y);</span>
+<span class="fc" id="L87">            content.showText(kv[0] + &quot; : &quot; + kv[1]);</span>
+<span class="fc" id="L88">            content.endText();</span>
+<span class="fc" id="L89">            y -= 13;</span>
+<span class="fc" id="L90">        }</span>
+    // Augmente l'espace après un tableau pour éviter la proximité avec le contenu suivant (ex: VAN totale)
+<span class="fc" id="L92">    y -= 20;</span>
+<span class="fc" id="L93">        return this;</span>
+    }
+
+    public PdfDocumentBuilder addTable(String[] headers, List&lt;List&lt;String&gt;&gt; rows) throws IOException {
+<span class="fc" id="L97">        float tableStartX = 50f;</span>
+<span class="fc" id="L98">        float rowHeight = 18f;</span>
+<span class="fc" id="L99">        float tableWidth = 480f;</span>
+<span class="fc" id="L100">        float[] colWidths = new float[headers.length];</span>
+<span class="fc" id="L101">        float total = 0f;</span>
+<span class="fc bfc" id="L102" title="All 2 branches covered.">        for (int i = 0; i &lt; headers.length; i++) {</span>
+<span class="fc" id="L103">            colWidths[i] = tableWidth / headers.length;</span>
+<span class="fc" id="L104">            total += colWidths[i];</span>
+        }
+        // Header background
+<span class="fc" id="L107">        content.setStrokingColor(Color.BLACK);</span>
+<span class="fc" id="L108">        content.setNonStrokingColor(Color.LIGHT_GRAY);</span>
+<span class="fc" id="L109">        content.addRect(tableStartX, y - rowHeight, total, rowHeight);</span>
+<span class="fc" id="L110">        content.fill();</span>
+<span class="fc" id="L111">        content.setNonStrokingColor(Color.BLACK);</span>
+<span class="fc" id="L112">        float nextX = tableStartX;</span>
+<span class="fc bfc" id="L113" title="All 2 branches covered.">        for (int i = 0; i &lt; headers.length; i++) {</span>
+<span class="fc" id="L114">            content.beginText();</span>
+<span class="fc" id="L115">            content.setFont(PDType1Font.HELVETICA_BOLD, 10);</span>
+<span class="fc" id="L116">            content.newLineAtOffset(nextX + 2, y - rowHeight + 4);</span>
+<span class="fc" id="L117">            content.showText(headers[i]);</span>
+<span class="fc" id="L118">            content.endText();</span>
+<span class="fc" id="L119">            nextX += colWidths[i];</span>
+        }
+<span class="fc" id="L121">        y -= rowHeight;</span>
+<span class="fc bfc" id="L122" title="All 2 branches covered.">        for (List&lt;String&gt; row : rows) {</span>
+<span class="fc" id="L123">            ensureSpace(rowHeight + 10);</span>
+<span class="fc" id="L124">            nextX = tableStartX;</span>
+<span class="fc bfc" id="L125" title="All 2 branches covered.">            for (int j = 0; j &lt; headers.length; j++) {</span>
+<span class="fc" id="L126">                content.setStrokingColor(Color.BLACK);</span>
+<span class="fc" id="L127">                content.addRect(nextX, y - rowHeight, colWidths[j], rowHeight);</span>
+<span class="fc" id="L128">                content.stroke();</span>
+<span class="fc" id="L129">                content.beginText();</span>
+<span class="fc" id="L130">                content.setFont(PDType1Font.HELVETICA, 10);</span>
+<span class="fc" id="L131">                content.newLineAtOffset(nextX + 2, y - rowHeight + 4);</span>
+<span class="pc bpc" id="L132" title="1 of 2 branches missed.">                String val = (j &lt; row.size()) ? row.get(j) : &quot;&quot;;</span>
+<span class="fc" id="L133">                content.showText(val);</span>
+<span class="fc" id="L134">                content.endText();</span>
+<span class="fc" id="L135">                nextX += colWidths[j];</span>
+            }
+<span class="fc" id="L137">            y -= rowHeight;</span>
+<span class="fc" id="L138">        }</span>
+<span class="fc" id="L139">        y -= 20;</span>
+<span class="fc" id="L140">        return this;</span>
+    }
+
+    public PdfDocumentBuilder addImage(BufferedImage img, float width, float height) throws IOException {
+<span class="fc" id="L144">        ensureSpace(height + 50);</span>
+<span class="fc" id="L145">        PDImageXObject pdImage = LosslessFactory.createFromImage(doc, img);</span>
+<span class="fc" id="L146">        content.drawImage(pdImage, 50, y - height, width, height);</span>
+<span class="fc" id="L147">        y -= (height + 20);</span>
+<span class="fc" id="L148">        return this;</span>
+    }
+
+    // Ajoute un titre de section (gras 12) avec un léger espacement dessous
+    public PdfDocumentBuilder addSectionTitle(String text) throws IOException {
+<span class="fc" id="L153">        content.setFont(PDType1Font.HELVETICA_BOLD, 12);</span>
+<span class="fc" id="L154">        content.beginText();</span>
+<span class="fc" id="L155">        content.newLineAtOffset(50, y);</span>
+<span class="fc" id="L156">        content.showText(text);</span>
+<span class="fc" id="L157">        content.endText();</span>
+<span class="fc" id="L158">        y -= 20f;</span>
+<span class="fc" id="L159">        return this;</span>
+    }
+
+    // Ajoute une ligne de texte (gras 11 par défaut) et espace dessous
+    public PdfDocumentBuilder addTextLine(String text) throws IOException {
+<span class="fc" id="L164">        content.setFont(PDType1Font.HELVETICA_BOLD, 11);</span>
+<span class="fc" id="L165">        content.beginText();</span>
+<span class="fc" id="L166">        content.newLineAtOffset(50, y);</span>
+<span class="fc" id="L167">        content.showText(text);</span>
+<span class="fc" id="L168">        content.endText();</span>
+<span class="fc" id="L169">        y -= 24f;</span>
+<span class="fc" id="L170">        return this;</span>
+    }
+
+    public void saveTo(File file) throws IOException {
+        // Close current content stream to allow appending footers
+<span class="pc bpc" id="L175" title="1 of 2 branches missed.">        if (content != null) content.close();</span>
+
+        // Add page numbers (Page X / Y) centered at the bottom of each page
+<span class="fc" id="L178">        int total = doc.getNumberOfPages();</span>
+<span class="fc" id="L179">        float fontSize = 9f;</span>
+<span class="fc bfc" id="L180" title="All 2 branches covered.">        for (int i = 0; i &lt; total; i++) {</span>
+<span class="fc" id="L181">            PDPage page = doc.getPage(i);</span>
+<span class="fc" id="L182">            float pageWidth = page.getMediaBox().getWidth();</span>
+<span class="fc" id="L183">            String text = &quot;Page &quot; + (i + 1) + &quot; / &quot; + total;</span>
+<span class="fc" id="L184">            float textWidth = PDType1Font.HELVETICA.getStringWidth(text) / 1000f * fontSize;</span>
+<span class="fc" id="L185">            float x = (pageWidth - textWidth) / 2f;</span>
+<span class="fc" id="L186">            float yFooter = 30f;</span>
+<span class="fc" id="L187">            try (PDPageContentStream footer = new PDPageContentStream(doc, page, PDPageContentStream.AppendMode.APPEND, true, true)) {</span>
+<span class="fc" id="L188">                footer.setFont(PDType1Font.HELVETICA, fontSize);</span>
+<span class="fc" id="L189">                footer.beginText();</span>
+<span class="fc" id="L190">                footer.newLineAtOffset(x, yFooter);</span>
+<span class="fc" id="L191">                footer.showText(text);</span>
+<span class="fc" id="L192">                footer.endText();</span>
+            }
+        }
+
+<span class="fc" id="L196">        doc.save(file);</span>
+<span class="fc" id="L197">        doc.close();</span>
+<span class="fc" id="L198">    }</span>
+
+    private void newPage() throws IOException {
+<span class="fc" id="L201">        PDPage page = new PDPage();</span>
+<span class="fc" id="L202">        doc.addPage(page);</span>
+<span class="fc" id="L203">        content = new PDPageContentStream(doc, page);</span>
+<span class="fc" id="L204">        y = 750f;</span>
+<span class="fc" id="L205">    }</span>
+
+    private void ensureSpace(float needed) throws IOException {
+<span class="fc bfc" id="L208" title="All 2 branches covered.">        if (y - needed &lt; 100) {</span>
+<span class="fc" id="L209">            content.close();</span>
+<span class="fc" id="L210">            newPage();</span>
+        }
+<span class="fc" id="L212">    }</span>
+
+    @Override
+    public void close() throws IOException {
+        // no-op, use saveTo to close resources
+<span class="fc" id="L217">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

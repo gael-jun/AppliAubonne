@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MonthlyResult.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">appli_pre_etudes</a> &gt; <a href="index.source.html" class="el_package">modele.pvgis</a> &gt; <span class="el_source">MonthlyResult.java</span></div><h1>MonthlyResult.java</h1><pre class="source lang-java linenums">package modele.pvgis;
+
+/**
+ * Données agrégées par mois issues de PVGIS.
+ * month: 1..12
+ * E_d: production moyenne journalière Wh/j
+ * E_lost_d: énergie perdue Wh/j (batterie pleine, clipping...)
+ * f_f: pourcentage de jours batterie pleine (%)
+ * f_e: pourcentage de jours batterie vide (%)
+ */
+public final class MonthlyResult {
+    public final int month;
+    public final double E_d;
+    public final double E_lost_d;
+    public final double f_f;
+    public final double f_e;
+
+<span class="fc" id="L18">    public MonthlyResult(int month, double e_d, double e_lost_d, double f_f, double f_e) {</span>
+<span class="fc" id="L19">        this.month = month; this.E_d = e_d; this.E_lost_d = e_lost_d; this.f_f = f_f; this.f_e = f_e;</span>
+<span class="fc" id="L20">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

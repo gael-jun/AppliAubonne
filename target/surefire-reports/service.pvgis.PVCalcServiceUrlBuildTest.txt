@@ -1,0 +1,10 @@
+-------------------------------------------------------------------------------
+Test set: service.pvgis.PVCalcServiceUrlBuildTest
+-------------------------------------------------------------------------------
+Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.020 s -- in service.pvgis.PVCalcServiceUrlBuildTest
+service.pvgis.PVCalcServiceUrlBuildTest.two_axis_priority -- Time elapsed: 0.002 s
+service.pvgis.PVCalcServiceUrlBuildTest.inclined_axis_with_angle -- Time elapsed: 0.001 s
+service.pvgis.PVCalcServiceUrlBuildTest.financial_parameters_and_angle_aspect -- Time elapsed: 0 s
+service.pvgis.PVCalcServiceUrlBuildTest.vertical_axis_optimum -- Time elapsed: 0.004 s
+service.pvgis.PVCalcServiceUrlBuildTest.include_global_flag -- Time elapsed: 0.002 s
+service.pvgis.PVCalcServiceUrlBuildTest.baseline_fixed_no_global -- Time elapsed: 0.001 s

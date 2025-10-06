@@ -1,0 +1,106 @@
+% Template LaTeX initial pour le rapport
+% Remplacer progressivement le contenu par la transcription structurée du .docx
+\documentclass[11pt,a4paper]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{lmodern}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{longtable}
+\usepackage{tabularx}
+\usepackage{caption}
+\usepackage{float}
+\usepackage{listings}
+\usepackage{csquotes}
+\usepackage{pdfpages}
+\geometry{margin=2.5cm}
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue,citecolor=blue}
+
+% Définition d'un environnement pour les objectifs
+\newcommand{\objectif}[1]{\paragraph{Objectif}#1}
+
+% Tableaux flexibles
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+
+\title{Rapport de Pré-Études Photovoltaïques\\\large Intégration Estimation, Finance et Export}
+\author{Entreprise / Auteur}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\chapter{Introduction}
+Ce document formalise le rapport précédemment rédigé dans un fichier Word (Rapport\_EAubonne.docx) en le convertissant vers une structure LaTeX maintenable.
+
+\section{Contexte}
+% Décrire le contexte métier / besoin initial
+
+\section{Objectifs}
+Les objectifs spécifiques du projet sont :
+\begin{enumerate}
+  \item Concevoir, intégrer et analyser les données d’estimation de production (Grid, Off-Grid, Tracker).
+  \item Réduire le temps de préparation d’un rapport d’estimation.
+  \item Diminuer les risques d’erreurs manuelles dans la consolidation multi-outils.
+  \item Modéliser les données et implémenter les indicateurs financiers (VAN, TRI, etc.).
+  \item Créer une interface ergonomique avec validation des entrées et contrôleurs fiables.
+  \item Industrialiser la qualité (tests, couverture, analyse statique, documentation).
+\end{enumerate}
+
+\chapter{Architecture}
+\section{Vue Composants}
+Inclure le diagramme de composants (PlantUML exporté en PNG/PDF) :
+\begin{figure}[H]
+  \centering
+  % \includegraphics[width=0.9\textwidth]{../uml/component-architecture.png}
+  \caption{Architecture logique par composants}
+\end{figure}
+
+\section{Cas d'utilisation principaux}
+\subsection{Estimation PV Grid}
+% Préconditions / Scénario nominal / Post-conditions / Alternatifs
+\subsection{Graphes Financiers}
+% Préconditions / Scénario nominal / Post-conditions / Alternatifs
+\subsection{Export PDF / CSV}
+% Préconditions / Scénario nominal / Post-conditions / Alternatifs
+
+\chapter{Modélisation}
+\section{Données et Domaines}
+% Décrire modele.pvgis.*, modele.finance.*
+\section{Patrons de conception}
+% Strategy (Export), Façade (PVGIS/Export), Builder (PDF)
+
+\chapter{Implémentation}
+\section{Technologies}
+Java 21, Maven, Swing, HttpClient, JSON (org.json), XChart, PDFBox, Apache POI.
+\section{Qualité et Tests}
+% Résumé des tests vitrine
+
+\chapter{Résultats et Évaluation}
+\section{Tableau Objectifs / Résultats / Méthodes}
+\begin{longtable}{p{0.30\textwidth} p{0.36\textwidth} p{0.30\textwidth}}
+\toprule
+\textbf{Objectif} & \textbf{Résultats (atteints / attendus)} & \textbf{Méthodes d'évaluation} \\
+\midrule
+Concevoir, intégrer et analyser l’estimation (Grid, Off-Grid, Tracker) & Services unifiés, parseur robuste, normalisation unités & Revue architecture; tests parser; comparaison PVGIS officielle \\
+Réduire le temps de préparation d’un rapport & Export PDF/CSV auto; réduction temps manuel (X→Y min) & Mesures chronométrées; feedback utilisateurs; comptage étapes \\
+Réduire les erreurs de consolidation & Centralisation calculs + validation; formats homogènes & Historique erreurs vs incidents; tests validation; contrôle exports \\
+Implémenter indicateurs financiers & FinancialCalculator (VAN, TRI, payback); conversions validées & Tests formules; comparaison Excel; revue arrondis \\
+Interface ergonomique et contrôleurs fiables & UI réactive; états explicites; blocage actions en erreur & Tests contrôleurs; inspection ergonomie; logs erreurs \\
+Industrialiser la qualité & Tests ciblés; profil JaCoCo; Sonar A/A; docs UML + README & Rapport JaCoCo; tableau de bord Sonar; revue documentaire \\
+\bottomrule
+\end{longtable}
+
+\chapter{Conclusion}
+% Synthèse finale
+
+\appendix
+\chapter{Annexes}
+% Ajouter exports de diagrammes, extraits de code, etc.
+
+\end{document}

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>HttpClientPVGIS.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">appli_pre_etudes</a> &gt; <a href="index.source.html" class="el_package">service.pvgis</a> &gt; <span class="el_source">HttpClientPVGIS.java</span></div><h1>HttpClientPVGIS.java</h1><pre class="source lang-java linenums">package service.pvgis;
+
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.time.Duration;
+
+/**
+ * Implémentation HTTP réelle pour l'API PVGIS avec timeouts et quelques réessais simples.
+ */
+public final class HttpClientPVGIS implements PVGISClient {
+    private final HttpClient http;
+    private final int maxRetries;
+    private final Duration requestTimeout;
+
+    public HttpClientPVGIS() {
+<span class="nc" id="L19">        this(HttpClient.newBuilder()</span>
+<span class="nc" id="L20">                .connectTimeout(Duration.ofSeconds(10))</span>
+<span class="nc" id="L21">                .build(),</span>
+            2,
+<span class="nc" id="L23">            Duration.ofSeconds(20));</span>
+<span class="nc" id="L24">    }</span>
+
+<span class="nc" id="L26">    public HttpClientPVGIS(HttpClient http, int maxRetries, Duration requestTimeout) {</span>
+<span class="nc" id="L27">        this.http = http;</span>
+<span class="nc" id="L28">        this.maxRetries = Math.max(0, maxRetries);</span>
+<span class="nc" id="L29">        this.requestTimeout = requestTimeout;</span>
+<span class="nc" id="L30">    }</span>
+
+    @Override
+    public String get(String url) throws IOException, InterruptedException {
+<span class="nc" id="L34">        IOException lastIo = null;</span>
+<span class="nc" id="L35">        InterruptedException lastInt = null;</span>
+<span class="nc bnc" id="L36" title="All 2 branches missed.">        for (int attempt = 0; attempt &lt;= maxRetries; attempt++) {</span>
+            try {
+<span class="nc" id="L38">                HttpRequest request = HttpRequest.newBuilder()</span>
+<span class="nc" id="L39">                        .uri(URI.create(url))</span>
+<span class="nc" id="L40">                        .timeout(requestTimeout)</span>
+<span class="nc" id="L41">                        .GET()</span>
+<span class="nc" id="L42">                        .build();</span>
+<span class="nc" id="L43">                HttpResponse&lt;String&gt; resp = http.send(request, HttpResponse.BodyHandlers.ofString());</span>
+<span class="nc" id="L44">                int code = resp.statusCode();</span>
+<span class="nc bnc" id="L45" title="All 4 branches missed.">                if (code &gt;= 200 &amp;&amp; code &lt; 300) {</span>
+<span class="nc" id="L46">                    return resp.body();</span>
+                }
+<span class="nc" id="L48">                lastIo = new IOException(&quot;HTTP &quot; + code + &quot; for URL: &quot; + url);</span>
+<span class="nc" id="L49">            } catch (IOException io) {</span>
+<span class="nc" id="L50">                lastIo = io;</span>
+<span class="nc" id="L51">            } catch (InterruptedException ie) {</span>
+<span class="nc" id="L52">                lastInt = ie;</span>
+<span class="nc" id="L53">                throw ie; // propagate interrupt immediately</span>
+<span class="nc" id="L54">            }</span>
+            // small backoff before retry
+<span class="nc" id="L56">            try { Thread.sleep(Math.min(1000L * (attempt + 1), 3000L)); } catch (InterruptedException ie) { Thread.currentThread().interrupt(); throw ie; }</span>
+        }
+<span class="nc bnc" id="L58" title="All 2 branches missed.">        if (lastIo != null) throw lastIo;</span>
+<span class="nc bnc" id="L59" title="All 2 branches missed.">        if (lastInt != null) throw lastInt;</span>
+<span class="nc" id="L60">        throw new IOException(&quot;Unknown error calling PVGIS&quot;);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
